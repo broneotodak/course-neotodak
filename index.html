@@ -185,6 +185,21 @@
   .note p + p { margin-top: 9px; }
   .note b { color: var(--ink); font-weight: 650; }
 
+  /* ---------- cost ---------- */
+  .free-lbl { font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin: 2px 0 9px; }
+  .freeband { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .free-chip { display: inline-flex; align-items: center; gap: 8px; font-size: 12.8px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 7px 11px; box-shadow: var(--shadow); }
+  .free-chip b { font-weight: 650; }
+  .free-chip .use { color: var(--ink-faint); font-size: 11.5px; }
+  .free-chip .rm0 { font-family: ui-monospace, Menlo, monospace; font-size: 10px; font-weight: 700; color: var(--ship); background: var(--ship-soft); padding: 1px 6px; border-radius: 999px; }
+  table.cp .free { color: var(--ship); font-weight: 650; }
+  .cost-total { display: flex; flex-wrap: wrap; gap: 16px 30px; align-items: center; margin-top: 16px; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--ship); border-radius: 12px; padding: 18px 22px; box-shadow: var(--shadow); }
+  .cost-total .big { font-size: 25px; font-weight: 800; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .cost-total .big small { display: block; font-size: 10px; font-weight: 600; color: var(--ink-faint); font-family: ui-monospace, Menlo, monospace; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+  .cost-total .ct-say { flex: 1; min-width: 240px; font-size: 13.5px; color: var(--ink-soft); }
+  .cost-total .ct-say b { color: var(--ink); font-weight: 650; }
+  .cost-note { font-size: 12px; color: var(--ink-faint); margin-top: 13px; max-width: 780px; }
+
   footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint); }
 
   @media (max-width: 720px) {
@@ -406,9 +421,49 @@
     </div>
   </section>
 
-  <!-- 05 · ASSESSMENT & CERT -->
+  <!-- 05 · TOOLS & COST -->
+  <section id="cost">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Tools &amp; rough cost</h2></div>
+    <p class="sec-sub">The stack is chosen to keep learner cost near zero. The engine, 3D tools, rigging, editing and version control are all free — the only real spend is one or two AI subscriptions.</p>
+
+    <div class="free-lbl">Free forever · RM0 each</div>
+    <div class="freeband">
+      <span class="free-chip"><b>Godot 4</b> <span class="use">game engine · no royalties</span> <span class="rm0">RM0</span></span>
+      <span class="free-chip"><b>Blender</b> <span class="use">3D + rigging</span> <span class="rm0">RM0</span></span>
+      <span class="free-chip"><b>Mixamo</b> <span class="use">auto-rig + animations</span> <span class="rm0">RM0</span></span>
+      <span class="free-chip"><b>DaVinci Resolve</b> <span class="use">trailer / video</span> <span class="rm0">RM0</span></span>
+      <span class="free-chip"><b>Audacity</b> <span class="use">audio</span> <span class="rm0">RM0</span></span>
+      <span class="free-chip"><b>Git / GitHub</b> <span class="use">version control</span> <span class="rm0">RM0</span></span>
+      <span class="free-chip"><b>Supabase</b> <span class="use">the pgVector project brain · free tier</span> <span class="rm0">RM0</span></span>
+    </div>
+
+    <div class="free-lbl">The only real spend · AI subscriptions</div>
+    <div class="cp-scroll">
+      <table class="cp">
+        <thead>
+          <tr><th>Tool</th><th>What it&rsquo;s for</th><th>Plan</th><th class="num">~USD / mo</th><th class="num">~RM / mo</th><th>When</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="cu-title">Claude (Claude Code)</td><td>The core AI pair + memory workflow</td><td>Pro</td><td class="num">$20</td><td class="num">~95</td><td>All 12 weeks</td></tr>
+          <tr><td class="cu-title">Meshy.ai</td><td>AI 3D model generation</td><td>Free → Pro</td><td class="num">$0–20</td><td class="num">0–95</td><td>3D elective only (~4 wks)</td></tr>
+          <tr><td class="cu-title">2D image gen</td><td>Sprites, textures, store art</td><td class="free">Academy pool / Todak GPU</td><td class="num free">shared</td><td class="num free">—</td><td>As needed</td></tr>
+          <tr><td class="cu-title">pgVector memory</td><td>The &ldquo;project brain&rdquo;</td><td class="free">Supabase free tier</td><td class="num free">$0</td><td class="num free">0</td><td>All 12 weeks</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="cost-total">
+      <div class="big"><small>2D track</small>~RM285</div>
+      <div class="big"><small>with 3D pathway</small>~RM380</div>
+      <div class="ct-say">Total AI + software cost <b>per learner, for the whole 3 months</b>. The 2D baseline is just Claude Pro for three months; the 3D pathway adds about one month of Meshy. Bought as Academy team/pool plans, the per-head cost drops below this.</div>
+    </div>
+
+    <p class="cost-note">Store &amp; publishing fees (Google Play, Steam, Apple, itch.io) are on <b>Todak Studios&rsquo;</b> developer accounts — a learner pays <b>RM0</b> to publish. Figures are indicative 2026 retail prices (billed in USD; RM shown at roughly 4.75). Heavy Claude Code users may need the Max plan (~$100/mo), which is exactly why the pooled-account model exists.</p>
+  </section>
+
+  <!-- 06 · ASSESSMENT & CERT -->
   <section id="assessment">
-    <div class="sec-head"><span class="sec-num">05</span><h2>Assessment &amp; certification</h2></div>
+    <div class="sec-head"><span class="sec-num">06</span><h2>Assessment &amp; certification</h2></div>
     <div class="note">
       <h3>Competency-based, evidenced by a real game</h3>
       <p>Every unit is judged <b>Competent / Not Yet Competent</b> against the evidence above — there are no written exams. The learner&rsquo;s <b>portfolio</b> (their project memory, builds and assets) is the running record, and the <b>published game</b> is the capstone evidence, gated by the Todak Studios quality review.</p>
@@ -416,9 +471,9 @@
     </div>
   </section>
 
-  <!-- 06 · TVET ALIGNMENT -->
+  <!-- 07 · TVET ALIGNMENT -->
   <section id="tvet">
-    <div class="sec-head"><span class="sec-num">06</span><h2>TVET alignment</h2></div>
+    <div class="sec-head"><span class="sec-num">07</span><h2>TVET alignment</h2></div>
     <div class="note flag">
       <h3>Structured to JPK CoCU — accreditation-ready</h3>
       <p>This module is written in the <b>Curriculum of Competency Unit (CoCU)</b> structure used by Malaysia&rsquo;s Department of Skills Development (JPK/DSD): competency units split into work activities, related knowledge and skills, indicative training hours, and competency-based assessment. It is positioned as a <b>stackable micro-credential cluster toward Sijil Kemahiran Malaysia (SKM) Level 3</b> in a Game / Interactive Multimedia occupational area, leveraging Todak Academy&rsquo;s existing JPK accredited-centre status.</p>
