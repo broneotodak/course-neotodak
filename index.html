@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI-Assisted Game Development — Todak AI Creator Program</title>
+<meta name="description" content="A 12-week competency-based game development module built on the Todak AI method (Claude Code + persistent memory). Structured to Malaysian JPK CoCU format; a graduate ships one published game.">
+<style>
+  :root {
+    --bg: #e9ebee;
+    --surface: #f6f7f8;
+    --surface-2: #ffffff;
+    --line: #d3d8dd;
+    --line-soft: #e0e4e8;
+    --ink: #14181c;
+    --ink-soft: #545c64;
+    --ink-faint: #828d97;
+    --method: #37627f;
+    --method-soft: rgba(55,98,127,.11);
+    --crew: #9a6a1c;
+    --crew-soft: rgba(154,106,28,.13);
+    --mentor: #5a6570;
+    --mentor-soft: rgba(90,101,112,.12);
+    --ship: #2c8a66;
+    --ship-soft: rgba(44,138,102,.13);
+    --core: #37627f;
+    --elective: #7a5aa0;
+    --elective-soft: rgba(122,90,160,.13);
+    --shadow: 0 1px 2px rgba(20,24,28,.05), 0 8px 24px rgba(20,24,28,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+      --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+      --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+      --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+      --mentor: #9aa4ad; --mentor-soft: rgba(154,164,173,.12);
+      --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+      --core: #86b2ce; --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+    --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+    --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+    --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+    --mentor: #9aa4ad; --mentor-soft: rgba(154,164,173,.12);
+    --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+    --core: #86b2ce; --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--method); }
+
+  /* ---------- top strip ---------- */
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint);
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
+  .topbar .badge { color: var(--method); }
+
+  /* ---------- hero ---------- */
+  header { padding: 48px 0 30px; }
+  .eyebrow {
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 10px;
+  }
+  .eyebrow .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--method); box-shadow: 0 0 0 3px var(--method-soft); }
+  h1 {
+    font-size: clamp(29px, 5.2vw, 44px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; text-wrap: balance;
+    background: linear-gradient(175deg, var(--ink) 34%, var(--ink-soft) 130%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .dek { color: var(--ink-soft); font-size: 16.5px; max-width: 680px; margin-top: 15px; }
+
+  /* ---------- glance grid ---------- */
+  .glance { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 30px; }
+  .g-tile {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 15px 16px; box-shadow: var(--shadow);
+  }
+  .g-tile .k { font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+  .g-tile .v { font-size: 15px; font-weight: 700; margin-top: 5px; letter-spacing: -.01em; }
+  .g-tile .v small { display: block; font-size: 11.5px; font-weight: 500; color: var(--ink-soft); letter-spacing: 0; margin-top: 2px; }
+  .g-tile.wide { grid-column: span 2; }
+
+  /* ---------- section scaffolding ---------- */
+  section { padding: 50px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 13px; margin-bottom: 6px; flex-wrap: wrap; }
+  .sec-num { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; color: var(--method); }
+  .sec-head h2 { font-size: 22px; font-weight: 760; letter-spacing: -.015em; }
+  .sec-sub { color: var(--ink-soft); font-size: 14.5px; margin: 4px 0 22px; max-width: 740px; }
+
+  /* ---------- method spine ---------- */
+  .spine { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 13px; padding: 22px 24px; box-shadow: var(--shadow); }
+  .spine .lead { font-size: 16.5px; font-weight: 720; letter-spacing: -.01em; }
+  .spine p { color: var(--ink-soft); font-size: 14.5px; margin-top: 8px; max-width: 760px; }
+  .loop { display: flex; align-items: stretch; gap: 0; margin-top: 18px; flex-wrap: wrap; }
+  .loop .step { flex: 1; min-width: 92px; text-align: center; padding: 11px 6px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; }
+  .loop .step .s-n { font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: var(--method); letter-spacing: .1em; }
+  .loop .step .s-t { font-size: 12.5px; font-weight: 650; margin-top: 3px; }
+  .loop .arw { display: flex; align-items: center; color: var(--ink-faint); font-size: 15px; padding: 0 7px; }
+  .loop .step.mem { border-color: color-mix(in srgb, var(--method) 45%, transparent); background: var(--method-soft); }
+
+  /* ---------- competency profile table ---------- */
+  .cp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
+  table.cp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: var(--surface); }
+  table.cp th, table.cp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  table.cp thead th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-2); position: sticky; top: 0; }
+  table.cp tbody tr:last-child td { border-bottom: none; }
+  table.cp .code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--ink-soft); white-space: nowrap; }
+  table.cp .cu-title { font-weight: 650; color: var(--ink); }
+  table.cp .num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+  table.cp tfoot td { padding: 11px 14px; font-weight: 700; border-top: 2px solid var(--line); }
+  .type-pill { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .type-pill.core { color: var(--core); background: var(--method-soft); }
+  .type-pill.elective { color: var(--elective); background: var(--elective-soft); }
+
+  /* ---------- legend ---------- */
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 22px 0 4px; }
+  .lg { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-soft); }
+  .lg .sw { width: 11px; height: 11px; border-radius: 3px; }
+  .lg .sw.method { background: var(--method); }
+  .lg .sw.crew { background: var(--crew); }
+  .lg .sw.mentor { background: var(--mentor); }
+
+  /* ---------- phase / weeks ---------- */
+  .phase { padding: 30px 0 0; }
+  .phase-head { display: flex; align-items: baseline; gap: 12px; margin: 6px 0 14px; flex-wrap: wrap; }
+  .phase-tag { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--method); letter-spacing: .06em; }
+  .phase-head h3 { font-size: 18px; font-weight: 740; letter-spacing: -.014em; }
+  .phase-head .wk { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint); }
+  .weeks { display: flex; flex-direction: column; gap: 10px; }
+  .week { display: grid; grid-template-columns: 44px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 14px 18px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+  .week::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; }
+  .week.method::before { background: var(--method); }
+  .week.crew::before { background: var(--crew); }
+  .week.mentor::before { background: var(--mentor); }
+  .w-rail { display: flex; flex-direction: column; align-items: center; gap: 7px; padding-top: 1px; }
+  .w-num { font-family: ui-monospace, Menlo, monospace; font-size: 18px; font-weight: 700; line-height: 1; }
+  .w-num .lbl { display: block; font-size: 8px; letter-spacing: .1em; color: var(--ink-faint); margin-top: 3px; text-align: center; }
+  .w-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .week.method .w-dot { background: var(--method); }
+  .week.crew .w-dot { background: var(--crew); }
+  .week.mentor .w-dot { background: var(--mentor); }
+  .w-top { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+  .w-top h4 { font-size: 15px; font-weight: 700; letter-spacing: -.01em; }
+  .w-cu { font-family: ui-monospace, Menlo, monospace; font-size: 10px; color: var(--ink-faint); border: 1px solid var(--line); border-radius: 5px; padding: 1px 6px; }
+  .w-desc { font-size: 13.3px; color: var(--ink-soft); }
+  .w-ship { display: inline-flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: var(--ink); font-weight: 600; }
+  .w-ship::before { content: "▸"; color: var(--ship); font-weight: 700; }
+
+  /* ---------- CU detail cards ---------- */
+  .cu-grid { display: flex; flex-direction: column; gap: 12px; }
+  .cu { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; box-shadow: var(--shadow); }
+  .cu-head { display: flex; align-items: center; gap: 11px; flex-wrap: wrap; margin-bottom: 4px; }
+  .cu-head .code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; color: var(--method); font-weight: 600; }
+  .cu-head h4 { font-size: 16px; font-weight: 730; letter-spacing: -.012em; flex: 1; min-width: 180px; }
+  .cu-head .hrs { font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .cu-desc { color: var(--ink-soft); font-size: 13.5px; margin-bottom: 13px; }
+  .cu-cols { display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; }
+  .cu-block .cb-lbl { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+  .cu-block ul { list-style: none; display: flex; flex-direction: column; gap: 3px; }
+  .cu-block li { font-size: 13px; color: var(--ink-soft); padding-left: 14px; position: relative; }
+  .cu-block li::before { content: ""; position: absolute; left: 2px; top: 8px; width: 4px; height: 4px; border-radius: 50%; background: var(--ink-faint); }
+  .cu-assess { margin-top: 13px; padding-top: 12px; border-top: 1px dashed var(--line); font-size: 13px; }
+  .cu-assess b { color: var(--ship); font-weight: 650; }
+
+  /* ---------- note blocks ---------- */
+  .note { background: var(--surface); border: 1px solid var(--line); border-radius: 13px; padding: 22px 24px; box-shadow: var(--shadow); }
+  .note.flag { border-left: 3px solid var(--crew); }
+  .note h3 { font-size: 16px; font-weight: 720; margin-bottom: 8px; }
+  .note p { color: var(--ink-soft); font-size: 14px; max-width: 780px; }
+  .note p + p { margin-top: 9px; }
+  .note b { color: var(--ink); font-weight: 650; }
+
+  footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint); }
+
+  @media (max-width: 720px) {
+    .glance { grid-template-columns: repeat(2, 1fr); }
+    .g-tile.wide { grid-column: span 2; }
+    .cu-cols { grid-template-columns: 1fr; gap: 12px; }
+    .loop .step { min-width: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span>Todak Academy · Studios · Fusion</span>
+    <span class="badge">AI Creator Program · Game Track</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <header>
+    <div class="eyebrow"><span class="dot"></span> Module Specification · Draft v1</div>
+    <h1>AI-Assisted Game Development</h1>
+    <p class="dek">A 12-week, competency-based module that takes a beginner from &ldquo;what is an AI agent?&rdquo; to a real game published on the store — built on the way Todak actually works: Claude Code paired with a memory that never forgets the project.</p>
+
+    <div class="glance">
+      <div class="g-tile"><div class="k">Duration</div><div class="v">12 weeks<small>3 months · blended</small></div></div>
+      <div class="g-tile"><div class="k">Training hours</div><div class="v">~240 hrs<small>indicative, guided</small></div></div>
+      <div class="g-tile"><div class="k">Format</div><div class="v">CoCU<small>JPK competency units</small></div></div>
+      <div class="g-tile"><div class="k">Graduate ships</div><div class="v">1 game<small>live on store</small></div></div>
+      <div class="g-tile wide"><div class="k">Target qualification</div><div class="v">Micro-credential cluster → SKM Level 3<small>Game / Interactive Multimedia · accreditation-ready, pending JPK</small></div></div>
+      <div class="g-tile"><div class="k">Assessment</div><div class="v">Competency<small>Competent / Not Yet</small></div></div>
+      <div class="g-tile"><div class="k">Entry</div><div class="v">Open<small>no coding needed</small></div></div>
+    </div>
+  </header>
+
+  <!-- 01 · METHOD -->
+  <section id="method">
+    <div class="sec-head"><span class="sec-num">01</span><h2>The method is the spine</h2></div>
+    <p class="sec-sub">This is what separates the module from any other bootcamp. It runs through every competency unit below.</p>
+    <div class="spine">
+      <div class="lead">Claude Code + a persistent &ldquo;project brain.&rdquo;</div>
+      <p>Each learner works with <b>Claude Code</b> as their AI pair, backed by their own <b>pgVector project memory</b> — a store that holds the game design, the code conventions, and every decision and bug they hit. The AI never loses the thread of the project, which is the only reason a beginner can ship in three months. Learners don&rsquo;t just prompt — they run the loop, every session:</p>
+      <div class="loop">
+        <div class="step"><div class="s-n">01</div><div class="s-t">Prompt</div></div>
+        <div class="arw">→</div>
+        <div class="step"><div class="s-n">02</div><div class="s-t">Plan</div></div>
+        <div class="arw">→</div>
+        <div class="step"><div class="s-n">03</div><div class="s-t">Build</div></div>
+        <div class="arw">→</div>
+        <div class="step"><div class="s-n">04</div><div class="s-t">Verify</div></div>
+        <div class="arw">→</div>
+        <div class="step mem"><div class="s-n">05</div><div class="s-t">Save to memory</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 · COMPETENCY PROFILE -->
+  <section id="profile">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Competency profile</h2></div>
+    <p class="sec-sub">Eight competency units in JPK CoCU structure. Core units are required; the 3D pathway is elective, so a learner can ship a 2D game and still complete the module.</p>
+    <div class="cp-scroll">
+      <table class="cp">
+        <thead>
+          <tr><th>Code</th><th>Competency unit</th><th>Type</th><th>Weeks</th><th class="num">Hours</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="code">AGD·C01</td><td class="cu-title">AI-Assisted Development Foundation</td><td><span class="type-pill core">Core</span></td><td>1</td><td class="num">24</td></tr>
+          <tr><td class="code">AGD·C02</td><td class="cu-title">Game Design Fundamentals</td><td><span class="type-pill core">Core</span></td><td>2</td><td class="num">20</td></tr>
+          <tr><td class="code">AGD·C03</td><td class="cu-title">Game Programming with Godot</td><td><span class="type-pill core">Core</span></td><td>3–4</td><td class="num">40</td></tr>
+          <tr><td class="code">AGD·C04</td><td class="cu-title">Game Application Development &amp; Build</td><td><span class="type-pill core">Core</span></td><td>5–6</td><td class="num">36</td></tr>
+          <tr><td class="code">AGD·E05</td><td class="cu-title">3D Asset Creation Pipeline</td><td><span class="type-pill elective">Elective · 3D</span></td><td>7</td><td class="num">28</td></tr>
+          <tr><td class="code">AGD·E06</td><td class="cu-title">Character Rigging &amp; Animation</td><td><span class="type-pill elective">Elective · 3D</span></td><td>8–9</td><td class="num">32</td></tr>
+          <tr><td class="code">AGD·C07</td><td class="cu-title">Game Production — Vertical Slice</td><td><span class="type-pill core">Core</span></td><td>10–11</td><td class="num">40</td></tr>
+          <tr><td class="code">AGD·C08</td><td class="cu-title">Game Publishing &amp; Distribution</td><td><span class="type-pill core">Core</span></td><td>12</td><td class="num">20</td></tr>
+        </tbody>
+        <tfoot>
+          <tr><td colspan="4">Total indicative training hours</td><td class="num">240</td></tr>
+        </tfoot>
+      </table>
+    </div>
+  </section>
+
+  <!-- 03 · DELIVERY PLAN -->
+  <section id="journey">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Delivery plan — week by week</h2></div>
+    <p class="sec-sub">How the units are taught across the term. Colour shows who leads each week.</p>
+    <div class="legend">
+      <span class="lg"><span class="sw method"></span> Todak method — AI + self-driven</span>
+      <span class="lg"><span class="sw crew"></span> Studios crew (Fareez &amp; team)</span>
+      <span class="lg"><span class="sw mentor"></span> Mentor-led production</span>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">PHASE 1</span><h3>Think in AI, design in games</h3><span class="wk">Weeks 1–3 · Academy</span></div>
+      <div class="weeks">
+        <div class="week method"><div class="w-rail"><div class="w-num">01<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>How AI actually works — our way of using it</h4><span class="w-cu">AGD·C01</span></div><div class="w-desc">Plain-language LLM / agent / agentic concepts, hands-on. Set up Claude Code + the pgVector project brain and run the first loop.</div><div class="w-ship">Working AI setup + initialised project brain</div></div></div>
+        <div class="week crew"><div class="w-rail"><div class="w-num">02<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>What makes a game fun</h4><span class="w-cu">AGD·C02</span></div><div class="w-desc">Core loop, feedback, reward; genres and why scope matters. Study real games, pick a concept, write a 1-page design doc.</div><div class="w-ship">1-page GDD, saved to the project brain</div></div></div>
+        <div class="week method"><div class="w-rail"><div class="w-num">03<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>Prompting with memory + first Godot steps</h4><span class="w-cu">AGD·C03</span></div><div class="w-desc">Prompt Claude Code against the project brain; learn Godot nodes &amp; scenes; build a Pong clone the Todak way.</div><div class="w-ship">Playable Pong clone</div></div></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">PHASE 2</span><h3>Build in Godot — prototype to app</h3><span class="wk">Weeks 4–6 · Fusion</span></div>
+      <div class="weeks">
+        <div class="week method"><div class="w-rail"><div class="w-num">04<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>Game logic, the AI-pair way</h4><span class="w-cu">AGD·C03</span></div><div class="w-desc">GDScript essentials — signals, input, physics, collision — learned by building. Debugging as a real skill.</div><div class="w-ship">2D platformer — move, jump, die, win</div></div></div>
+        <div class="week mentor"><div class="w-rail"><div class="w-num">05<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>From prototype to app</h4><span class="w-cu">AGD·C04</span></div><div class="w-desc">Structure the project like real software: state machine, scene management, save/load, settings, menus, and git.</div><div class="w-ship">Multi-level game with full menu + save</div></div></div>
+        <div class="week method"><div class="w-rail"><div class="w-num">06<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>First real build — ship to a phone</h4><span class="w-cu">AGD·C04</span></div><div class="w-desc">The export pipeline to Android, testing on a real device, fixing with memory of past bugs.</div><div class="w-ship">Your game running on your own phone</div></div></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">PHASE 3</span><h3>Make it 3D — creation &amp; rigging</h3><span class="wk">Weeks 7–9 · Fusion · elective</span></div>
+      <div class="weeks">
+        <div class="week crew"><div class="w-rail"><div class="w-num">07<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>3D creation &amp; the AI asset pipeline</h4><span class="w-cu">AGD·E05</span></div><div class="w-desc">AI image → 3D model, Blender cleanup, style consistency, import to Godot. Runs on Todak&rsquo;s own GPU.</div><div class="w-ship">First AI-made 3D asset, cleaned &amp; in-engine</div></div></div>
+        <div class="week crew"><div class="w-rail"><div class="w-num">08<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>Rigging &amp; animation</h4><span class="w-cu">AGD·E06</span></div><div class="w-desc">Armatures &amp; skeletons, weight-painting basics, a character rig, animation states, clean export to Godot.</div><div class="w-ship">A rigged character animating in-game</div></div></div>
+        <div class="week mentor"><div class="w-rail"><div class="w-num">09<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>Assets into gameplay</h4><span class="w-cu">AGD·E06</span></div><div class="w-desc">Wire the character into a real scene: animation state machine, camera, basic 3D movement. Decide 2D vs simple-3D for the ship.</div><div class="w-ship">Playable micro-scene with your character</div></div></div>
+      </div>
+    </div>
+
+    <div class="phase">
+      <div class="phase-head"><span class="phase-tag">PHASE 4</span><h3>Slice &amp; ship</h3><span class="wk">Weeks 10–12 · Studios</span></div>
+      <div class="weeks">
+        <div class="week mentor"><div class="w-rail"><div class="w-num">10<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>Vertical slice</h4><span class="w-cu">AGD·C07</span></div><div class="w-desc">Lock scope to one core loop, build it end-to-end, add game feel (juice, particles, transitions) and audio.</div><div class="w-ship">Vertical slice — one polished loop, start to end</div></div></div>
+        <div class="week method"><div class="w-rail"><div class="w-num">11<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>Polish &amp; pre-publish</h4><span class="w-cu">AGD·C07</span></div><div class="w-desc">Bug bash, optimization, and the store listing kit — icon, screenshots, trailer, copy — plus AI disclosure and age rating.</div><div class="w-ship">Release candidate + full listing kit</div></div></div>
+        <div class="week crew"><div class="w-rail"><div class="w-num">12<span class="lbl">WK</span></div><span class="w-dot"></span></div><div><div class="w-top"><h4>Publish — through Todak Studios</h4><span class="w-cu">AGD·C08</span></div><div class="w-desc">Walk the publishing runbook, submit through the Todak Studios developer account, pass the quality-gate check.</div><div class="w-ship">🚀 A published game with the learner&rsquo;s name on it</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 · CU DETAIL -->
+  <section id="units">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Competency units in detail</h2></div>
+    <p class="sec-sub">Each unit follows CoCU structure: work activities, related knowledge and skills, and the evidence a learner must produce to be judged Competent.</p>
+    <div class="cu-grid">
+
+      <div class="cu">
+        <div class="cu-head"><span class="code">AGD·C01</span><h4>AI-Assisted Development Foundation</h4><span class="hrs">24 hrs · Core</span></div>
+        <div class="cu-desc">Operate the Todak AI method — Claude Code with a persistent project memory — to plan, build, verify and document work.</div>
+        <div class="cu-cols">
+          <div class="cu-block"><div class="cb-lbl">Work activities</div><ul><li>Set up the AI development environment (Claude Code + pgVector memory)</li><li>Apply the prompt → plan → build → verify → save loop</li><li>Maintain project memory: design, conventions, decisions, defects</li></ul></div>
+          <div class="cu-block"><div class="cb-lbl">Related knowledge &amp; skills</div><ul><li>What an LLM, agent and agentic system is; context &amp; memory</li><li>Structuring a prompt; recalling and verifying against memory</li><li>Version-control basics</li></ul></div>
+        </div>
+        <div class="cu-assess"><b>Evidence:</b> a working environment and one memory-driven task completed and documented in the project brain.</div>
+      </div>
+
+      <div class="cu">
+        <div class="cu-head"><span class="code">AGD·C02</span><h4>Game Design Fundamentals</h4><span class="hrs">20 hrs · Core</span></div>
+        <div class="cu-desc">Analyse game types and produce a scoped, buildable game design document.</div>
+        <div class="cu-cols">
+          <div class="cu-block"><div class="cb-lbl">Work activities</div><ul><li>Analyse genres, core loops and player motivation</li><li>Evaluate scope and feasibility for a 12-week build</li><li>Define a concept and produce a 1-page GDD</li></ul></div>
+          <div class="cu-block"><div class="cb-lbl">Related knowledge &amp; skills</div><ul><li>Core loop, feedback and reward; genre conventions</li><li>Scope discipline — why small games win</li><li>Design-document writing</li></ul></div>
+        </div>
+        <div class="cu-assess"><b>Evidence:</b> an approved 1-page game design document.</div>
+      </div>
+
+      <div class="cu">
+        <div class="cu-head"><span class="code">AGD·C03</span><h4>Game Programming with Godot</h4><span class="hrs">40 hrs · Core</span></div>
+        <div class="cu-desc">Build 2D game logic in Godot 4 with GDScript, AI-assisted throughout.</div>
+        <div class="cu-cols">
+          <div class="cu-block"><div class="cb-lbl">Work activities</div><ul><li>Use the Godot editor: nodes and the scene system</li><li>Write GDScript: variables, signals, input, physics, collision</li><li>Implement sprites and animation; debug systematically</li></ul></div>
+          <div class="cu-block"><div class="cb-lbl">Related knowledge &amp; skills</div><ul><li>Programming logic fundamentals</li><li>Godot architecture; event-driven signals</li><li>Reading errors and verifying AI-assisted fixes</li></ul></div>
+        </div>
+        <div class="cu-assess"><b>Evidence:</b> a playable 2D platformer with lose and win states.</div>
+      </div>
+
+      <div class="cu">
+        <div class="cu-head"><span class="code">AGD·C04</span><h4>Game Application Development &amp; Build</h4><span class="hrs">36 hrs · Core</span></div>
+        <div class="cu-desc">Structure a game as a real application and produce a build that runs on a device.</div>
+        <div class="cu-cols">
+          <div class="cu-block"><div class="cb-lbl">Work activities</div><ul><li>Implement state machine, scene management, save/load, settings, UI/HUD</li><li>Apply version control to the project</li><li>Export to Android and test on a physical device</li></ul></div>
+          <div class="cu-block"><div class="cb-lbl">Related knowledge &amp; skills</div><ul><li>Application architecture and game state</li><li>Persistence and configuration</li><li>Build &amp; export pipeline; on-device debugging</li></ul></div>
+        </div>
+        <div class="cu-assess"><b>Evidence:</b> a multi-level game with menu and save, running from an installable build.</div>
+      </div>
+
+      <div class="cu">
+        <div class="cu-head"><span class="code">AGD·E05</span><h4>3D Asset Creation Pipeline</h4><span class="hrs">28 hrs · Elective (3D)</span></div>
+        <div class="cu-desc">Produce game-ready 3D assets using an AI-assisted pipeline on Todak&rsquo;s own hardware.</div>
+        <div class="cu-cols">
+          <div class="cu-block"><div class="cb-lbl">Work activities</div><ul><li>Generate a 3D model from AI and evaluate output</li><li>Clean up and retopologise in Blender</li><li>Maintain art-style consistency; import into Godot</li></ul></div>
+          <div class="cu-block"><div class="cb-lbl">Related knowledge &amp; skills</div><ul><li>3D asset fundamentals; mesh &amp; texture</li><li>AI generation workflow and its limits</li><li>Blender cleanup; engine import settings</li></ul></div>
+        </div>
+        <div class="cu-assess"><b>Evidence:</b> one AI-generated 3D asset, cleaned and running in-engine.</div>
+      </div>
+
+      <div class="cu">
+        <div class="cu-head"><span class="code">AGD·E06</span><h4>Character Rigging &amp; Animation</h4><span class="hrs">32 hrs · Elective (3D)</span></div>
+        <div class="cu-desc">Rig and animate a 3D character and integrate it into the game engine.</div>
+        <div class="cu-cols">
+          <div class="cu-block"><div class="cb-lbl">Work activities</div><ul><li>Build an armature/skeleton and apply weight-painting</li><li>Create animation states — idle, walk, jump</li><li>Export the rigged character cleanly to Godot</li></ul></div>
+          <div class="cu-block"><div class="cb-lbl">Related knowledge &amp; skills</div><ul><li>Rigging concepts; bones and weights</li><li>Animation state machines</li><li>Skeletal export and engine integration</li></ul></div>
+        </div>
+        <div class="cu-assess"><b>Evidence:</b> a rigged character animating inside a Godot scene.</div>
+      </div>
+
+      <div class="cu">
+        <div class="cu-head"><span class="code">AGD·C07</span><h4>Game Production — Vertical Slice</h4><span class="hrs">40 hrs · Core</span></div>
+        <div class="cu-desc">Produce a polished, end-to-end vertical slice ready for review.</div>
+        <div class="cu-cols">
+          <div class="cu-block"><div class="cb-lbl">Work activities</div><ul><li>Lock scope to one core loop and build it fully</li><li>Apply game feel: juice, particles, transitions</li><li>Integrate audio and SFX; iterate via weekly builds</li></ul></div>
+          <div class="cu-block"><div class="cb-lbl">Related knowledge &amp; skills</div><ul><li>Production discipline and scope control</li><li>Game feel and polish techniques</li><li>Playtesting and iteration</li></ul></div>
+        </div>
+        <div class="cu-assess"><b>Evidence:</b> a polished vertical slice / release candidate.</div>
+      </div>
+
+      <div class="cu">
+        <div class="cu-head"><span class="code">AGD·C08</span><h4>Game Publishing &amp; Distribution</h4><span class="hrs">20 hrs · Core</span></div>
+        <div class="cu-desc">Prepare and publish a game to a distribution platform in compliance with platform and AI-disclosure policy.</div>
+        <div class="cu-cols">
+          <div class="cu-block"><div class="cb-lbl">Work activities</div><ul><li>Prepare the store listing kit — icon, screenshots, trailer, copy</li><li>Complete AI-content disclosure and age rating</li><li>Submit via the publisher account and verify the game is live</li></ul></div>
+          <div class="cu-block"><div class="cb-lbl">Related knowledge &amp; skills</div><ul><li>Store policies and submission flow</li><li>AI-disclosure and compliance requirements</li><li>Release readiness and quality-gate criteria</li></ul></div>
+        </div>
+        <div class="cu-assess"><b>Evidence:</b> a game published (or quality-gate-ready) with a complete store listing.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 05 · ASSESSMENT & CERT -->
+  <section id="assessment">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Assessment &amp; certification</h2></div>
+    <div class="note">
+      <h3>Competency-based, evidenced by a real game</h3>
+      <p>Every unit is judged <b>Competent / Not Yet Competent</b> against the evidence above — there are no written exams. The learner&rsquo;s <b>portfolio</b> (their project memory, builds and assets) is the running record, and the <b>published game</b> is the capstone evidence, gated by the Todak Studios quality review.</p>
+      <p>Learners who complete all Core units earn the module credential; the 3D pathway (Elective units E05–E06) is stacked on top for those who take the 3D route. Units are designed to be individually recognisable as <b>stackable micro-credentials</b>.</p>
+    </div>
+  </section>
+
+  <!-- 06 · TVET ALIGNMENT -->
+  <section id="tvet">
+    <div class="sec-head"><span class="sec-num">06</span><h2>TVET alignment</h2></div>
+    <div class="note flag">
+      <h3>Structured to JPK CoCU — accreditation-ready</h3>
+      <p>This module is written in the <b>Curriculum of Competency Unit (CoCU)</b> structure used by Malaysia&rsquo;s Department of Skills Development (JPK/DSD): competency units split into work activities, related knowledge and skills, indicative training hours, and competency-based assessment. It is positioned as a <b>stackable micro-credential cluster toward Sijil Kemahiran Malaysia (SKM) Level 3</b> in a Game / Interactive Multimedia occupational area, leveraging Todak Academy&rsquo;s existing JPK accredited-centre status.</p>
+      <p><b>Status:</b> this is a draft specification. Unit codes, hour allocations and the SKM mapping are indicative and become official only on JPK accreditation. It is not yet an accredited NOSS, and the accreditation pathway (and any MARA / PTPK / HRD Corp funding) is a separate step.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Todak AI Creator Program · Game Track · Module spec v1</span>
+    <span>Draft for discussion · Sept 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
