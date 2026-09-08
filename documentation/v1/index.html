@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Game Track Blueprint v1 — Todak AI Creator Program</title>
+<meta name="description" content="Working plan for the Game Track: three games per student with Claude Code and the Todak Game Kit, the classroom and home machine stack, publishing through Todak Studios from day one, and how every prompt is recorded.">
+<style>
+  :root {
+    --bg: #e9ebee;
+    --surface: #f6f7f8;
+    --surface-2: #ffffff;
+    --line: #d3d8dd;
+    --line-soft: #e0e4e8;
+    --ink: #14181c;
+    --ink-soft: #545c64;
+    --ink-faint: #828d97;
+    --method: #37627f;
+    --method-soft: rgba(55,98,127,.11);
+    --crew: #9a6a1c;
+    --crew-soft: rgba(154,106,28,.13);
+    --ship: #2c8a66;
+    --ship-soft: rgba(44,138,102,.13);
+    --elective: #7a5aa0;
+    --elective-soft: rgba(122,90,160,.13);
+    --shadow: 0 1px 2px rgba(20,24,28,.05), 0 8px 24px rgba(20,24,28,.05);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+      --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+      --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+      --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+      --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+      --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+    --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+    --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+    --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+    --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+    --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--method); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--method); outline-offset: 2px; }
+
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint);
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
+  .topbar .badge { color: var(--method); }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--method); }
+
+  header { padding: 48px 0 26px; }
+  .eyebrow {
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--crew); box-shadow: 0 0 0 3px var(--crew-soft); }
+  h1 { font-size: clamp(29px, 5.2vw, 44px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; text-wrap: balance; }
+  .dek { color: var(--ink-soft); font-size: 16.5px; max-width: 680px; margin-top: 15px; }
+
+  /* short version */
+  .answers { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--crew); border-radius: 13px; padding: 20px 24px; box-shadow: var(--shadow); margin-top: 28px; }
+  .answers .k-head { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+  .answers ol { list-style: none; display: grid; gap: 11px; }
+  .answers li { display: grid; grid-template-columns: 110px 1fr; gap: 14px; font-size: 14.5px; }
+  .answers .k { font-weight: 750; color: var(--method); letter-spacing: -.01em; }
+  @media (max-width: 560px) { .answers li { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* sections */
+  section { padding: 46px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 13px; margin-bottom: 6px; flex-wrap: wrap; }
+  .sec-num { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; color: var(--method); }
+  .sec-head h2 { font-size: 22px; font-weight: 760; letter-spacing: -.015em; }
+  .sec-sub { color: var(--ink-soft); font-size: 14.5px; margin: 4px 0 20px; max-width: 740px; }
+  h3 { font-size: 15.5px; font-weight: 700; margin: 24px 0 8px; letter-spacing: -.01em; }
+  p { font-size: 14.5px; margin-bottom: 12px; max-width: 740px; }
+  ul, ol.plain { padding-left: 20px; font-size: 14.5px; max-width: 740px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--ink-faint); }
+  b, strong { font-weight: 700; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--surface-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px; }
+  pre { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; padding: 13px 15px; overflow-x: auto; margin: 0 0 14px; max-width: 740px; }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+  /* tables (same look as the module spec) */
+  .cp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin: 6px 0 16px; }
+  table.cp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: var(--surface); }
+  table.cp th, table.cp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  table.cp thead th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-2); }
+  table.cp tbody tr:last-child td { border-bottom: none; }
+  table.cp .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .yes { color: var(--ship); font-weight: 700; }
+  .no { color: var(--ink-faint); }
+  .opt { color: var(--crew); font-weight: 700; }
+  .type-pill { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .type-pill.action { color: var(--method); background: var(--method-soft); }
+  .type-pill.puzzle { color: var(--elective); background: var(--elective-soft); }
+  .type-pill.story { color: var(--crew); background: var(--crew-soft); }
+  .type-pill.sim { color: var(--ship); background: var(--ship-soft); }
+
+  /* callouts */
+  .note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0 16px; max-width: 760px; font-size: 14.5px; }
+  .note.crew { border-left-color: var(--crew); }
+  .note.ship { border-left-color: var(--ship); }
+  .note p { margin: 0; }
+
+  /* compare */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+  .compare > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .compare h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .compare .pick { border-color: color-mix(in srgb, var(--method) 55%, transparent); background: var(--method-soft); }
+  .compare .pick h4 { color: var(--method); }
+  .compare ul { margin: 0; font-size: 14px; }
+
+  /* week strip */
+  .weeks { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 6px 0 8px; }
+  .weeks div { height: 44px; border-radius: 7px; display: grid; place-items: center; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 600; background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
+  .weeks .g1 { background: var(--method-soft); border-color: var(--method); color: var(--ink); }
+  .weeks .g2 { background: var(--elective-soft); border-color: var(--elective); color: var(--ink); }
+  .weeks .g3 { background: var(--crew-soft); border-color: var(--crew); color: var(--ink); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 4px 0 16px; }
+  .lg { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-soft); }
+  .lg .sw { width: 11px; height: 11px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
+  .lg .sw.g1 { background: var(--method-soft); border-color: var(--method); }
+  .lg .sw.g2 { background: var(--elective-soft); border-color: var(--elective); }
+  .lg .sw.g3 { background: var(--crew-soft); border-color: var(--crew); }
+
+  /* flow */
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; margin: 6px 0 18px; }
+  .flow .box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; box-shadow: var(--shadow); }
+  .flow .box b { display: block; margin-bottom: 4px; }
+  .flow .box small { display: block; color: var(--ink-soft); font-size: 12.5px; line-height: 1.45; }
+  .flow .arw { display: grid; place-items: center; color: var(--ink-faint); font-size: 18px; }
+  .flow .box.mem { border-color: color-mix(in srgb, var(--method) 45%, transparent); background: var(--method-soft); }
+  @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } .flow .arw { transform: rotate(90deg); } }
+
+  /* decisions */
+  .decisions { list-style: none; display: grid; gap: 9px; margin-top: 6px; }
+  .decisions li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; font-size: 14.5px; box-shadow: var(--shadow); }
+  .decisions .n { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--crew); }
+  .decisions .rec { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ship); background: var(--ship-soft); padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+  .decisions .done { color: var(--method); background: var(--method-soft); }
+
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span><a href="/">← Module spec</a></span>
+    <span class="badge">Documentation · v1 · Working plan</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span><span>Game Track · Blueprint v1 · 8 Sep 2026 · Draft for Neo &amp; Lan</span></div>
+    <h1>Three games, one kit, every prompt on record</h1>
+    <p class="dek">How students build and publish three games with Claude Code, what the classroom and home machines need, how publishing runs through Todak Studios from day one, and how we capture each student's prompting from the first lesson to the final game.</p>
+
+    <div class="answers">
+      <div class="k-head">Short version</div>
+      <ol>
+        <li><span class="k">Tool</span><span>Use Claude Code itself, not a platform we build. Ship a <b>Todak Game Kit</b> that installs into Claude Code in one command and carries the whole pipeline. Our own platform is a later phase, only if cohort 1 proves students need a browser-only option.</span></li>
+        <li><span class="k">Three games</span><span>Two small games, then one final game. Two weeks for game 1, three for game 2, five for the capstone. Each student picks their genres from a menu, one from each family. Confirmed 8 Sep.</span></li>
+        <li><span class="k">Publishing</span><span>Connected to the Todak Studios store accounts from the first lesson, through the kit. Every game goes live on the web the day it is finished. Android and PC from game 2. Google Play and iPhone TestFlight for the capstone. App Store release optional.</span></li>
+        <li><span class="k">Machines</span><span>Classroom is the Academy's high-spec Windows PCs, which cover everything except iPhone packaging. One Mac mini build farm does iPhone builds and store packaging for everyone. At home, any 16 GB laptop.</span></li>
+        <li><span class="k">Recording</span><span>Claude Code's built-in telemetry ships every prompt, reply, tool call, token count and line of code to a server we control, tagged with the student's login and session. Add the kit's own hooks and Git history and the lecturer gets a per-student <b>Prompt Journey</b>.</span></li>
+      </ol>
+    </div>
+  </header>
+
+  <section id="changes">
+    <div class="sec-head"><span class="sec-num">01</span><h2>What changes from the module spec</h2></div>
+    <p class="sec-sub">The <a href="/">module spec</a> stays the spine: 12 weeks, 8 competency units, Godot 4, Claude Code with persistent project memory, competency-based assessment. This plan changes four things.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Item</th><th>Module spec today</th><th>Blueprint v1</th></tr></thead>
+      <tbody>
+        <tr><td>Graduate outcome</td><td>1 game published</td><td>3 games in 3 genre families, all playable on the web, capstone on Google Play and TestFlight</td></tr>
+        <tr><td>How students use AI</td><td>Claude Code + project memory, set up in week 1</td><td>Same, delivered as an installable <b>Game Kit</b> so lesson 1 is already the full pipeline, not a setup session</td></tr>
+        <tr><td>Publishing</td><td>Todak Studios accounts, handled in week 12</td><td>Studios accounts wired into the kit from day one; each game is registered with the publisher desk the day it is started</td></tr>
+        <tr><td>Evidence of learning</td><td>Portfolio, builds, published game</td><td>Plus the full prompt record per student, which doubles as assessment evidence</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="tool">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Claude Code direct, or a platform built on it?</h2></div>
+    <p class="sec-sub">Recommendation: Claude Code direct for cohort 1, with the kit carrying everything a platform would have carried. Build the platform later only if the evidence says students need it.</p>
+    <div class="compare">
+      <div class="pick">
+        <h4>Claude Code + Game Kit (recommended)</h4>
+        <ul>
+          <li>Weeks to build, not months. The kit is skills, hooks, tool connections and templates in one package.</li>
+          <li>Students graduate with the real industry tool on their CV, not a wrapper only we use.</li>
+          <li>Claude Code improves every month for free. A wrapper always trails it.</li>
+          <li>Runs on the lab PC or the student's own laptop, in class or at home.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Our own platform (phase 2, if needed)</h4>
+        <ul>
+          <li>Browser-only. Works on a Chromebook or a weak laptop.</li>
+          <li>Recording happens on our server, impossible for a student to switch off.</li>
+          <li>One bill for AI use, metered per student, instead of seats.</li>
+          <li>Months of work, and it would still sit on Claude's agent toolkit, so the kit is not wasted.</li>
+        </ul>
+      </div>
+    </div>
+    <h3>The GPT-6 Astra question</h3>
+    <p>OpenAI released GPT-6 Astra on 3 September 2026. It is strong at game creation and can host web games from a prompt inside ChatGPT, and OpenAI's coding tool Codex supports it. So the AI tool is not our moat and never will be.</p>
+    <p>The moat is what sits around the tool: the pipeline (genre templates, asset services, the build farm, the showcase), the project memory, the Studios publishing lane, and the recorded prompt journey. The kit's instructions are written in the cross-tool format that Codex, Gemini and Cursor also read, so adding a second tool later is cheap. Cohort 1 standardises on Claude Code because its plugin, hook and telemetry support is the most complete for recording. A small "Codex lane" with two or three volunteers in cohort 1 would show how much of the kit carries over.</p>
+  </section>
+
+  <section id="kit">
+    <div class="sec-head"><span class="sec-num">03</span><h2>What is in the Game Kit</h2></div>
+    <p class="sec-sub">One command installs it into Claude Code. From then on the student types plain requests and the kit does the plumbing.</p>
+    <ul>
+      <li><b>Start a game.</b> "New endless runner called Sky Dash" scaffolds a Godot 4 project from the genre template, attaches the student's project memory, and registers the game with the Studios publisher desk (name, id, placeholder icon, privacy page).</li>
+      <li><b>Project memory.</b> The persistent brain already in the module spec: design decisions, code conventions, bugs, all remembered across 12 weeks.</li>
+      <li><b>Assets.</b> Sprites, tilesets, 3D models, rigs, music and sound effects through Academy-hosted tools (the same image-to-3D, rigging and voice pipeline Todak already runs in production). Students never hold raw API keys. Every generation is logged and metered.</li>
+      <li><b>Build and publish.</b> "Build for web" or "push to Android testing" sends the job to the build farm and returns a link. No Xcode, no Android SDK on the student's machine.</li>
+      <li><b>Guard rails.</b> Hooks that log every prompt, remind Claude which week and which game the student is on, and block destructive commands.</li>
+      <li><b>Helpers.</b> A playtester agent that runs the game headless and reports what broke, and a reviewer that checks the build against the store checklist before publishing.</li>
+    </ul>
+    <div class="note"><p><b>Dry-run rule.</b> Before any student touches the kit, we build three reference games through the exact pipeline and publish them under Todak Studios. Those become the course's worked examples, and every step that breaks gets fixed in the kit first.</p></div>
+  </section>
+
+  <section id="genres">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Genre menu</h2></div>
+    <p class="sec-sub">Side scroller, isometric and shooter were examples. The student chooses one genre per slot from this menu. The only rules are the three at the bottom.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Slot</th><th>Scope</th><th>Choices</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Game 1</b><br><span class="mono" style="font-size:12px;color:var(--ink-soft)">weeks 2–3</span></td>
+          <td>2D, one core mechanic, one screen or endless. Web only.</td>
+          <td>
+            <span class="type-pill action">Action</span> side scroller · endless runner · one-button flyer · top-down arcade shooter · breakout or pong variant<br>
+            <span class="type-pill puzzle">Puzzle</span> match-3 · block push (Sokoban) · 2048-style · snake on a grid
+          </td>
+        </tr>
+        <tr>
+          <td><b>Game 2</b><br><span class="mono" style="font-size:12px;color:var(--ink-soft)">weeks 4–6</span></td>
+          <td>2D or 2.5D, several levels, saved progress, touch controls. Web, PC and Android testing.</td>
+          <td>
+            <span class="type-pill action">Action</span> platformer with 5 levels and a boss · isometric or top-down adventure · twin-stick shooter · rhythm game<br>
+            <span class="type-pill puzzle">Strategy</span> tower defense · small-grid turn-based tactics · card battler · roguelike with generated rooms<br>
+            <span class="type-pill story">Narrative</span> visual novel with branching choices · point-and-click mystery
+          </td>
+        </tr>
+        <tr>
+          <td><b>Game 3 · final</b><br><span class="mono" style="font-size:12px;color:var(--ink-soft)">weeks 7–11</span></td>
+          <td>3D, or an ambitious 2D with 3D assets. Store-ready: icon, listing, privacy page, touch controls. Web, PC, Google Play, TestFlight.</td>
+          <td>
+            <span class="type-pill action">Action</span> first-person shooter or arena · third-person action-adventure · kart or racing · 3D platformer<br>
+            <span class="type-pill sim">Simulation</span> survival and crafting on a small island · tycoon or shop sim · farming or city builder (small)<br>
+            <span class="type-pill story">Narrative</span> 3D walking-sim story · escape room<br>
+            <span class="type-pill puzzle">Mobile</span> hyper-casual with ads or in-app purchase · local two-player party game on one screen
+          </td>
+        </tr>
+      </tbody>
+    </table></div>
+    <h3>The three rules</h3>
+    <ol class="plain">
+      <li><b>Three families, not three of the same.</b> Action, Puzzle and Strategy, Narrative, Simulation. A student's three games come from at least two different families, and the final game changes camera or dimension from games 1 and 2 (2D to 3D, side view to top-down, and so on).</li>
+      <li><b>If it goes to a phone, it has touch controls.</b> A shooter on a phone is hard to make feel good. Runners, racers, puzzles and sims are naturally mobile. The mentor steers the capstone choice with that in mind.</li>
+      <li><b>Every game ships complete.</b> Title screen, how-to-play, win and lose states, sound, and a saved high score or progress. Small and finished beats big and broken.</li>
+    </ol>
+    <div class="note crew"><p>Not in 12 weeks: online multiplayer, open worlds, anything needing a server the student runs. Local two-player on one screen is fine.</p></div>
+  </section>
+
+  <section id="publishing">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Publishing through Todak Studios, from day one</h2></div>
+    <p class="sec-sub">Todak Studios already holds developer accounts on Steam, itch.io, Google Play and Apple. The kit connects to them on the first day instead of week 12, and the student never sees a store key.</p>
+    <div class="flow">
+      <div class="box"><b>Day 1 · register</b><small>The kit's "new game" command sends a publishing manifest to the Studios publisher desk: title, id, placeholder icon, privacy page.</small></div>
+      <div class="arw">→</div>
+      <div class="box mem"><b>Week 1 · publisher desk</b><small>An Academy admin creates the store records in one batch. Apple needs a person in the console for a new app, and Google Play's very first upload is by hand. Done once per game.</small></div>
+      <div class="arw">→</div>
+      <div class="box"><b>Every build after</b><small>Student says "publish". The build farm packages the game and pushes it with the Studios keys. A link comes back in the showcase.</small></div>
+    </div>
+    <div class="weeks">
+      <div>W1</div>
+      <div class="g1">W2</div><div class="g1">W3</div>
+      <div class="g2">W4</div><div class="g2">W5</div><div class="g2">W6</div>
+      <div class="g3">W7</div><div class="g3">W8</div><div class="g3">W9</div><div class="g3">W10</div><div class="g3">W11</div>
+      <div>W12</div>
+    </div>
+    <div class="legend">
+      <span class="lg"><span class="sw"></span>Foundations · final publishing week</span>
+      <span class="lg"><span class="sw g1"></span>Game 1 · small</span>
+      <span class="lg"><span class="sw g2"></span>Game 2 · small</span>
+      <span class="lg"><span class="sw g3"></span>Game 3 · final</span>
+    </div>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Where it is published</th><th>Game 1</th><th>Game 2</th><th>Game 3</th><th>Account</th><th>Fee</th></tr></thead>
+      <tbody>
+        <tr><td>Web · course showcase + itch.io</td><td class="yes">Yes</td><td class="yes">Yes</td><td class="yes">Yes</td><td>Todak Studios itch.io</td><td class="num">RM0</td></tr>
+        <tr><td>PC · Windows and Mac downloads on itch.io</td><td class="no">–</td><td class="yes">Yes</td><td class="yes">Yes</td><td>Todak Studios itch.io</td><td class="num">RM0</td></tr>
+        <tr><td>Android · Play internal testing</td><td class="no">–</td><td class="yes">Yes</td><td class="yes">Yes</td><td>Todak Studios Play (organisation account, no 12-tester wait)</td><td class="num">RM0</td></tr>
+        <tr><td>Android · Google Play production</td><td class="no">–</td><td class="no">–</td><td class="yes">Yes</td><td>Todak Studios Play</td><td class="num">RM0</td></tr>
+        <tr><td>iPhone · TestFlight</td><td class="no">–</td><td class="no">–</td><td class="yes">Yes</td><td>Todak Studios Apple team</td><td class="num">RM0</td></tr>
+        <tr><td>iPhone · App Store release</td><td class="no">–</td><td class="no">–</td><td class="opt">Optional</td><td>Todak Studios Apple team</td><td class="num">RM0</td></tr>
+        <tr><td>Steam</td><td class="no">–</td><td class="no">–</td><td class="opt">Showcase pick only</td><td>Todak Studios Steam</td><td class="num">USD 100 per game, recoupable</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Why web first, stores last</h3>
+    <ul>
+      <li>A web build is a link anyone can play on a phone or laptop in seconds. That is the portfolio, and it waits on no reviewer.</li>
+      <li>Google Play and Apple reviews take hours to days and can reject. Graduation must not depend on them.</li>
+      <li>The Studios organisation accounts skip the 12-tester, 14-day rule that new personal Play accounts face, so Android testing is instant.</li>
+    </ul>
+    <h3>What being under Todak Studios means</h3>
+    <ul>
+      <li>Todak Studios is the publisher of record for every student game. The enrolment contract has to say who owns the game and how revenue is split. The 70/30 share discussed on 3 Sep is still open.</li>
+      <li>A naming rule is set in the kit before anyone publishes, because a package name can never change after the first upload. Proposed: <code>com.todakstudios.academy.&lt;game&gt;</code>.</li>
+      <li>Whether student games carry the Todak Studios brand or a "Todak Academy Games" label on the same accounts is a decision for Neo and Lan.</li>
+    </ul>
+    <h3>Things that bite, already known</h3>
+    <ul>
+      <li>Godot web games need two security headers on the hosting site. The showcase sets them and itch.io has a tick-box for it.</li>
+      <li>Apple's developer agreements must be accepted or the store keys stop working for days. Check before each cohort's capstone week.</li>
+      <li>Every store listing needs a privacy policy page before the first submission. The kit generates one per game.</li>
+    </ul>
+  </section>
+
+  <section id="machines">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Machines</h2></div>
+    <p class="sec-sub">The Academy classroom runs high-spec Windows PCs. That covers everything in the course except iPhone packaging, which needs a Mac. So one Mac mini becomes the build farm for everyone.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Where</th><th>Machine</th><th>What runs there</th></tr></thead>
+      <tbody>
+        <tr><td><b>Classroom</b></td><td>The Academy's Windows PCs (high spec). 16 GB memory and 30 GB free disk is enough; the 3D capstone enjoys the extra power.</td><td>Claude Code (native Windows, desktop app or VS Code extension, so it does not look like a hacker terminal), Godot 4 with export templates, Git, Node, Blender for the 3D weeks. Installed once as a lab image.</td></tr>
+        <tr><td><b>Shared-PC rule</b></td><td>Students rotate between PCs</td><td>Each student signs into their own Claude seat and GitHub account. Work lives in GitHub and the project memory, never on the PC, so any PC in the lab is theirs for the session and the prompt record follows the login, not the machine.</td></tr>
+        <tr><td><b>Home</b></td><td>Any laptop with 16 GB memory, Windows or Mac. 8 GB works for the 2D games and struggles in the 3D weeks.</td><td>Same one-line installer plus the kit. Weak-laptop fallback: Claude Code on the web plus the build farm, playing web builds in the browser.</td></tr>
+        <tr><td><b>Build farm</b></td><td>One Mac mini at the Academy. The only Mac in the whole loop.</td><td>Godot exports for Web, Windows, Mac, Linux and Android, iPhone builds through Xcode, and store uploads with the Studios keys. Copies the Android and Apple recipe already proven this month on ApaNakMakan.</td></tr>
+      </tbody>
+    </table></div>
+    <p>The build farm is the piece that makes "pipeline from day one" real. The student pushes code, the farm builds every platform, the link appears in the showcase. Students who want the Android tools on their own laptop can install them, but nobody needs to.</p>
+  </section>
+
+  <section id="record">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Recording every prompt</h2></div>
+    <p class="sec-sub">Three layers, two of them already built into Claude Code. Nothing exotic to build; the work is the collector, the database and the lecturer's view.</p>
+    <div class="flow">
+      <div class="box"><b>Student PC</b><small>Claude Code + Game Kit + Godot. Built-in telemetry streams prompts, replies, tool calls, tokens and lines of code. Kit hooks add cohort, game, week and commit.</small></div>
+      <div class="arw">→</div>
+      <div class="box mem"><b>Course database</b><small>Every event stored per student and session. Git history on the Academy's GitHub organisation sits beside it as the tamper-proof timeline.</small></div>
+      <div class="arw">→</div>
+      <div class="box"><b>Lecturer view</b><small>A Prompt Journey per student inside the classroom system: timeline per game, how specific prompts became week by week, tokens and cost, replay of any session.</small></div>
+    </div>
+    <h3>Layer 1 · Claude Code's own telemetry</h3>
+    <p>Claude Code can export a stream of events to any server we name. The kit installer switches it on. With the content flags set, each event carries the full prompt text, the full reply, every tool call with file paths, the model used, tokens and cost, lines added and removed, commits, the session id and the student's login email. One id ties a prompt to everything it triggered, so a session can be replayed step by step.</p>
+    <pre><code>CLAUDE_CODE_ENABLE_TELEMETRY=1
+OTEL_LOG_USER_PROMPTS=1
+OTEL_LOG_ASSISTANT_RESPONSES=1
+OTEL_LOG_TOOL_DETAILS=1
+OTEL_EXPORTER_OTLP_ENDPOINT=https://telemetry.course.neotodak.com</code></pre>
+    <p>This works with the Claude Pro seats already in the cost model. It is a client-side feature and does not change how the student logs in or pays.</p>
+    <h3>Layer 2 · the kit's hooks</h3>
+    <p>On every prompt and at the end of every turn, the kit writes a row to the course database with the context telemetry does not know: which cohort, which game, which week, the current commit. The same hook reminds Claude where the student is in the course, so the AI's answers stay on the curriculum.</p>
+    <h3>Layer 3 · Git</h3>
+    <p>Every student game lives in the Academy's GitHub organisation. Commit history is the tamper-proof timeline. The lecturer view links prompt to commit to build to published game.</p>
+    <h3>What the lecturer sees</h3>
+    <p>The Academy's classroom system already has students, classes, enrolments, progress and AI grading. We add a prompt-history table and a <b>Prompt Journey</b> page per student. The existing AI grading scores prompt quality weekly, so the student gets a growth chart at graduation and we get proof for marketing that the course teaches prompting, not just games.</p>
+    <h3>Rules that come with it</h3>
+    <ul>
+      <li>Consent at enrolment under Malaysian data protection law. Prompt logs are assessment evidence, which fits the competency-based portfolio the module already promises.</li>
+      <li>Students see their own journey. Lecturers see their class. Exports and deletion on request.</li>
+      <li>A student can technically switch telemetry off on their own laptop. The answer is a course rule, not a lock: work without a record does not count as evidence, and the Git history stays either way. If cohort 1 shows this being gamed, phase 2 puts a relay on our server in front of Claude Code, which keeps the Pro login and makes the record unavoidable.</li>
+    </ul>
+  </section>
+
+  <section id="cost">
+    <div class="sec-head"><span class="sec-num">08</span><h2>What it adds to the cost model</h2></div>
+    <p class="sec-sub">The module spec's cohort figures stay as the base: about RM5,100 for 15 learners and RM6,700 for 20, with Claude Pro seats as 85% of the bill. The additions below are estimates to confirm, not quotes.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Addition</th><th>Type</th><th>Estimate</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Mac mini for the build farm</td><td>One-off</td><td class="num">RM2.6k–4k</td><td>Depends on memory. Serves every cohort. Required because the classroom is Windows and iPhone builds need a Mac</td></tr>
+        <tr><td>Asset generation (images, 3D, music, sound)</td><td>Per learner</td><td class="num">~RM50</td><td>Academy-hosted tools metered by the kit. Replaces retail Meshy at RM95 per month</td></tr>
+        <tr><td>Claude Max seats for the capstone month</td><td>Per cohort buffer</td><td class="num">~RM2.4k</td><td>Pro's usage window will be hit in heavy 3D weeks. Budget five Max seats (USD 100 each) for one month and hand them to whoever runs dry</td></tr>
+        <tr><td>Telemetry collector, database, showcase hosting</td><td>Monthly</td><td class="num">~RM120</td><td>One small database project plus space on an Academy server. Shared across cohorts</td></tr>
+        <tr><td>Store publishing</td><td>–</td><td class="num">RM0</td><td>Studios accounts already exist for Apple, Google Play, itch.io and Steam</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="build">
+    <div class="sec-head"><span class="sec-num">09</span><h2>Build list before cohort 1</h2></div>
+    <p class="sec-sub">About six weeks of work if it starts now, most of it in parallel. Items 1, 3 and 7 are where the risk lives, so they go first.</p>
+    <ol class="plain">
+      <li><b>Game Kit v1</b> · 2 weeks. Genre templates for every menu entry, the asset and build commands, the day-1 publishing manifest, the logging hooks, the memory wiring, the cross-tool instruction file.</li>
+      <li><b>Telemetry collector + Prompt Journey</b> · 1.5 weeks. Collector endpoint, prompt table in the classroom database, lecturer page, weekly prompt score.</li>
+      <li><b>Studios publisher desk</b> · 1 week. The manifest queue, the batch checklist for creating store records, the naming rule, the per-game privacy page generator.</li>
+      <li><b>Build farm</b> · 1 week after the Mac mini arrives. Godot exports, store uploads with the Studios keys, link back to the showcase.</li>
+      <li><b>Showcase gallery</b> · 1 week. Every student's three games playable on course.neotodak.com, with the required web headers.</li>
+      <li><b>Windows lab image + home installer</b> · 3 days. One image for the classroom PCs, one script for Windows and Mac laptops at home.</li>
+      <li><b>Dry run</b> · 2 weeks, overlapping. Build three reference games (one per slot) through the exact kit and publish them under Todak Studios, fixing the kit on every snag.</li>
+    </ol>
+  </section>
+
+  <section id="decide">
+    <div class="sec-head"><span class="sec-num">10</span><h2>Decisions for Neo &amp; Lan</h2></div>
+    <ol class="decisions">
+      <li><span class="n">1</span><span>Claude Code with the kit for cohort 1, own platform only as phase 2. <span class="rec">Recommended yes</span></span></li>
+      <li><span class="n">2</span><span>Two small games then one final game inside 12 weeks. <span class="rec done">Confirmed 8 Sep</span></span></li>
+      <li><span class="n">3</span><span>Genre menu and the three rules above. Add or remove entries as Lan sees fit.</span></li>
+      <li><span class="n">4</span><span>Graduation rule: all three games live on the web, capstone on Google Play and TestFlight, App Store optional. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">5</span><span>Publisher label for student games: Todak Studios brand, or a "Todak Academy Games" label on the same accounts. Plus ownership and the 70/30 revenue share in the enrolment contract.</span></li>
+      <li><span class="n">6</span><span>Approve one Mac mini as the build farm. <span class="rec">Required, classroom is Windows</span></span></li>
+      <li><span class="n">7</span><span>Consent wording and who can see the prompt records. Needed before the first enrolment form goes out.</span></li>
+    </ol>
+  </section>
+
+  <section id="changelog">
+    <div class="sec-head"><span class="sec-num">11</span><h2>Changelog</h2></div>
+    <ul>
+      <li><b>v1 · 8 Sep 2026.</b> First working plan. Folds in Neo's same-day notes: genres are a menu not a fixed list; publishing wired to Studios accounts from day one; classroom is Windows PCs; games 1 and 2 small, game 3 final.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Todak AI Creator Program · Game Track · Blueprint v1</span>
+    <span>Working plan · not yet approved · Sept 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
