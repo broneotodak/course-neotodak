@@ -114,7 +114,7 @@
 <div class="topbar">
   <div class="wrap">
     <span><a href="/documentation/">← Documentation</a></span>
-    <span class="badge">Objek pipeline · v1 · Working plan</span>
+    <span class="badge">Objek pipeline · v1.1 · Working plan</span>
   </div>
 </div>
 
@@ -130,7 +130,7 @@
       <ol>
         <li><span class="k">What failed before</span><span>The Cospace attempt did not fail at "image to 3D". It failed at <b>clothing on a body</b>: rig mismatch, sleeves, T-pose, and fitting a garment to a torso. Tops actually worked by July. Generic objects skip all of that.</span></li>
         <li><span class="k">Calibration</span><span>Last time "calibration" meant fitting a garment to a body by hand-tuned numbers. This time it means <b>real-world size</b>, taken from the product listing or confirmed by you before anything is generated, and checked automatically after.</span></li>
-        <li><span class="k">Which machine</span><span><b>tr-home</b> is the worker for version 1: official Blender, a 24 GB GPU for renders, the browser that can open Shopee, and Codex with Astra already logged in. <b>EdgeXpert</b> is more powerful for AI models, but it runs Siti and the twin brain, and Blender has no official build for its chip. It joins in phase 2 to host our own mesh models.</span></li>
+        <li><span class="k">Which machine</span><span><b>tr-home</b> is the worker for version 1: official Blender, a 24 GB GPU for renders, the browser that can open Shopee, and Codex with Astra already logged in. <b>bandung-01</b> is the NVIDIA box: normal chip plus a CUDA card with the AI libraries already installed, idle for seven weeks, so it becomes the phase 2 home for our own mesh engine and a render node, once it gets the reboot it has been waiting for. <b>EdgeXpert</b> stays with Siti and the twin brain; it only joins if a model needs more memory than 12 GB.</span></li>
         <li><span class="k">Astra's job</span><span>Astra drives Blender: writes and repairs the clean-up scripts, decides how to retry a bad mesh. Claude builds the pipeline and acts as the second pair of eyes. Never the same model writing and judging, same rule as the Studio.</span></li>
         <li><span class="k">Dashboard</span><span>A fourth lane in <b>studio.neotodak.com</b> called Objek, with the same five-gate shape. No new dashboard. The viewer page and the "send to Game Kit" button live there.</span></li>
       </ol>
@@ -190,12 +190,14 @@
       <thead><tr><th>Machine</th><th>What it has today</th><th>Role in this pipeline</th></tr></thead>
       <tbody>
         <tr><td><b>tr-home</b> <span class="pill tr">worker v1</span></td><td>32-core Threadripper, 62 GB memory, AMD 24 GB GPU, Ubuntu on a normal x86 chip. Codex installed and logged in. The browser desk with the Shopee-capable Chrome profiles. Already runs the Studio publisher every five minutes. Blender is one command away (official build).</td><td>Steps 1, 2 and 4: browser fetch, image clean-up, Blender clean-up, GPU turntable renders, the Astra runner. A single worker process polls the Objek queue, same pattern as the publisher.</td></tr>
-        <tr><td><b>EdgeXpert</b> <span class="pill edge">phase 2</span></td><td>NVIDIA GB10 with 121 GB unified memory, 3.4 TB free. The most capable AI box we own. But it is an ARM chip: Blender has no official build for it (community builds only), the AI libraries need NVIDIA's ARM stack installed, and it is Siti's home plus the twin brain. Codex is installed here too.</td><td>Step 5 judge today if we want it local. Phase 2: host our own mesh engine (TRELLIS-2 or Hunyuan3D) so step 3 stops paying per object. Not in the version 1 path, on purpose.</td></tr>
+        <tr><td><b>bandung-01</b> <span class="pill edge">phase 2 · render node</span></td><td>Ultra 9 285K, 30 GB memory, RTX 5070 with 12 GB, 1.7 TB free, Ubuntu on a normal x86 chip. Idle for seven weeks (load near zero). The CUDA AI stack is already installed in the Forge training environment. No Blender, no Codex, no browser desk yet. <b>Caveat:</b> the graphics driver was updated but the machine was never rebooted, so the GPU is unusable until a reboot; it is also the twin brain's cold spare and the Forge trainer, so heavy jobs wait when training runs.</td><td>Best home for phase 2: our own mesh engine (TRELLIS-2 or Hunyuan3D fit in 12 GB with the smaller variants) plus CUDA turntable renders. Can also be the version 1 Blender worker instead of tr-home if you want NVIDIA from day one; the Shopee fetch stays on tr-home either way.</td></tr>
+        <tr><td><b>EdgeXpert</b> <span class="pill edge">reserve</span></td><td>NVIDIA GB10 with 121 GB unified memory, 3.4 TB free. The most capable AI box we own. But it is an ARM chip: Blender has no official build for it (community builds only), the AI libraries need NVIDIA's ARM stack installed, and it is Siti's home plus the twin brain. Codex is installed here too.</td><td>Step 5 judge today if we want it local. Otherwise only if a mesh model needs more than bandung-01's 12 GB. Not in the version 1 path, on purpose.</td></tr>
+        <tr><td><b>neo-bandung-ofc</b></td><td>Apartment Windows PC, Ultra 9 185H, 32 GB. Offline on the network for 23 days (parked).</td><td>None.</td></tr>
         <tr><td><b>Studio</b> <span class="pill studio">dashboard</span></td><td>studio.neotodak.com on Netlify, the fleet database, the media bucket, PIN gate, lanes and gates already built for drama, lapisan and daily.</td><td>Steps 0 and 6, and every gate button. The Objek lane is a fourth lane, not a new app.</td></tr>
         <tr><td><b>Hosted engines</b> <span class="pill cloud">pay per object</span></td><td>Tripo through fal.ai (proven July), Hunyuan3D, Meshy, Rodin. Image models for extra views. A vision model for judging.</td><td>Step 3 and the extra views in step 2. Swappable per job so the bake-off can run.</td></tr>
       </tbody>
     </table></div>
-    <div class="note crew"><p><b>On "EdgeXpert because it is more powerful".</b> True for running AI models, and that is exactly what phase 2 uses it for. For Blender it is the weaker choice: unofficial builds, an ARM chip, and it would share the box with Siti. Blender work is not heavy anyway; the GPU only matters for the turntable renders, and tr-home's card does that fine.</p></div>
+    <div class="note crew"><p><b>On "EdgeXpert because it is more powerful".</b> True for running AI models, but for this pipeline bandung-01 is the better NVIDIA choice: normal chip, official Blender, CUDA libraries already there, and nothing else depending on it day to day. EdgeXpert would share the box with Siti and needs unofficial Blender builds. Blender work is not heavy anyway; the GPU only matters for turntable renders and, in phase 2, for running our own mesh engine.</p></div>
   </section>
 
   <section id="astra">
@@ -261,7 +263,8 @@
   <section id="decide">
     <div class="sec-head"><span class="sec-num">07</span><h2>Decisions for Neo</h2></div>
     <ol class="decisions">
-      <li><span class="n">1</span><span>tr-home is the version 1 worker, EdgeXpert joins in phase 2 for our own mesh engine. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">1</span><span>tr-home is the version 1 worker; bandung-01 becomes the phase 2 mesh-engine and render node after a reboot; EdgeXpert stays in reserve. <span class="rec">Recommended</span> Alternative: bandung-01 as the worker from day one if you want NVIDIA now.</span></li>
+      <li><span class="n">1b</span><span>Approve a reboot of bandung-01 at a quiet moment so its GPU works again. Its two background services restart on their own.</span></li>
       <li><span class="n">2</span><span>The dashboard is a fourth lane in studio.neotodak.com, not a new site. <span class="rec">Recommended</span></span></li>
       <li><span class="n">3</span><span>Astra runs the Blender step from inside the pipeline on tr-home; a different model judges; Claude builds. First bake-off decides who keeps the Blender job.</span></li>
       <li><span class="n">4</span><span>Hosted engines for version 1 at roughly RM8 to 20 per object, Tripo first with a second engine in parallel.</span></li>
@@ -273,12 +276,13 @@
   <section id="changelog">
     <div class="sec-head"><span class="sec-num">08</span><h2>Changelog</h2></div>
     <ul>
+      <li><b>v1.1 · 9 Sep 2026.</b> Added bandung-01 after checking it live: idle NVIDIA box with the CUDA stack ready, GPU blocked by a pending reboot; phase 2 home for our own mesh engine. Apartment Windows PC offline 23 days.</li>
       <li><b>v1 · 9 Sep 2026.</b> First working plan, after reading the June to August Cospace garment record, checking both fleet machines live, and confirming Astra access on Codex and the API.</li>
     </ul>
   </section>
 
   <footer>
-    <span>Todak AI Creator Program · Creative pipeline · Objek v1</span>
+    <span>Todak AI Creator Program · Creative pipeline · Objek v1.1</span>
     <span>Working plan · not yet approved · Sept 2026</span>
   </footer>
 
