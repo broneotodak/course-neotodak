@@ -114,7 +114,7 @@
 <div class="topbar">
   <div class="wrap">
     <span><a href="/documentation/">← Documentation</a></span>
-    <span class="badge">Objek pipeline · v1.1 · Working plan</span>
+    <span class="badge">Objek pipeline · v1.2 · Working plan</span>
   </div>
 </div>
 
@@ -131,7 +131,7 @@
         <li><span class="k">What failed before</span><span>The Cospace attempt did not fail at "image to 3D". It failed at <b>clothing on a body</b>: rig mismatch, sleeves, T-pose, and fitting a garment to a torso. Tops actually worked by July. Generic objects skip all of that.</span></li>
         <li><span class="k">Calibration</span><span>Last time "calibration" meant fitting a garment to a body by hand-tuned numbers. This time it means <b>real-world size</b>, taken from the product listing or confirmed by you before anything is generated, and checked automatically after.</span></li>
         <li><span class="k">Which machine</span><span><b>tr-home</b> is the worker for version 1: official Blender, a 24 GB GPU for renders, the browser that can open Shopee, and Codex with Astra already logged in. <b>bandung-01</b> is the NVIDIA box: normal chip plus a CUDA card with the AI libraries already installed, idle for seven weeks, so it becomes the phase 2 home for our own mesh engine and a render node, once it gets the reboot it has been waiting for. <b>EdgeXpert</b> stays with Siti and the twin brain; it only joins if a model needs more memory than 12 GB.</span></li>
-        <li><span class="k">Astra's job</span><span>Astra drives Blender: writes and repairs the clean-up scripts, decides how to retry a bad mesh. Claude builds the pipeline and acts as the second pair of eyes. Never the same model writing and judging, same rule as the Studio.</span></li>
+        <li><span class="k">Who does what</span><span><b>Astra does the 3D spatial work</b>: parametric models, mechanisms, Blender repairs. <b>Claude does the pipeline around it</b>: fetching, product card, video-to-frames, size checks, viewers, the Studio lane, and judging results against references. Decided after the 9 Sep dry run, where Claude got the chair's fold wrong three times and Astra's version was right first time. Never the same model building and judging, same rule as the Studio.</span></li>
         <li><span class="k">Dashboard</span><span>A fourth lane in <b>studio.neotodak.com</b> called Objek, with the same five-gate shape. No new dashboard. The viewer page and the "send to Game Kit" button live there.</span></li>
       </ol>
     </div>
@@ -159,13 +159,18 @@
     <p class="sec-sub">Every step writes its result to the job row in the Studio database and drops files in the media bucket, so the dashboard shows progress live and any step can be re-run alone.</p>
     <ol class="steps">
       <li><span class="n">0</span><div><div class="t">Intake <span class="pill studio">Studio</span></div><div class="d">You give one of three things: an image, a link (Shopee, Lazada, any product page), or a sentence describing the object. The Studio creates a job in the Objek lane. Nothing costs money yet.</div></div></li>
-      <li><span class="n">1</span><div><div class="t">Fetch and understand <span class="pill tr">tr-home</span> <span class="pill cloud">Astra</span></div><div class="d">For a link, the browser desk on tr-home opens the page with a real Chrome profile (Shopee blocks plain scrapers) and pulls the product photos, title, and the listed dimensions and weight. Astra writes a <b>product card</b>: what it is, category, real size in centimetres, materials, whether it is symmetric, which views we have. <b>Pintu 0:</b> you confirm the card, above all the size. This is the calibration, done before any money is spent.</div></div></li>
+      <li><span class="n">1</span><div><div class="t">Fetch and understand <span class="pill tr">tr-home</span> <span class="pill cloud">Astra</span></div><div class="d">For a link, pull the product photos, title, the listed dimensions and weight, <b>and any listing video</b>. Shopee hides the video behind a login, but the page data still carries the file, and the seller's own video is the best reference for how a product moves. Cut it into frames. Claude writes a <b>product card</b>: what it is, category, real size in centimetres, materials, whether it is symmetric, which views and video we have. <b>Pintu 0:</b> you confirm the card, above all the size. This is the calibration, done before any money is spent. <b>Rule from the dry run:</b> nobody models motion from stills. If no video exists, the object ships as a static model and the card says so.</div></div></li>
       <li><span class="n">2</span><div><div class="t">Reference set <span class="pill tr">tr-home</span> <span class="pill cloud">image model</span></div><div class="d">Cut the object out of its background. Generate the views we do not have (back, side, top) with an image model told to keep the same object. Result: two to four clean views on white. <b>Pintu 1:</b> a reviewer model checks the views agree with each other. About RM1 to 2.</div></div></li>
       <li><span class="n">3</span><div><div class="t">Mesh generation <span class="pill cloud">hosted engines</span></div><div class="d">Send the views to a hosted image-to-3D engine and get a textured mesh back. Version 1 uses Tripo through fal.ai because it already proved itself in July. The lane runs a second engine in parallel (Hunyuan3D, Meshy or Rodin) so you get two candidates, and the winner count becomes a leaderboard like the Studio's writer bake-offs. About RM3 to 8 per candidate.</div></div></li>
       <li><span class="n">4</span><div><div class="t">Blender clean-up and calibration <span class="pill tr">tr-home</span> <span class="pill cloud">Astra</span></div><div class="d">Blender runs headless from scripts, no window. Fix orientation (the July bugs are documented: quaternion rotation, the Y-up wrapper), <b>scale to the real size from the product card</b>, set the origin and floor, reduce polygons to the target (web or game), close holes, fix normals, remove stray pieces, bake a clean 2K texture, and export three files: GLB for the web and Godot, USDZ for iPhone AR, FBX for other engines. Then render a turntable: eight stills and a six-second spin on the 24 GB GPU. Automatic checks: bounding box within 5% of the card, watertight, polygon budget, texture size, no stray meshes. Astra's role: when a check fails, it edits the script or changes the parameters and re-runs, up to three tries.</div></div></li>
       <li><span class="n">5</span><div><div class="t">Second pair of eyes <span class="pill edge">EdgeXpert or cloud</span></div><div class="d"><b>Pintu 2:</b> a vision model that is not Astra compares the turntable with the source photos and scores 0 to 10 with a list of issues: wrong proportions, smeared logo, missing part, fake back side. Below the bar, the lane goes back to step 3 with the other engine or a new seed. Above the bar, you see source and result side by side and press Lulus or Gagal.</div></div></li>
       <li><span class="n">6</span><div><div class="t">Publish and use <span class="pill studio">Studio</span></div><div class="d">Files go to the media bucket. The Studio shows the object in a browser viewer you can spin, with an AR button on a phone. Buttons: copy share link, download, <b>send to Game Kit</b> (drops the GLB into a student's Godot project as a ready asset), and later, send to Cospace through the July garment tool for tops only.</div></div></li>
     </ol>
+    <h3>Two lanes, chosen per object</h3>
+    <ul>
+      <li><b>Mesh lane</b> (steps 2 to 4 above) for organic and textured objects: shoes, toys, lamps, anything a photo describes better than a formula. Hosted engines, then Blender clean-up.</li>
+      <li><b>Parametric lane</b> for mechanisms and tube-frame furniture: Astra writes the model in code from the product card and the video frames, so dimensions are exact and the object can move. The size check and the judge apply to both lanes.</li>
+    </ul>
     <h3>Why this works where the clothing version stalled</h3>
     <ul>
       <li>No skeleton, no body, no fit tuning. The hardest 80% of the old problem is gone.</li>
@@ -201,28 +206,29 @@
   </section>
 
   <section id="astra">
-    <div class="sec-head"><span class="sec-num">04</span><h2>Where Astra fits, and where it should not</h2></div>
-    <p class="sec-sub">GPT-6 Astra is real, released 3 September, and OpenAI markets it as strong at Blender and 3D reasoning. We can use it today: Codex is logged in on your Mac and on tr-home, and the API key works.</p>
+    <div class="sec-head"><span class="sec-num">04</span><h2>The split: Astra for 3D, Claude for the pipeline</h2></div>
+    <p class="sec-sub">Decided on 9 September from evidence, not preference. GPT-6 Astra is marketed on 3D and Blender reasoning; the dry run bore that out.</p>
     <div class="compare">
       <div class="pick">
-        <h4>Astra on tr-home, inside the pipeline (recommended)</h4>
+        <h4>Astra · the spatial work</h4>
         <ul>
-          <li>Runs as a background command per job, no chat window: "here is the mesh, the product card and the failed check, fix it".</li>
-          <li>Writes and repairs the Blender scripts. The scripts, not the chat, are what runs next time.</li>
+          <li>Parametric models built from the product card and the video: frames, hinges, fabric, the fold itself.</li>
+          <li>Blender clean-up scripts and repairs when a generated mesh fails a check.</li>
+          <li>Runs inside the pipeline on tr-home as a background command per job, with the video frames and the product card as its brief. Codex is logged in there and on your Mac.</li>
           <li>Its output is judged by a different model. Same rule as the Studio writer and reviewer.</li>
-          <li>Swappable. If Claude or a newer model does the Blender step better in a bake-off, change one setting.</li>
         </ul>
       </div>
       <div>
-        <h4>Astra in Codex on your Mac, by hand</h4>
+        <h4>Claude · everything around it</h4>
         <ul>
-          <li>Good for the first week: exploring what Astra can do in Blender, building the scripts.</li>
-          <li>Not a pipeline. Your Mac must not become the worker, and the browser control rule already says the same.</li>
-          <li>No queue, no gates, no record of what was tried.</li>
+          <li>Fetching the listing, the product card, cutting videos into frames, the reference set.</li>
+          <li>Running the mesh engines, the size checks, the web exports, the viewers, the Studio lane and its gates.</li>
+          <li>Judging results against the references and writing the record of what was tried.</li>
+          <li>Building and maintaining the worker itself.</li>
         </ul>
       </div>
     </div>
-    <p>Version 1 uses Astra for steps 1 and 4 and a Claude or Gemini vision model for step 5. Claude Code builds the worker and the Studio lane. The first bake-off is Astra against Claude on the same five broken meshes; whoever repairs more of them keeps the job.</p>
+    <p><b>The evidence.</b> On the same chair, Claude produced three parametric fold animations and all three were wrong against the seller's video, even after the video was in hand. Lan's Astra build got the fold right first time. Claude's mesh-lane work held up: the calibrated Hunyuan mesh passed its size check and the drawing sheets were correct. So the line is drawn at spatial reasoning, and it moves only if a later bake-off says otherwise.</p>
   </section>
 
   <section id="dashboard">
@@ -260,13 +266,36 @@
     </table></div>
   </section>
 
+  <section id="dryrun">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Dry run, 9 September: one Shopee chair through the steps by hand</h2></div>
+    <p class="sec-sub">8000K KY507 folding director's chair, from a Shopee link. What worked, what failed, and what changed in this plan because of it.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Step</th><th>Result</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Fetch</td><td>Shopee blocked the API and showed the browser a login wall; the page data still carried the spec text, every photo and the seller's fold video.</td><td class="yes">Works, via page data</td></tr>
+        <tr><td>Product card + drawings</td><td>Two-sheet technical drawing set with real listed dimensions, parts list, materials, exploded view. AI line-art for views, numbers drawn by us.</td><td class="yes">Correct</td></tr>
+        <tr><td>Mesh lane</td><td>Three engines on the same three views. Hunyuan3D v3 passed the size check (59 × 50 × 82 vs listed 55 × 50 × 82); Tripo 22% too wide; Meshy rebuilt the whole marketing photo.</td><td class="yes">Hunyuan wins</td></tr>
+        <tr><td>Blender clean-up on tr-home</td><td>Orientation, scale to listed height, floor origin, hygiene, 60k triangles, GLB/FBX/USDZ, turntable. 25 MB down to 462 KB for the web.</td><td class="yes">Works</td></tr>
+        <tr><td>Parametric fold by Claude</td><td>Three versions, all wrong against the video: the mechanism was guessed from stills, then misread from frames.</td><td class="opt">Failed, three times</td></tr>
+        <tr><td>Parametric fold by Astra (Lan)</td><td>Tech sheet, model and fold-into-bag animation in three.js, right first time.</td><td class="yes">Works</td></tr>
+      </tbody>
+    </table></div>
+    <h3>What changed in the plan</h3>
+    <ul>
+      <li>Videos are pulled and cut into frames in step 1, before anyone models motion. No video, no motion.</li>
+      <li>Astra owns the spatial work; Claude owns the pipeline and the judging. Section 04.</li>
+      <li>Never feed a marketing composite to a mesh engine. Clean views only.</li>
+      <li>Every canvas page is tested at both screen pixel ratios; the first viewer put the chair in a corner on a Retina screen.</li>
+    </ul>
+  </section>
+
   <section id="decide">
-    <div class="sec-head"><span class="sec-num">07</span><h2>Decisions for Neo</h2></div>
+    <div class="sec-head"><span class="sec-num">08</span><h2>Decisions for Neo</h2></div>
     <ol class="decisions">
       <li><span class="n">1</span><span>tr-home is the version 1 worker; bandung-01 becomes the phase 2 mesh-engine and render node after a reboot; EdgeXpert stays in reserve. <span class="rec">Recommended</span> Alternative: bandung-01 as the worker from day one if you want NVIDIA now.</span></li>
       <li><span class="n">1b</span><span>Approve a reboot of bandung-01 at a quiet moment so its GPU works again. Its two background services restart on their own.</span></li>
       <li><span class="n">2</span><span>The dashboard is a fourth lane in studio.neotodak.com, not a new site. <span class="rec">Recommended</span></span></li>
-      <li><span class="n">3</span><span>Astra runs the Blender step from inside the pipeline on tr-home; a different model judges; Claude builds. First bake-off decides who keeps the Blender job.</span></li>
+      <li><span class="n">3</span><span>Astra does the 3D spatial work, Claude does the pipeline and judging. <span class="rec">Decided 9 Sep from the dry run</span></span></li>
       <li><span class="n">4</span><span>Hosted engines for version 1 at roughly RM8 to 20 per object, Tripo first with a second engine in parallel.</span></li>
       <li><span class="n">5</span><span>Clothing on a body stays out of version 1. It gets its own lane later, reusing the July garment tool.</span></li>
       <li><span class="n">6</span><span>Go: start the one-week build, or hold until the course Game Kit work is further along.</span></li>
@@ -274,15 +303,16 @@
   </section>
 
   <section id="changelog">
-    <div class="sec-head"><span class="sec-num">08</span><h2>Changelog</h2></div>
+    <div class="sec-head"><span class="sec-num">09</span><h2>Changelog</h2></div>
     <ul>
+      <li><b>v1.2 · 9 Sep 2026.</b> Astra for 3D spatial work, Claude for the pipeline, decided from the dry run. Videos pulled in step 1. Two lanes named. Dry-run results section added.</li>
       <li><b>v1.1 · 9 Sep 2026.</b> Added bandung-01 after checking it live: idle NVIDIA box with the CUDA stack ready, GPU blocked by a pending reboot; phase 2 home for our own mesh engine. Apartment Windows PC offline 23 days.</li>
       <li><b>v1 · 9 Sep 2026.</b> First working plan, after reading the June to August Cospace garment record, checking both fleet machines live, and confirming Astra access on Codex and the API.</li>
     </ul>
   </section>
 
   <footer>
-    <span>Todak AI Creator Program · Creative pipeline · Objek v1.1</span>
+    <span>Todak AI Creator Program · Creative pipeline · Objek v1.2</span>
     <span>Working plan · not yet approved · Sept 2026</span>
   </footer>
 
