@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Objek Pipeline Blueprint — Todak AI Creator Program</title>
+<meta name="description" content="Working plan for the generic image-or-URL to 3D object pipeline: what the Cospace clothing attempt taught us, the seven steps from input to a web viewer, which fleet machine does each step, and where GPT-6 Astra fits.">
+<style>
+  :root {
+    --bg: #e9ebee; --surface: #f6f7f8; --surface-2: #ffffff; --line: #d3d8dd; --line-soft: #e0e4e8;
+    --ink: #14181c; --ink-soft: #545c64; --ink-faint: #828d97;
+    --method: #37627f; --method-soft: rgba(55,98,127,.11);
+    --crew: #9a6a1c; --crew-soft: rgba(154,106,28,.13);
+    --ship: #2c8a66; --ship-soft: rgba(44,138,102,.13);
+    --elective: #7a5aa0; --elective-soft: rgba(122,90,160,.13);
+    --shadow: 0 1px 2px rgba(20,24,28,.05), 0 8px 24px rgba(20,24,28,.05);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+      --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+      --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+      --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+      --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+      --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+    --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+    --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+    --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+    --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+    --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body { background: var(--bg); color: var(--ink); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--method); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--method); outline-offset: 2px; }
+  .topbar { border-bottom: 1px solid var(--line); font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint); letter-spacing: .12em; text-transform: uppercase; }
+  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
+  .topbar .badge { color: var(--method); }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--method); }
+  header { padding: 48px 0 26px; }
+  .eyebrow { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .eyebrow .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--elective); box-shadow: 0 0 0 3px var(--elective-soft); }
+  h1 { font-size: clamp(29px, 5.2vw, 44px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; text-wrap: balance; }
+  .dek { color: var(--ink-soft); font-size: 16.5px; max-width: 700px; margin-top: 15px; }
+  .answers { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--elective); border-radius: 13px; padding: 20px 24px; box-shadow: var(--shadow); margin-top: 28px; }
+  .answers .k-head { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+  .answers ol { list-style: none; display: grid; gap: 11px; }
+  .answers li { display: grid; grid-template-columns: 120px 1fr; gap: 14px; font-size: 14.5px; }
+  .answers .k { font-weight: 750; color: var(--method); letter-spacing: -.01em; }
+  @media (max-width: 560px) { .answers li { grid-template-columns: 1fr; gap: 2px; } }
+  section { padding: 46px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 13px; margin-bottom: 6px; flex-wrap: wrap; }
+  .sec-num { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; color: var(--method); }
+  .sec-head h2 { font-size: 22px; font-weight: 760; letter-spacing: -.015em; }
+  .sec-sub { color: var(--ink-soft); font-size: 14.5px; margin: 4px 0 20px; max-width: 740px; }
+  h3 { font-size: 15.5px; font-weight: 700; margin: 24px 0 8px; letter-spacing: -.01em; }
+  p { font-size: 14.5px; margin-bottom: 12px; max-width: 740px; }
+  ul, ol.plain { padding-left: 20px; font-size: 14.5px; max-width: 740px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--ink-faint); }
+  b, strong { font-weight: 700; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--surface-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px; }
+  .cp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin: 6px 0 16px; }
+  table.cp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 640px; background: var(--surface); }
+  table.cp th, table.cp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  table.cp thead th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-2); }
+  table.cp tbody tr:last-child td { border-bottom: none; }
+  table.cp .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pill { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .pill.tr { color: var(--ship); background: var(--ship-soft); }
+  .pill.edge { color: var(--elective); background: var(--elective-soft); }
+  .pill.studio { color: var(--method); background: var(--method-soft); }
+  .pill.cloud { color: var(--crew); background: var(--crew-soft); }
+  .note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0 16px; max-width: 760px; font-size: 14.5px; }
+  .note.crew { border-left-color: var(--crew); }
+  .note.ship { border-left-color: var(--ship); }
+  .note p { margin: 0; }
+  .steps { list-style: none; display: grid; gap: 10px; margin: 8px 0 16px; }
+  .steps li { display: grid; grid-template-columns: 44px 1fr; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow); font-size: 14.5px; }
+  .steps .n { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 700; color: var(--method); padding-top: 3px; }
+  .steps .t { font-weight: 750; letter-spacing: -.01em; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 4px; }
+  .steps .d { color: var(--ink-soft); }
+  .steps .d b { color: var(--ink); }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+  .compare > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .compare h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .compare .pick { border-color: color-mix(in srgb, var(--method) 55%, transparent); background: var(--method-soft); }
+  .compare .pick h4 { color: var(--method); }
+  .compare ul { margin: 0; font-size: 14px; }
+  .decisions { list-style: none; display: grid; gap: 9px; margin-top: 6px; }
+  .decisions li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; font-size: 14.5px; box-shadow: var(--shadow); }
+  .decisions .n { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--crew); }
+  .decisions .rec { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ship); background: var(--ship-soft); padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span><a href="/documentation/">← Documentation</a></span>
+    <span class="badge">Objek pipeline · v1 · Working plan</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span><span>Creative pipeline · Objek lane · 9 Sep 2026 · Draft for Neo</span></div>
+    <h1>From a photo or a shop link to a 3D object you can spin in the browser</h1>
+    <p class="dek">The generic version of the Cospace clothing experiment: any object in, a clean, correctly sized 3D model out, viewable on the web and ready for the Game Kit. Seven steps, each pinned to a fleet machine, with GPT-6 Astra as the Blender operator and a second model as the judge.</p>
+
+    <div class="answers">
+      <div class="k-head">Short version</div>
+      <ol>
+        <li><span class="k">What failed before</span><span>The Cospace attempt did not fail at "image to 3D". It failed at <b>clothing on a body</b>: rig mismatch, sleeves, T-pose, and fitting a garment to a torso. Tops actually worked by July. Generic objects skip all of that.</span></li>
+        <li><span class="k">Calibration</span><span>Last time "calibration" meant fitting a garment to a body by hand-tuned numbers. This time it means <b>real-world size</b>, taken from the product listing or confirmed by you before anything is generated, and checked automatically after.</span></li>
+        <li><span class="k">Which machine</span><span><b>tr-home</b> is the worker for version 1: official Blender, a 24 GB GPU for renders, the browser that can open Shopee, and Codex with Astra already logged in. <b>EdgeXpert</b> is more powerful for AI models, but it runs Siti and the twin brain, and Blender has no official build for its chip. It joins in phase 2 to host our own mesh models.</span></li>
+        <li><span class="k">Astra's job</span><span>Astra drives Blender: writes and repairs the clean-up scripts, decides how to retry a bad mesh. Claude builds the pipeline and acts as the second pair of eyes. Never the same model writing and judging, same rule as the Studio.</span></li>
+        <li><span class="k">Dashboard</span><span>A fourth lane in <b>studio.neotodak.com</b> called Objek, with the same five-gate shape. No new dashboard. The viewer page and the "send to Game Kit" button live there.</span></li>
+      </ol>
+    </div>
+  </header>
+
+  <section id="cospace">
+    <div class="sec-head"><span class="sec-num">01</span><h2>What the Cospace clothing attempt actually taught us</h2></div>
+    <p class="sec-sub">The June to August work is all on record. Reading it back, the picture is clearer than "the 3D was not accurate".</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>What happened</th><th>Root cause</th><th>Does it apply to generic objects?</th></tr></thead>
+      <tbody>
+        <tr><td>Garments stayed frozen or exploded on the avatar</td><td>Rig mismatch. The garments used one skeleton, the bodies another, zero shared bone names. An asset problem, not a code problem.</td><td><b>No.</b> A chair, a shoe or a lamp has no skeleton.</td></tr>
+        <tr><td>Sleeves did not follow the arms</td><td>Weight transfer put sleeve vertices on the torso. Only arms-out (T-pose) garments auto-rig cleanly; arms-down sources are hard.</td><td><b>No.</b> Nothing to rig.</td></tr>
+        <tr><td>Garments looked tight, gappy, or like a puffer</td><td>Fit was scaled by height only, then patched with body-envelope scaling. Some engines inflate the shape.</td><td><b>Partly.</b> Size still matters, but the reference is now the product's own dimensions, not a body.</td></tr>
+        <tr><td>Skin and shirt patches baked into the texture</td><td>Source photo had a person or busy background. The engine reproduces whatever is in the picture.</td><td><b>Yes.</b> Fixed by cleaning the image first and generating extra views.</td></tr>
+        <tr><td>First engine too coarse</td><td>Higgsfield's mesh was rough. Switching to Tripo gave clean geometry and passed every check.</td><td><b>Yes.</b> Engine choice is a bake-off, not a guess.</td></tr>
+        <tr><td>No "generate" button ever shipped</td><td>No machine with Blender behind the Cospace server, and the Studio UI sits in Lan's repo.</td><td><b>Yes, and this is the real fix.</b> This plan puts Blender on a fleet worker with a queue in front of it.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><p>By 23 July there was a one-command tool that turned a product image into a wearable top that passed the validator, on garments it had never seen. What was missing was a backend and a button. Clothing stays a separate, later lane that reuses that tool. This plan is for everything else.</p></div>
+  </section>
+
+  <section id="steps">
+    <div class="sec-head"><span class="sec-num">02</span><h2>The seven steps, and who runs each one</h2></div>
+    <p class="sec-sub">Every step writes its result to the job row in the Studio database and drops files in the media bucket, so the dashboard shows progress live and any step can be re-run alone.</p>
+    <ol class="steps">
+      <li><span class="n">0</span><div><div class="t">Intake <span class="pill studio">Studio</span></div><div class="d">You give one of three things: an image, a link (Shopee, Lazada, any product page), or a sentence describing the object. The Studio creates a job in the Objek lane. Nothing costs money yet.</div></div></li>
+      <li><span class="n">1</span><div><div class="t">Fetch and understand <span class="pill tr">tr-home</span> <span class="pill cloud">Astra</span></div><div class="d">For a link, the browser desk on tr-home opens the page with a real Chrome profile (Shopee blocks plain scrapers) and pulls the product photos, title, and the listed dimensions and weight. Astra writes a <b>product card</b>: what it is, category, real size in centimetres, materials, whether it is symmetric, which views we have. <b>Pintu 0:</b> you confirm the card, above all the size. This is the calibration, done before any money is spent.</div></div></li>
+      <li><span class="n">2</span><div><div class="t">Reference set <span class="pill tr">tr-home</span> <span class="pill cloud">image model</span></div><div class="d">Cut the object out of its background. Generate the views we do not have (back, side, top) with an image model told to keep the same object. Result: two to four clean views on white. <b>Pintu 1:</b> a reviewer model checks the views agree with each other. About RM1 to 2.</div></div></li>
+      <li><span class="n">3</span><div><div class="t">Mesh generation <span class="pill cloud">hosted engines</span></div><div class="d">Send the views to a hosted image-to-3D engine and get a textured mesh back. Version 1 uses Tripo through fal.ai because it already proved itself in July. The lane runs a second engine in parallel (Hunyuan3D, Meshy or Rodin) so you get two candidates, and the winner count becomes a leaderboard like the Studio's writer bake-offs. About RM3 to 8 per candidate.</div></div></li>
+      <li><span class="n">4</span><div><div class="t">Blender clean-up and calibration <span class="pill tr">tr-home</span> <span class="pill cloud">Astra</span></div><div class="d">Blender runs headless from scripts, no window. Fix orientation (the July bugs are documented: quaternion rotation, the Y-up wrapper), <b>scale to the real size from the product card</b>, set the origin and floor, reduce polygons to the target (web or game), close holes, fix normals, remove stray pieces, bake a clean 2K texture, and export three files: GLB for the web and Godot, USDZ for iPhone AR, FBX for other engines. Then render a turntable: eight stills and a six-second spin on the 24 GB GPU. Automatic checks: bounding box within 5% of the card, watertight, polygon budget, texture size, no stray meshes. Astra's role: when a check fails, it edits the script or changes the parameters and re-runs, up to three tries.</div></div></li>
+      <li><span class="n">5</span><div><div class="t">Second pair of eyes <span class="pill edge">EdgeXpert or cloud</span></div><div class="d"><b>Pintu 2:</b> a vision model that is not Astra compares the turntable with the source photos and scores 0 to 10 with a list of issues: wrong proportions, smeared logo, missing part, fake back side. Below the bar, the lane goes back to step 3 with the other engine or a new seed. Above the bar, you see source and result side by side and press Lulus or Gagal.</div></div></li>
+      <li><span class="n">6</span><div><div class="t">Publish and use <span class="pill studio">Studio</span></div><div class="d">Files go to the media bucket. The Studio shows the object in a browser viewer you can spin, with an AR button on a phone. Buttons: copy share link, download, <b>send to Game Kit</b> (drops the GLB into a student's Godot project as a ready asset), and later, send to Cospace through the July garment tool for tops only.</div></div></li>
+    </ol>
+    <h3>Why this works where the clothing version stalled</h3>
+    <ul>
+      <li>No skeleton, no body, no fit tuning. The hardest 80% of the old problem is gone.</li>
+      <li>Size is confirmed by a person before generation and measured by a script after. That is the calibration, and it is checkable.</li>
+      <li>The engine reproduces what it sees, so we control what it sees: clean cut-out, extra views, no people, no clutter.</li>
+      <li>A judge that is not the maker looks at every result before you do.</li>
+      <li>A queue and a worker exist. The button finally has something behind it.</li>
+    </ul>
+    <h3>What it still cannot do well</h3>
+    <ul>
+      <li>The back of an object only ever shown from the front is invented. Extra views reduce this, they do not remove it.</li>
+      <li>Glass, chrome, thin wire and transparent parts come out wrong on every engine today.</li>
+      <li>Logos and printed text smear. A fix step can re-project the source photo onto the front face, but small text stays soft.</li>
+      <li>Shop links are best effort. Shopee changes its pages and blocks robots; when the fetch fails, you paste the images and carry on.</li>
+    </ul>
+  </section>
+
+  <section id="fleet">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Which fleet machine, and why</h2></div>
+    <p class="sec-sub">Checked live on 9 September. This is the part where the preferred answer and the practical answer differ.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Machine</th><th>What it has today</th><th>Role in this pipeline</th></tr></thead>
+      <tbody>
+        <tr><td><b>tr-home</b> <span class="pill tr">worker v1</span></td><td>32-core Threadripper, 62 GB memory, AMD 24 GB GPU, Ubuntu on a normal x86 chip. Codex installed and logged in. The browser desk with the Shopee-capable Chrome profiles. Already runs the Studio publisher every five minutes. Blender is one command away (official build).</td><td>Steps 1, 2 and 4: browser fetch, image clean-up, Blender clean-up, GPU turntable renders, the Astra runner. A single worker process polls the Objek queue, same pattern as the publisher.</td></tr>
+        <tr><td><b>EdgeXpert</b> <span class="pill edge">phase 2</span></td><td>NVIDIA GB10 with 121 GB unified memory, 3.4 TB free. The most capable AI box we own. But it is an ARM chip: Blender has no official build for it (community builds only), the AI libraries need NVIDIA's ARM stack installed, and it is Siti's home plus the twin brain. Codex is installed here too.</td><td>Step 5 judge today if we want it local. Phase 2: host our own mesh engine (TRELLIS-2 or Hunyuan3D) so step 3 stops paying per object. Not in the version 1 path, on purpose.</td></tr>
+        <tr><td><b>Studio</b> <span class="pill studio">dashboard</span></td><td>studio.neotodak.com on Netlify, the fleet database, the media bucket, PIN gate, lanes and gates already built for drama, lapisan and daily.</td><td>Steps 0 and 6, and every gate button. The Objek lane is a fourth lane, not a new app.</td></tr>
+        <tr><td><b>Hosted engines</b> <span class="pill cloud">pay per object</span></td><td>Tripo through fal.ai (proven July), Hunyuan3D, Meshy, Rodin. Image models for extra views. A vision model for judging.</td><td>Step 3 and the extra views in step 2. Swappable per job so the bake-off can run.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note crew"><p><b>On "EdgeXpert because it is more powerful".</b> True for running AI models, and that is exactly what phase 2 uses it for. For Blender it is the weaker choice: unofficial builds, an ARM chip, and it would share the box with Siti. Blender work is not heavy anyway; the GPU only matters for the turntable renders, and tr-home's card does that fine.</p></div>
+  </section>
+
+  <section id="astra">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Where Astra fits, and where it should not</h2></div>
+    <p class="sec-sub">GPT-6 Astra is real, released 3 September, and OpenAI markets it as strong at Blender and 3D reasoning. We can use it today: Codex is logged in on your Mac and on tr-home, and the API key works.</p>
+    <div class="compare">
+      <div class="pick">
+        <h4>Astra on tr-home, inside the pipeline (recommended)</h4>
+        <ul>
+          <li>Runs as a background command per job, no chat window: "here is the mesh, the product card and the failed check, fix it".</li>
+          <li>Writes and repairs the Blender scripts. The scripts, not the chat, are what runs next time.</li>
+          <li>Its output is judged by a different model. Same rule as the Studio writer and reviewer.</li>
+          <li>Swappable. If Claude or a newer model does the Blender step better in a bake-off, change one setting.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Astra in Codex on your Mac, by hand</h4>
+        <ul>
+          <li>Good for the first week: exploring what Astra can do in Blender, building the scripts.</li>
+          <li>Not a pipeline. Your Mac must not become the worker, and the browser control rule already says the same.</li>
+          <li>No queue, no gates, no record of what was tried.</li>
+        </ul>
+      </div>
+    </div>
+    <p>Version 1 uses Astra for steps 1 and 4 and a Claude or Gemini vision model for step 5. Claude Code builds the worker and the Studio lane. The first bake-off is Astra against Claude on the same five broken meshes; whoever repairs more of them keeps the job.</p>
+  </section>
+
+  <section id="dashboard">
+    <div class="sec-head"><span class="sec-num">05</span><h2>The Objek lane in the Studio</h2></div>
+    <p class="sec-sub">Same shape as the other lanes: a job list, three gates, a cost line per job, a leaderboard per engine.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Gate</th><th>What you see</th><th>What you decide</th><th>Cost so far</th></tr></thead>
+      <tbody>
+        <tr><td><b>Pintu 0 · Kad produk</b></td><td>Photos pulled from the link, the product card, the size in centimetres</td><td>Size correct? Which views do we have?</td><td class="num">RM0</td></tr>
+        <tr><td><b>Pintu 1 · Rujukan</b></td><td>Two to four clean views on white, reviewer's consistency note</td><td>Do the views match the object?</td><td class="num">RM1–2</td></tr>
+        <tr><td><b>Pintu 2 · Objek</b></td><td>Two candidate meshes as turntables next to the source photos, judge's score and issues, measured size versus the card</td><td>Lulus, or Gagal with a reason that feeds the retry</td><td class="num">RM6–16</td></tr>
+        <tr><td><b>Terbit</b></td><td>Browser viewer, AR on phone, share link, download, send to Game Kit</td><td>—</td><td class="num">RM0</td></tr>
+      </tbody>
+    </table></div>
+    <p>For the course, the same lane is what students use in the 3D weeks: a student pastes a photo of a prop, gets a game-ready asset with a real size, and the prompt record shows how they directed the fix loop. The Game Kit's "asset" command is a front door to this lane.</p>
+  </section>
+
+  <section id="build">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Build list and cost</h2></div>
+    <p class="sec-sub">About one week of work. Estimates, not quotes.</p>
+    <ol class="plain">
+      <li><b>Blender and the worker on tr-home</b> · 1 day. Official Blender, a worker process that polls the Objek queue, the fal.ai and image-model calls, the Codex runner.</li>
+      <li><b>Clean-up scripts</b> · 2 days. Orientation, real-size scaling, decimation, hole closing, texture bake, three exports, turntable render, the automatic checks. Astra and Claude both write against the same five test objects.</li>
+      <li><b>Objek lane in the Studio</b> · 1.5 days. Job table, three gates, viewer page, send-to-Game-Kit. Built with the Studio session that owns that repo.</li>
+      <li><b>Judge and retry loop</b> · 1 day. Vision scoring, the retry rules, the engine leaderboard.</li>
+      <li><b>Dry run</b> · 1 day. Five real Shopee items of different kinds: a shoe, a chair, a bottle, a toy, a lamp. Every snag goes into the scripts before anyone else uses it.</li>
+    </ol>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Cost</th><th>Type</th><th>Estimate</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Per object, version 1</td><td>Per job</td><td class="num">RM8–20</td><td>Extra views RM1–2, two candidate meshes RM6–16, Astra tokens RM1–3, renders RM0</td></tr>
+        <tr><td>Blender, worker, viewer</td><td>One-off</td><td class="num">RM0</td><td>All free software on machines we already run</td></tr>
+        <tr><td>Phase 2 local mesh engine on EdgeXpert</td><td>One-off effort</td><td class="num">2–3 days</td><td>Worth it only past a few hundred objects a month, or for the course cohorts</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="decide">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Decisions for Neo</h2></div>
+    <ol class="decisions">
+      <li><span class="n">1</span><span>tr-home is the version 1 worker, EdgeXpert joins in phase 2 for our own mesh engine. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">2</span><span>The dashboard is a fourth lane in studio.neotodak.com, not a new site. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">3</span><span>Astra runs the Blender step from inside the pipeline on tr-home; a different model judges; Claude builds. First bake-off decides who keeps the Blender job.</span></li>
+      <li><span class="n">4</span><span>Hosted engines for version 1 at roughly RM8 to 20 per object, Tripo first with a second engine in parallel.</span></li>
+      <li><span class="n">5</span><span>Clothing on a body stays out of version 1. It gets its own lane later, reusing the July garment tool.</span></li>
+      <li><span class="n">6</span><span>Go: start the one-week build, or hold until the course Game Kit work is further along.</span></li>
+    </ol>
+  </section>
+
+  <section id="changelog">
+    <div class="sec-head"><span class="sec-num">08</span><h2>Changelog</h2></div>
+    <ul>
+      <li><b>v1 · 9 Sep 2026.</b> First working plan, after reading the June to August Cospace garment record, checking both fleet machines live, and confirming Astra access on Codex and the API.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Todak AI Creator Program · Creative pipeline · Objek v1</span>
+    <span>Working plan · not yet approved · Sept 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>

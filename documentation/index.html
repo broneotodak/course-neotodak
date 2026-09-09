@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Documentation — Todak AI Creator Program</title>
+<meta name="description" content="Working plans and pipeline documents for the Todak AI Creator Program.">
+<style>
+  :root {
+    --bg: #e9ebee; --surface: #f6f7f8; --line: #d3d8dd; --ink: #14181c; --ink-soft: #545c64; --ink-faint: #828d97;
+    --method: #37627f; --method-soft: rgba(55,98,127,.11); --crew: #9a6a1c; --elective: #7a5aa0;
+    --shadow: 0 1px 2px rgba(20,24,28,.05), 0 8px 24px rgba(20,24,28,.05); color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #0c0e11; --surface: #14181d; --line: #2a3138; --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c; --method: #86b2ce; --method-soft: rgba(134,178,206,.13); --crew: #d2a052; --elective: #b298d6; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35); color-scheme: dark; }
+  }
+  :root[data-theme="dark"] { --bg: #0c0e11; --surface: #14181d; --line: #2a3138; --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c; --method: #86b2ce; --method-soft: rgba(134,178,206,.13); --crew: #d2a052; --elective: #b298d6; --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35); color-scheme: dark; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--ink); font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--method); text-underline-offset: 2px; }
+  .topbar { border-bottom: 1px solid var(--line); font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint); letter-spacing: .12em; text-transform: uppercase; }
+  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
+  .topbar .badge { color: var(--method); }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  header { padding: 48px 0 20px; }
+  .eyebrow { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 18px; }
+  h1 { font-size: clamp(29px, 5.2vw, 40px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; }
+  .dek { color: var(--ink-soft); font-size: 16px; max-width: 680px; margin-top: 12px; }
+  .docs { list-style: none; display: grid; gap: 12px; margin-top: 12px; }
+  .docs li { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 12px; padding: 16px 20px; box-shadow: var(--shadow); }
+  .docs li.objek { border-left-color: var(--elective); }
+  .docs .k { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+  .docs h2 { font-size: 18px; font-weight: 750; letter-spacing: -.01em; margin: 4px 0 6px; }
+  .docs h2 a { text-decoration: none; }
+  .docs h2 a:hover { text-decoration: underline; }
+  .docs p { color: var(--ink-soft); font-size: 14.5px; max-width: 720px; }
+  footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap"><span><a href="/">← Module spec</a></span><span class="badge">Documentation</span></div></div>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Todak AI Creator Program · Working plans</div>
+    <h1>Documentation</h1>
+    <p class="dek">Plans and pipeline documents behind the Game Track. Each page carries its own changelog; newer versions get a new folder and the old one stays.</p>
+  </header>
+  <ul class="docs">
+    <li>
+      <div class="k">Game Track · Blueprint v1.1 · 8 Sep 2026</div>
+      <h2><a href="/documentation/v1/">Three games, one kit, every prompt on record</a></h2>
+      <p>How students build and publish three games with Claude Code and the Todak Game Kit, the classroom and home machine stack, publishing through Todak Studios from day one, and how every prompt is recorded.</p>
+    </li>
+    <li class="objek">
+      <div class="k">Creative pipeline · Objek v1 · 9 Sep 2026</div>
+      <h2><a href="/documentation/objek-pipeline/">From a photo or a shop link to a 3D object you can spin in the browser</a></h2>
+      <p>What the Cospace clothing attempt taught us, the seven steps from input to web viewer, which fleet machine runs each step, and where GPT-6 Astra fits.</p>
+    </li>
+  </ul>
+  <footer>Todak AI Creator Program · Documentation · Sept 2026</footer>
+</div>
+</body>
+</html>
