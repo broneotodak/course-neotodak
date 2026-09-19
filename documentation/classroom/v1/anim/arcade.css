@@ -1,0 +1,176 @@
+/* Arcade cabinets only. The surrounding page keeps its original theme. */
+.arcade {
+  --arc-bg: #14152a;
+  --arc-panel: #1f2140;
+  --arc-line: #4a4d8a;
+  --arc-ink: #f2f2ff;
+  --arc-soft: #9a9cc9;
+  --arc-pink: #ff6ba8;
+  --arc-cyan: #5be7ff;
+  --arc-green: #7cff6b;
+  color-scheme: dark;
+  color: var(--arc-ink);
+  background: var(--arc-bg);
+  border: 2px solid var(--arc-line);
+  padding: 18px;
+  margin: 10px 0 12px;
+  min-width: 0;
+}
+.arcade .arcade-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 18px;
+  font: 10px/1.8 "Press Start 2P", monospace;
+  color: var(--arc-pink);
+}
+.arcade .arcade-heading small { font: 11px/1.5 ui-monospace, monospace; color: var(--arc-soft); }
+.arcade svg { display: block; width: 100%; height: auto; shape-rendering: crispEdges; }
+.arcade .arcade-tour-svg { aspect-ratio: 1000 / 410; }
+.arcade .arcade-scene-svg { aspect-ratio: 316 / 244; }
+.arcade svg text { font-family: "Press Start 2P", monospace; fill: var(--arc-ink); }
+.arcade svg .soft, .arcade svg .lbl { fill: var(--arc-soft); }
+.arcade svg .frame, .arcade svg .side, .arcade svg .code,
+.arcade svg .desk, .arcade svg .mon {
+  fill: var(--arc-panel); stroke: var(--arc-line); stroke-width: 2;
+}
+.arcade svg .side { fill: var(--arc-bg); }
+.arcade svg .astra { stroke: var(--arc-cyan); }
+.arcade svg .cc { stroke: var(--arc-pink); }
+.arcade svg .box, .arcade svg .btn { fill: none; stroke: var(--arc-ink); stroke-width: 2; }
+.arcade svg .tick { fill: none; stroke: var(--arc-green); stroke-width: 2.4; }
+.arcade svg .thumb { fill: var(--arc-cyan); fill-opacity: .2; stroke: var(--arc-cyan); }
+.arcade svg .ln { fill: var(--arc-soft); opacity: .45; }
+.arcade svg .ln.new { fill: var(--arc-pink); opacity: 1; }
+.arcade svg .game, .arcade svg .scene { fill: #0d0f1a; stroke: var(--arc-line); stroke-width: 2; }
+.arcade svg .net { stroke: var(--arc-soft); }
+.arcade svg .paddle, .arcade svg .hair, .arcade svg .pants { fill: var(--arc-ink); }
+.arcade svg .ball, .arcade svg .knob { fill: var(--arc-pink); }
+.arcade svg .play, .arcade svg .recdot, .arcade svg .hero,
+.arcade svg .chip, .arcade svg .toast rect, .arcade svg .stamp rect { fill: var(--arc-green); }
+.arcade svg .chipt, .arcade svg .toast text, .arcade svg .stamp text { fill: #0d0f1a; }
+.arcade svg .skin, .arcade svg .arm { fill: #f0c8a0; }
+.arcade svg .shirt { fill: var(--arc-cyan); }
+.arcade svg .stu { stroke: var(--arc-ink); stroke-width: 2; }
+.arcade svg .deskline, .arcade svg .slider { fill: var(--arc-line); }
+.arcade svg .scanlines { pointer-events: none; }
+.arcade svg .screen-copy { font-family: ui-monospace, Menlo, monospace; font-size: 9px; }
+.arcade svg .character-front { fill: var(--arc-cyan); }
+.arcade svg .character-side { fill: var(--arc-line); }
+.arcade svg .character-top { fill: var(--arc-ink); }
+.arcade svg .phone { fill: var(--arc-panel); stroke: var(--arc-ink); stroke-width: 2; }
+.arcade svg .scene-grid { fill: none; stroke: var(--arc-line); stroke-width: 1; }
+/* The timeline seeks these paused, stepped animations so every visual freezes together. */
+.arcade[data-ready="true"] [data-paddle], .arcade[data-ready="true"] [data-ball] {
+  animation-duration: 2400ms;
+  animation-timing-function: steps(6, end);
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-delay: var(--arc-game-time, 0ms);
+}
+.arcade[data-ready="true"] [data-paddle="tour"] { animation-name: arcade-paddle; }
+.arcade[data-ready="true"] [data-ball="tour"] { animation-name: arcade-ball; }
+.arcade[data-ready="true"] [data-paddle="small"] { animation-name: arcade-small-paddle; }
+.arcade[data-ready="true"] [data-ball="small"] { animation-name: arcade-small-ball; }
+@keyframes arcade-paddle {
+  0%, 100% { transform: translateY(0); }
+  20% { transform: translateY(-60px); }
+  50% { transform: translateY(50px); }
+  75% { transform: translateY(-30px); }
+}
+@keyframes arcade-ball {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-120px, -80px); }
+  45% { transform: translate(120px, 0); }
+  65% { transform: translate(0, 110px); }
+  85% { transform: translate(-120px, 30px); }
+  100% { transform: translate(0, 0); }
+}
+@keyframes arcade-small-paddle {
+  0%, 100% { transform: translateY(0); }
+  20% { transform: translateY(-16px); }
+  50% { transform: translateY(17px); }
+  80% { transform: translateY(-10px); }
+}
+@keyframes arcade-small-ball {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-22px, -20px); }
+  45% { transform: translate(22px, 0); }
+  65% { transform: translate(0, 27px); }
+  85% { transform: translate(-22px, 10px); }
+}
+.arcade .arcade-dialog {
+  display: grid;
+  border: 2px solid var(--arc-line);
+  box-shadow: inset 0 0 0 3px var(--arc-bg);
+  background: var(--arc-panel);
+  padding: 14px 16px;
+  margin-top: 12px;
+  line-height: 1.55;
+  font-size: 14px;
+}
+/* Stacked captions reserve the longest caption's space, including after fonts load. */
+.arcade .arcade-caption { grid-area: 1 / 1; visibility: hidden; }
+.arcade .arcade-caption:last-child { visibility: visible; }
+.arcade .arcade-caption b { color: var(--arc-pink); }
+.arcade .arcade-caption::after {
+  content: ""; display: inline-block; width: 7px; height: 10px;
+  margin-left: 7px; background: var(--arc-cyan); vertical-align: -1px;
+}
+.arcade[data-running="true"] .arcade-caption::after { animation: arcade-cursor .8s steps(1, end) infinite; }
+@keyframes arcade-cursor { 50% { opacity: 0; } }
+.arcade .arcade-dots { display: flex; gap: 7px; align-items: center; }
+.arcade .arcade-dot { width: 9px; height: 9px; background: var(--arc-line); }
+.arcade .arcade-dot:last-child, .arcade .arcade-dot[aria-current="step"] { background: var(--arc-pink); }
+.arcade[data-ready="true"] .arcade-dot:not([aria-current="step"]) { background: var(--arc-line); }
+.arcade .arcade-progress { display: flex; justify-content: space-between; gap: 10px; margin: 14px 0 10px; }
+.arcade .arcade-status { color: var(--arc-soft); font: 11px/1.5 ui-monospace, monospace; }
+.arcade .arcade-controls { display: flex; flex-wrap: wrap; gap: 8px; }
+.arcade .arcade-controls[hidden] { display: flex; visibility: hidden; pointer-events: none; }
+.arcade .arcade-controls button {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-height: 44px; min-width: 44px; padding: 8px 13px;
+  border: 2px solid var(--arc-line); border-radius: 0;
+  background: var(--arc-panel); color: var(--arc-ink);
+  font: 13px/1.3 ui-monospace, Menlo, monospace; cursor: pointer;
+}
+.arcade .arcade-controls button[data-action="toggle"] { border-color: var(--arc-pink); }
+.arcade .arcade-controls button:hover { border-color: var(--arc-cyan); }
+.arcade .arcade-controls button:focus-visible { outline: 3px solid var(--arc-cyan); outline-offset: 3px; }
+.arcade .arcade-control-icon { width: 10px; height: 10px; flex: 0 0 10px; fill: currentColor; }
+.arcade .arcade-controls button .arcade-pause-icon { display: none; }
+.arcade[data-playing="true"] .arcade-controls button .arcade-pause-icon { display: block; }
+.arcade[data-playing="true"] .arcade-controls button .arcade-play-icon { display: none; }
+.arcade .arcade-help { color: var(--arc-soft); font-size: 11px; margin: 10px 0 0; }
+.arcade:not([data-ready="true"]) [data-only] { visibility: hidden; }
+.arcade-storyboard { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 12px 0; }
+.arcade-storyboard .arcade { margin: 0; padding: 12px; display: flex; flex-direction: column; }
+.arcade-storyboard .arcade-heading { min-height: 48px; font-size: 9px; display: block; margin-bottom: 10px; }
+.arcade-storyboard .arcade-heading small { display: block; margin-top: 7px; }
+.arcade-storyboard .arcade-dialog { padding: 12px; flex: 1; font-size: 13px; }
+.arcade-storyboard .arcade-controls { gap: 5px; }
+.arcade-storyboard .arcade-controls button { padding: 8px; font-size: 11px; flex: 1; }
+.arcade-storyboard .arcade-controls button[data-action="toggle"] { flex: 1.1; }
+.arcade-storyboard .arcade-controls button svg { display: none; }
+@media (max-width: 740px) {
+  .arcade[data-arcade="tour"] .arcade-heading { display: block; }
+  .arcade[data-arcade="tour"] .arcade-heading small { display: block; margin-top: 8px; }
+  .arcade-storyboard { grid-template-columns: 1fr; }
+  .arcade-storyboard .arcade { padding: 16px; }
+  .arcade-storyboard .arcade-heading { min-height: 0; }
+  .arcade-storyboard .arcade-dialog { font-size: 14px; }
+  .arcade-storyboard .arcade-controls button { flex: initial; font-size: 13px; padding: 8px 12px; }
+  .arcade-storyboard .arcade-controls button[data-action="toggle"] { flex: initial; }
+}
+@media (max-width: 440px) {
+  .arcade { padding: 10px; }
+  .arcade .arcade-heading { font-size: 9px; }
+  .arcade .arcade-dialog { padding: 10px; }
+  .arcade .arcade-controls { gap: 6px; }
+  .arcade .arcade-controls button { padding: 8px 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .arcade *, .arcade *::after { animation: none !important; }
+}

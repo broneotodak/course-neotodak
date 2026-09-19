@@ -240,26 +240,99 @@
     </table></div>
 
     <h3>Option B, drawn</h3>
-    <div class="screen">
-      <div class="mon">
-        <div class="cap">Monitor 1 · Todak Workbench (the editor)</div>
-        <div class="wb">
-          <div class="side"><b>Todak sidebar</b><small>Week 3 · Game 1 · Pong</small><small>Today's steps ✓ ✓ ☐ ☐</small><small>Design board</small><small>Builds &amp; links</small><small>▶ Run · Build · Publish · Review</small><small>My prompt journey</small></div>
-          <div class="code"><b>The code and files</b><small>The student's game, visible at all times. This is where "not vibe coders" lives: whatever either desk changes appears here, and the student reads it.</small></div>
-          <div class="desks">
-            <div class="astra"><b>Design desk · Astra</b><small>Design doc, moodboards, sprites, UI mock-ups, gameplay on a branch.</small></div>
-            <div class="cc"><b>Build desk · Claude Code</b><small>Memory, scaffolding, builds, publish, review report.</small></div>
-          </div>
-        </div>
+    <!-- Arcade screen tour: resources stay inside this approved insertion point. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap">
+    <link rel="stylesheet" href="anim/arcade.css">
+    <script src="anim/arcade.js" defer="defer"></script>
+    <figure class="arcade" data-arcade="tour" data-beat-ms="2400" aria-labelledby="arcade-tour-heading">
+      <figcaption class="arcade-heading" id="arcade-tour-heading">TODAK WORKBENCH <small>One prompt. Five beats. A game that moves.</small></figcaption>
+      <svg class="arcade-tour-svg" role="img" aria-labelledby="arcade-tour-title arcade-tour-desc" viewBox="0 0 1000 410" width="1000" height="410" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
+  <title id="arcade-tour-title">The Todak Workbench screen tour</title>
+  <desc id="arcade-tour-desc">Monitor 1 has the Todak sidebar, code in the middle, the closed Design desk and the active Build desk. A student types a paddle request; three lines change; Godot reloads on Monitor 2; Pong plays; the Paddle moves step and saved to memory chip light up.</desc>
+  <defs>
+    <pattern id="arcade-tour-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="rgba(0,0,0,.22)"/></pattern>
+  </defs>
+  <g class="panels">
+    <!-- monitor 1 -->
+    <rect class="frame" x="4" y="4" width="612" height="366" rx="0"/>
+    <text class="lbl" x="310" y="392" text-anchor="middle" font-size="7">Monitor 1 · Todak Workbench</text>
+    <!-- sidebar -->
+    <rect class="side" x="16" y="16" width="140" height="342" rx="0"/>
+    <text class="t strong" x="26" y="38" font-size="7">Week 3 · Game 1</text>
+    <text class="t" x="26" y="54" font-size="7">Pong</text>
+    <text class="t soft" x="26" y="80" font-size="7">Today's steps</text>
+    <g class="steps" font-size="7">
+      <rect class="box done" x="26" y="90" width="11" height="11"/><path class="tick" d="M28 96 l3 3 l6 -7"/><text class="t" x="44" y="100">Scaffold</text>
+      <rect class="box" x="26" y="110" width="11" height="11"/><path class="tick tick2" data-from="4" d="M28 116 l3 3 l6 -7"/><text class="t" x="44" y="120">Paddle moves</text>
+      <rect class="box" x="26" y="130" width="11" height="11"/><text class="t" x="44" y="140">Ball bounces</text>
+      <rect class="box" x="26" y="150" width="11" height="11"/><text class="t" x="44" y="160">Publish to web</text>
+    </g>
+    <text class="t soft" x="26" y="196" font-size="7">Design board</text>
+    <rect class="thumb" x="26" y="204" width="34" height="24"/><rect class="thumb" x="66" y="204" width="34" height="24"/><rect class="thumb" x="106" y="204" width="34" height="24"/>
+    <path class="net" d="M34 211 v10 M53 211 v10 M73 215 h7 M120 210 v12 M114 216 h12"/>
+    <rect class="ball" x="43" y="215" width="3" height="3"/>
+    <text class="t soft" x="26" y="252" font-size="7">Builds &amp; links</text>
+    <g class="btns" font-size="7">
+      <rect class="btn" x="26" y="262" width="56" height="18" rx="0"/><text class="t" x="54" y="275" text-anchor="middle">Run</text>
+      <rect class="btn" x="88" y="262" width="56" height="18" rx="0"/><text class="t" x="116" y="275" text-anchor="middle">Build</text>
+      <rect class="btn" x="26" y="286" width="56" height="18" rx="0"/><text class="t" x="54" y="299" text-anchor="middle">Publish</text>
+      <rect class="btn" x="88" y="286" width="56" height="18" rx="0"/><text class="t" x="116" y="299" text-anchor="middle">Review</text>
+    </g>
+    <g class="rec" font-size="6"><rect class="recdot" x="28" y="336" width="8" height="8"/><text class="t soft" x="42" y="344">recording · saved</text></g>
+    <!-- code -->
+    <rect class="code" x="166" y="16" width="234" height="342" rx="0"/>
+    <text class="t soft" x="176" y="34" font-size="7">paddle.gd</text>
+    <g class="lines">
+      <rect class="ln" x="176" y="46" width="150" height="6"/><rect class="ln" x="176" y="60" width="110" height="6"/><rect class="ln" x="176" y="74" width="180" height="6"/>
+      <rect class="ln new n1" data-from="1" data-delay="0" x="186" y="96" width="170" height="6"/><rect class="ln new n2" data-from="1" data-delay="350" x="186" y="110" width="130" height="6"/><rect class="ln new n3" data-from="1" data-delay="700" x="186" y="124" width="150" height="6"/>
+      <rect class="ln" x="176" y="146" width="120" height="6"/><rect class="ln" x="176" y="160" width="160" height="6"/>
+    </g>
+    <!-- desks -->
+    <rect class="desk astra" x="410" y="16" width="196" height="150" rx="0"/>
+    <text class="t strong" x="420" y="34" font-size="7">Design desk · Astra</text>
+    <text class="t soft" x="420" y="52" font-size="7">closed this block</text>
+    <rect class="thumb big" x="420" y="62" width="80" height="50"/><rect class="thumb big" x="510" y="62" width="80" height="50"/>
+    <text class="t soft" x="420" y="130" font-size="7">paddles · ball · title</text>
+    <rect class="desk cc" x="410" y="176" width="196" height="182" rx="0"/>
+    <text class="t strong" x="420" y="194" font-size="7">Build desk · Claude Code</text>
+    <g class="chat" font-size="7">
+      <text class="t soft" x="420" y="214">You</text>
+      <text class="t prompt" data-type="make the left paddle" x="420" y="230">make the left paddle</text>
+      <text class="t prompt p2" data-type="move with W and S" x="420" y="244">move with W and S</text>
+      <text class="t soft reply" data-from="1" x="420" y="272">Claude Code</text>
+      <text class="t reply" data-from="1" x="420" y="288">Edited paddle.gd, 3 lines.</text>
+      <text class="t reply" data-from="2" x="420" y="302" font-size="6">Godot reloaded. Press Play.</text>
+      <rect class="chip mem" data-from="4" x="420" y="320" width="120" height="18" rx="0"/><text class="t chipt mem" data-from="4" x="480" y="333" text-anchor="middle">saved to memory</text>
+    </g>
+    <!-- monitor 2 -->
+    <rect class="frame" x="646" y="4" width="350" height="366" rx="0"/>
+    <text class="lbl" x="821" y="392" text-anchor="middle" font-size="7">Monitor 2 · Godot, the live view</text>
+    <rect class="side" x="658" y="16" width="326" height="26" rx="0"/>
+    <text class="t strong" x="668" y="33" font-size="7">Godot · pong.tscn</text>
+    <polygon class="play" points="960,22 972,29 960,36"/>
+    <text class="t soft" x="668" y="60" font-size="7">Scene: Main › Paddle › Ball</text>
+    <rect class="game" x="668" y="70" width="306" height="278"/>
+    <text class="score" data-score="true" x="821" y="100" text-anchor="middle" font-size="13">1 : 0</text>
+    <line class="net" x1="821" y1="110" x2="821" y2="340" stroke-dasharray="6 6"/>
+    <rect class="paddle left" data-paddle="tour" x="684" y="190" width="10" height="46"/>
+    <rect class="paddle right" x="948" y="190" width="10" height="46"/>
+    <rect class="ball" data-ball="tour" x="816" y="220" width="10" height="10"/>
+    <g class="toast" data-only="2"><rect x="700" y="316" width="242" height="22" rx="0"/><text class="t" x="821" y="331" text-anchor="middle" font-size="7">Reloaded paddle.gd</text></g>
+    <text class="t soft keys" data-from="3" x="684" y="336" font-size="7">W / S</text>
+  </g>
+  <rect class="scanlines" x="16" y="16" width="590" height="342" fill="url(#arcade-tour-scan)"/>
+  <rect class="scanlines" x="658" y="16" width="326" height="332" fill="url(#arcade-tour-scan)"/>
+</svg>
+      <div class="arcade-dialog" id="arcade-tour-caption" aria-live="off" aria-atomic="true"><div class="arcade-caption" aria-hidden="true"><b>1 · The student types in the Build desk.</b> “make the left paddle move with W and S”.</div><div class="arcade-caption" aria-hidden="true"><b>2 · The code changes in the middle.</b> Three new lines in paddle.gd, highlighted.</div><div class="arcade-caption" aria-hidden="true"><b>3 · Godot reloads the script</b> on Monitor 2. Nothing to copy, nothing to paste.</div><div class="arcade-caption" aria-hidden="true"><b>4 · Press Play.</b> The paddle moves, the ball bounces, the score ticks. The student sees it work.</div><div class="arcade-caption"><b>5 · Step ticked, saved to memory.</b> The prompt is in the journey.</div></div>
+      <div class="arcade-progress"><div class="arcade-dots" aria-hidden="true"><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span></div><span class="arcade-status">Final beat · 5/5</span></div>
+      <div class="arcade-controls" hidden="hidden">
+        <button type="button" data-action="toggle"><svg class="arcade-control-icon arcade-play-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg><svg class="arcade-control-icon arcade-pause-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z"/></svg><span data-play-label="true">Play</span></button>
+        <button type="button" data-action="previous"><svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M9 0 L1 5 L9 10 Z"/></svg>Previous</button>
+        <button type="button" data-action="next">Next<svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg></button>
       </div>
-      <div class="mon">
-        <div class="cap">Monitor 2 · Godot (the live view)</div>
-        <div class="gd">
-          <div><b>Godot editor</b><small>Scenes, nodes, the script the desks just edited. Reloads on every change.</small></div>
-          <div class="play">▶ The game, running<small>Press Play, or say "run it" to either desk.</small></div>
-        </div>
-      </div>
-    </div>
+      <p class="arcade-help">12-second loop · Hover or focus to pause · Previous / Next step one beat</p>
+    </figure>
+    <p>Animation, not a screenshot. The real Workbench is built in the kit phase.</p>
     <ul>
       <li><b>The "type here, see it there" Neo described is real</b> in this layout. The student types in a desk, the code changes in the middle, Godot reloads it and the game runs on the right. No custom viewer is needed for that; Godot is the viewer.</li>
       <li><b>One monitor?</b> The layout still works: the game window floats over the desks while it runs. Two 24-inch monitors per lab PC make the day noticeably calmer and cost little. Decision 6.</li>
@@ -271,6 +344,156 @@
 
   <section id="walk">
     <div class="sec-head"><span class="sec-num">02</span><h2>Walk in as the student: day 1, week 3, week 10</h2></div>
+    <!-- Arcade storyboard: each scene has four independently controlled beats. -->
+    <div class="arcade-storyboard" role="group" aria-label="Day 1, week 3 and week 10 animated storyboard">
+    <figure class="arcade" data-arcade="day1" data-beat-ms="3000" aria-labelledby="arcade-day1-heading">
+      <figcaption class="arcade-heading" id="arcade-day1-heading">Day 1<small>Play, change, explain</small></figcaption>
+      <svg class="arcade-scene-svg" viewBox="0 0 316 244" width="316" height="244" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arcade-day1-title arcade-day1-desc">
+      <title id="arcade-day1-title">Day 1</title><desc id="arcade-day1-desc">A pixel student at two monitors: signed in to Week 1, playing a practice scene, sliding a setting, then explaining a higher jump. Claude Code saves the outcome. Astra stays closed. No Godot yet.</desc>
+      <defs><pattern id="arcade-day1-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="#000000" opacity=".22"/></pattern></defs>
+      <rect class="deskline" x="14" y="184" width="290" height="4"/>
+      <rect class="deskline" x="98" y="188" width="4" height="36"/><rect class="deskline" x="290" y="188" width="4" height="36"/>
+      <rect class="mon" x="102" y="80" width="114" height="88"/><rect class="mon" x="226" y="80" width="78" height="88"/>
+      <rect class="deskline" x="154" y="168" width="8" height="10"/><rect class="deskline" x="260" y="168" width="8" height="10"/>
+      <rect class="deskline" x="142" y="176" width="32" height="3"/><rect class="deskline" x="248" y="176" width="32" height="3"/>
+      <rect class="thumb" x="102" y="179" width="34" height="3"/>
+      <text class="lbl" x="102" y="70" font-size="6">Monitor 1</text><text class="lbl" x="232" y="70" font-size="6">Monitor 2</text>
+      <text class="soft" x="102" y="238" font-size="5">Workbench</text><text class="soft" x="226" y="238" font-size="5">Practice view</text>
+      <rect class="side" x="14" y="4" width="288" height="42"/>
+      <text x="24" y="22" font-size="7">Week 1 · Your first loop</text>
+      <text class="soft screen-copy" x="24" y="36">Signed in · Claude / Astra / GitHub</text>
+      <text x="110" y="94" font-size="5">TODAK</text>
+      <rect class="desk astra" x="110" y="102" width="98" height="20"/>
+      <text class="soft" x="115" y="114" font-size="5">Astra · closed</text>
+      <text x="110" y="134" font-size="5">Build desk</text>
+      <rect class="slider" x="112" y="149" width="80" height="4"/><rect class="knob" data-slider="true" x="180" y="145" width="7" height="12"/>
+      <rect class="scene" x="232" y="88" width="66" height="72"/>
+      <path class="scene-grid" d="M236 145 H290 M260 127 H288"/>
+      <rect class="hero" data-hero="true" x="276" y="116" width="9" height="9"/>
+      <g data-only="0"><text class="soft" x="236" y="106" font-size="5">READY</text></g>
+      <g data-only="1"><text x="238" y="102" font-size="5">PLAY</text></g>
+      <g data-only="2"><text x="237" y="102" font-size="5">HIGHER</text></g>
+      <g data-from="3"><rect class="chip" x="110" y="201" width="192" height="20"/>
+        <text class="chipt" x="119" y="214" font-size="6">Claude · saved to memory</text></g>
+      <rect class="scanlines" x="106" y="84" width="106" height="80" fill="url(#arcade-day1-scan)"/>
+      <rect class="scanlines" x="230" y="84" width="70" height="80" fill="url(#arcade-day1-scan)"/>
+      <g class="stu" transform="translate(48,130)">
+      <rect class="skin" x="0" y="0" width="16" height="16"/><rect class="hair" x="0" y="-4" width="16" height="6"/>
+      <rect class="shirt" x="-4" y="18" width="24" height="22"/><rect class="arm" x="20" y="20" width="24" height="6"/>
+      <rect class="pants" x="-2" y="40" width="9" height="12"/><rect class="pants" x="9" y="40" width="9" height="12"/>
+    </g>
+    </svg>
+      <div class="arcade-dialog" id="arcade-day1-caption" aria-live="off" aria-atomic="true"><div class="arcade-caption" aria-hidden="true"><b>1 · Signs in</b> to their own Claude seat, Astra seat and GitHub. The sidebar says “Week 1 · Your first loop”.</div><div class="arcade-caption" aria-hidden="true"><b>2 · Plays a supplied practice scene.</b> Astra stays closed until the lecturer introduces the design desk.</div><div class="arcade-caption" aria-hidden="true"><b>3 · Changes one visible setting.</b> Slides the setting; the practice scene changes.</div><div class="arcade-caption"><b>4 · Explains the difference.</b> “The jump is higher.” Claude Code saves the outcome to project memory.</div></div>
+      <div class="arcade-progress"><div class="arcade-dots" aria-hidden="true"><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span></div><span class="arcade-status">Final beat · 4/4</span></div>
+      <div class="arcade-controls" hidden="hidden">
+        <button type="button" data-action="toggle"><svg class="arcade-control-icon arcade-play-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg><svg class="arcade-control-icon arcade-pause-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z"/></svg><span data-play-label="true">Play</span></button>
+        <button type="button" data-action="previous"><svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M9 0 L1 5 L9 10 Z"/></svg>Previous</button>
+        <button type="button" data-action="next">Next<svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg></button>
+      </div>
+      <p class="arcade-help">Hover or focus to pause · Step through with Previous / Next</p>
+    </figure>
+    <figure class="arcade" data-arcade="week3" data-beat-ms="3000" aria-labelledby="arcade-week3-heading">
+      <figcaption class="arcade-heading" id="arcade-week3-heading">Week 3<small>First game, Pong</small></figcaption>
+      <svg class="arcade-scene-svg" viewBox="0 0 316 244" width="316" height="244" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arcade-week3-title arcade-week3-desc">
+      <title id="arcade-week3-title">Week 3</title><desc id="arcade-week3-desc">A pixel student asks the Build desk to scaffold Pong, requests W and S paddle controls, plays Pong on Monitor 2, then gets a web link.</desc>
+      <defs><pattern id="arcade-week3-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="#000000" opacity=".22"/></pattern></defs>
+      <rect class="deskline" x="14" y="184" width="290" height="4"/>
+      <rect class="deskline" x="98" y="188" width="4" height="36"/><rect class="deskline" x="290" y="188" width="4" height="36"/>
+      <rect class="mon" x="102" y="80" width="114" height="88"/><rect class="mon" x="226" y="80" width="78" height="88"/>
+      <rect class="deskline" x="154" y="168" width="8" height="10"/><rect class="deskline" x="260" y="168" width="8" height="10"/>
+      <rect class="deskline" x="142" y="176" width="32" height="3"/><rect class="deskline" x="248" y="176" width="32" height="3"/>
+      <rect class="thumb" x="102" y="179" width="34" height="3"/>
+      <text class="lbl" x="102" y="70" font-size="6">Monitor 1</text><text class="lbl" x="232" y="70" font-size="6">Monitor 2</text>
+      <text class="soft" x="102" y="238" font-size="5">Workbench</text><text class="soft" x="226" y="238" font-size="5">Godot</text>
+      <rect class="side" x="14" y="4" width="288" height="42"/>
+      <text x="24" y="22" font-size="7">Week 3 · Game 1 · Pong</text>
+      <text class="soft screen-copy" x="24" y="36">Kit template → paddle.gd → web build</text>
+      <text x="110" y="94" font-size="5">Build desk</text>
+      <g data-only="0"><rect class="thumb" x="110" y="104" width="98" height="38"/><text x="118" y="120" font-size="6">PONG</text><text class="soft screen-copy" x="118" y="134">kit template</text></g>
+      <g data-from="1"><text class="screen-copy" x="110" y="108">make the left</text><text class="screen-copy" x="110" y="120">paddle move</text><text class="screen-copy" x="110" y="132">with W and S</text></g>
+      <rect class="desk astra" x="110" y="146" width="98" height="14"/><text class="soft" x="115" y="155" font-size="5">Astra · closed</text>
+      <rect class="scene" x="232" y="88" width="66" height="72"/>
+      <line class="net" x1="265" y1="91" x2="265" y2="158" stroke-dasharray="3 3"/>
+      <rect class="paddle" data-paddle="small" x="236" y="113" width="4" height="17"/>
+      <rect class="paddle" x="290" y="113" width="4" height="17"/>
+      <rect class="ball" data-ball="small" x="263" y="123" width="4" height="4"/>
+      <g data-from="3"><rect class="chip" x="110" y="200" width="192" height="22"/><text class="chipt screen-copy" x="119" y="215">Web link: showcase / my-pong</text></g>
+      <rect class="scanlines" x="106" y="84" width="106" height="80" fill="url(#arcade-week3-scan)"/>
+      <rect class="scanlines" x="230" y="84" width="70" height="80" fill="url(#arcade-week3-scan)"/>
+      <g class="stu" transform="translate(48,130)">
+      <rect class="skin" x="0" y="0" width="16" height="16"/><rect class="hair" x="0" y="-4" width="16" height="6"/>
+      <rect class="shirt" x="-4" y="18" width="24" height="22"/><rect class="arm" x="20" y="20" width="24" height="6"/>
+      <rect class="pants" x="-2" y="40" width="9" height="12"/><rect class="pants" x="9" y="40" width="9" height="12"/>
+    </g>
+    </svg>
+      <div class="arcade-dialog" id="arcade-week3-caption" aria-live="off" aria-atomic="true"><div class="arcade-caption" aria-hidden="true"><b>1 · Scaffold Pong</b> from the kit template; Godot opens on monitor 2.</div><div class="arcade-caption" aria-hidden="true"><b>2 · “make the left paddle move with W and S”.</b> Code changes, Godot reloads.</div><div class="arcade-caption" aria-hidden="true"><b>3 · Student presses Play.</b> Paddle moves, ball bounces.</div><div class="arcade-caption"><b>4 · “publish to web”</b> sends the build to the farm and returns a link.</div></div>
+      <div class="arcade-progress"><div class="arcade-dots" aria-hidden="true"><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span></div><span class="arcade-status">Final beat · 4/4</span></div>
+      <div class="arcade-controls" hidden="hidden">
+        <button type="button" data-action="toggle"><svg class="arcade-control-icon arcade-play-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg><svg class="arcade-control-icon arcade-pause-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z"/></svg><span data-play-label="true">Play</span></button>
+        <button type="button" data-action="previous"><svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M9 0 L1 5 L9 10 Z"/></svg>Previous</button>
+        <button type="button" data-action="next">Next<svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg></button>
+      </div>
+      <p class="arcade-help">Hover or focus to pause · Step through with Previous / Next</p>
+    </figure>
+    <figure class="arcade" data-arcade="week10" data-beat-ms="3000" aria-labelledby="arcade-week10-heading">
+      <figcaption class="arcade-heading" id="arcade-week10-heading">Week 10<small>3D capstone</small></figcaption>
+      <svg class="arcade-scene-svg" viewBox="0 0 316 244" width="316" height="244" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arcade-week10-title arcade-week10-desc">
+      <title id="arcade-week10-title">Week 10</title><desc id="arcade-week10-desc">A pixel student has a character sheet in the Design desk, a 3D character in Godot, and the same character on their test phone. The review report is approved and seen by the lecturer, Neo and Lan.</desc>
+      <defs><pattern id="arcade-week10-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="#000000" opacity=".22"/></pattern></defs>
+      <rect class="deskline" x="14" y="184" width="290" height="4"/>
+      <rect class="deskline" x="98" y="188" width="4" height="36"/><rect class="deskline" x="290" y="188" width="4" height="36"/>
+      <rect class="mon" x="102" y="80" width="114" height="88"/><rect class="mon" x="226" y="80" width="78" height="88"/>
+      <rect class="deskline" x="154" y="168" width="8" height="10"/><rect class="deskline" x="260" y="168" width="8" height="10"/>
+      <rect class="deskline" x="142" y="176" width="32" height="3"/><rect class="deskline" x="248" y="176" width="32" height="3"/>
+      <rect class="thumb" x="102" y="179" width="34" height="3"/>
+      <text class="lbl" x="102" y="70" font-size="6">Monitor 1</text><text class="lbl" x="232" y="70" font-size="6">Monitor 2</text>
+      <text class="soft" x="102" y="238" font-size="5">Workbench</text><text class="soft" x="226" y="238" font-size="5">Godot</text>
+      <rect class="side" x="14" y="4" width="288" height="42"/>
+      <text x="24" y="22" font-size="7">Week 10 · 3D capstone</text>
+      <text class="soft screen-copy" x="24" y="36">Character sheet → level → phone → review</text>
+      <rect class="desk astra" x="108" y="86" width="102" height="76"/>
+      <text x="114" y="99" font-size="5">Design desk</text>
+      <text class="soft" x="114" y="110" font-size="5">Astra</text>
+      <g transform="translate(125,122) scale(.65)"><path class="character-front" d="M0 0 H12 V12 H0 Z M-3 14 H15 V30 H-3 Z M-2 30 H4 V40 H-2 Z M9 30 H15 V40 H9 Z"/>
+          <path class="character-side" d="M12 0 L17 -4 V8 L12 12 Z M15 14 L20 10 V26 L15 30 Z M15 30 L20 26 V36 L15 40 Z"/>
+          <path class="character-top" d="M0 0 L5 -4 H17 L12 0 Z M-3 14 L2 10 H20 L15 14 Z"/>
+          <rect x="8" y="4" width="3" height="3" fill="#0d0f1a"/></g>
+      <g transform="translate(176,123) scale(.6)"><path class="character-front" d="M0 0 H12 V12 H0 Z M-3 14 H15 V30 H-3 Z M-2 30 H4 V40 H-2 Z M9 30 H15 V40 H9 Z"/>
+          <path class="character-side" d="M12 0 L17 -4 V8 L12 12 Z M15 14 L20 10 V26 L15 30 Z M15 30 L20 26 V36 L15 40 Z"/>
+          <path class="character-top" d="M0 0 L5 -4 H17 L12 0 Z M-3 14 L2 10 H20 L15 14 Z"/>
+          <rect x="8" y="4" width="3" height="3" fill="#0d0f1a"/></g>
+      <path class="scene-grid" d="M151 116 V157"/>
+      <rect class="scene" x="232" y="88" width="66" height="72"/>
+      <path class="scene-grid" d="M232 130 L265 112 L298 130 M232 144 L265 126 L298 144 M240 160 L273 142 L298 156 M238 126 L298 160 M232 142 L260 160 M264 112 L298 132"/>
+      <g data-from="1" data-character="true"><g transform="translate(257,110) scale(.85)"><path class="character-front" d="M0 0 H12 V12 H0 Z M-3 14 H15 V30 H-3 Z M-2 30 H4 V40 H-2 Z M9 30 H15 V40 H9 Z"/>
+          <path class="character-side" d="M12 0 L17 -4 V8 L12 12 Z M15 14 L20 10 V26 L15 30 Z M15 30 L20 26 V36 L15 40 Z"/>
+          <path class="character-top" d="M0 0 L5 -4 H17 L12 0 Z M-3 14 L2 10 H20 L15 14 Z"/>
+          <rect x="8" y="4" width="3" height="3" fill="#0d0f1a"/></g></g>
+      <g data-from="2"><rect class="phone" x="66" y="92" width="28" height="44"/><rect class="scene" x="70" y="98" width="20" height="30"/><g transform="translate(76,104) scale(.4)"><path class="character-front" d="M0 0 H12 V12 H0 Z M-3 14 H15 V30 H-3 Z M-2 30 H4 V40 H-2 Z M9 30 H15 V40 H9 Z"/>
+          <path class="character-side" d="M12 0 L17 -4 V8 L12 12 Z M15 14 L20 10 V26 L15 30 Z M15 30 L20 26 V36 L15 40 Z"/>
+          <path class="character-top" d="M0 0 L5 -4 H17 L12 0 Z M-3 14 L2 10 H20 L15 14 Z"/>
+          <rect x="8" y="4" width="3" height="3" fill="#0d0f1a"/></g><rect class="deskline" x="77" y="131" width="6" height="2"/></g>
+      <g class="stamp" data-from="3"><rect x="110" y="193" width="192" height="21"/><text x="122" y="207" font-size="6">Review report: approved</text></g>
+      <text class="soft screen-copy" data-from="3" x="110" y="227">Seen by lecturer · Neo · Lan</text>
+      <rect class="scanlines" x="106" y="84" width="106" height="80" fill="url(#arcade-week10-scan)"/>
+      <rect class="scanlines" x="230" y="84" width="70" height="80" fill="url(#arcade-week10-scan)"/>
+      <g class="stu" transform="translate(48,130)">
+      <rect class="skin" x="0" y="0" width="16" height="16"/><rect class="hair" x="0" y="-4" width="16" height="6"/>
+      <rect class="shirt" x="-4" y="18" width="24" height="22"/><rect class="arm" x="20" y="20" width="24" height="6"/>
+      <rect class="pants" x="-2" y="40" width="9" height="12"/><rect class="pants" x="9" y="40" width="9" height="12"/>
+    </g>
+    </svg>
+      <div class="arcade-dialog" id="arcade-week10-caption" aria-live="off" aria-atomic="true"><div class="arcade-caption" aria-hidden="true"><b>1 · Character sheet</b> on the Design desk. Student and Astra lock the core loop.</div><div class="arcade-caption" aria-hidden="true"><b>2 · Character</b> comes out of the Academy asset service as a 3D model, cleaned in Blender, wired into Godot.</div><div class="arcade-caption" aria-hidden="true"><b>3 · Android test build</b> on the student’s own phone.</div><div class="arcade-caption"><b>4 · “Review my game”</b> files the report: approved. The lecturer, Neo and Lan see it.</div></div>
+      <div class="arcade-progress"><div class="arcade-dots" aria-hidden="true"><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span></div><span class="arcade-status">Final beat · 4/4</span></div>
+      <div class="arcade-controls" hidden="hidden">
+        <button type="button" data-action="toggle"><svg class="arcade-control-icon arcade-play-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg><svg class="arcade-control-icon arcade-pause-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z"/></svg><span data-play-label="true">Play</span></button>
+        <button type="button" data-action="previous"><svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M9 0 L1 5 L9 10 Z"/></svg>Previous</button>
+        <button type="button" data-action="next">Next<svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg></button>
+      </div>
+      <p class="arcade-help">Hover or focus to pause · Step through with Previous / Next</p>
+    </figure>
+    </div>
+    <p>Animation, not a screenshot. The real Workbench is built in the kit phase.</p>
     <div class="cp-scroll"><table class="cp">
       <thead><tr><th>When</th><th>What happens</th><th>Design desk (Astra)</th><th>Build desk (Claude Code)</th><th>The student leaves with</th></tr></thead>
       <tbody>
