@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Home v1 — Todak AI Creator Program</title>
+<meta name="description" content="Where the Todak AI Creator Program lives: its own domain, hosting, database, build farm and AI services owned by Todak Academy and Todak Studios, off Neo’s personal domain and machines, with the migration plan and the bill.">
+<style>
+  :root {
+    --bg: #e9ebee;
+    --surface: #f6f7f8;
+    --surface-2: #ffffff;
+    --line: #d3d8dd;
+    --line-soft: #e0e4e8;
+    --ink: #14181c;
+    --ink-soft: #545c64;
+    --ink-faint: #828d97;
+    --method: #37627f;
+    --method-soft: rgba(55,98,127,.11);
+    --crew: #9a6a1c;
+    --crew-soft: rgba(154,106,28,.13);
+    --ship: #2c8a66;
+    --ship-soft: rgba(44,138,102,.13);
+    --elective: #7a5aa0;
+    --elective-soft: rgba(122,90,160,.13);
+    --shadow: 0 1px 2px rgba(20,24,28,.05), 0 8px 24px rgba(20,24,28,.05);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+      --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+      --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+      --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+      --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+      --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+    --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+    --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+    --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+    --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+    --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--method); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--method); outline-offset: 2px; }
+
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint);
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
+  .topbar .badge { color: var(--method); }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--method); }
+
+  header { padding: 48px 0 26px; }
+  .eyebrow {
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--crew); box-shadow: 0 0 0 3px var(--crew-soft); }
+  h1 { font-size: clamp(29px, 5.2vw, 44px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; text-wrap: balance; }
+  .dek { color: var(--ink-soft); font-size: 16.5px; max-width: 680px; margin-top: 15px; }
+
+  /* short version */
+  .answers { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--crew); border-radius: 13px; padding: 20px 24px; box-shadow: var(--shadow); margin-top: 28px; }
+  .answers .k-head { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+  .answers ol { list-style: none; display: grid; gap: 11px; }
+  .answers li { display: grid; grid-template-columns: 110px 1fr; gap: 14px; font-size: 14.5px; }
+  .answers .k { font-weight: 750; color: var(--method); letter-spacing: -.01em; }
+  @media (max-width: 560px) { .answers li { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* sections */
+  section { padding: 46px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 13px; margin-bottom: 6px; flex-wrap: wrap; }
+  .sec-num { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; color: var(--method); }
+  .sec-head h2 { font-size: 22px; font-weight: 760; letter-spacing: -.015em; }
+  .sec-sub { color: var(--ink-soft); font-size: 14.5px; margin: 4px 0 20px; max-width: 740px; }
+  h3 { font-size: 15.5px; font-weight: 700; margin: 24px 0 8px; letter-spacing: -.01em; }
+  p { font-size: 14.5px; margin-bottom: 12px; max-width: 740px; }
+  ul, ol.plain { padding-left: 20px; font-size: 14.5px; max-width: 740px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--ink-faint); }
+  b, strong { font-weight: 700; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--surface-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px; }
+  pre { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; padding: 13px 15px; overflow-x: auto; margin: 0 0 14px; max-width: 740px; }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+  /* tables (same look as the module spec) */
+  .cp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin: 6px 0 16px; }
+  table.cp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: var(--surface); }
+  table.cp th, table.cp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  table.cp thead th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-2); }
+  table.cp tbody tr:last-child td { border-bottom: none; }
+  table.cp .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .yes { color: var(--ship); font-weight: 700; }
+  .no { color: var(--ink-faint); }
+  .opt { color: var(--crew); font-weight: 700; }
+  .type-pill { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .type-pill.action { color: var(--method); background: var(--method-soft); }
+  .type-pill.puzzle { color: var(--elective); background: var(--elective-soft); }
+  .type-pill.story { color: var(--crew); background: var(--crew-soft); }
+  .type-pill.sim { color: var(--ship); background: var(--ship-soft); }
+
+  /* callouts */
+  .note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0 16px; max-width: 760px; font-size: 14.5px; }
+  .note.crew { border-left-color: var(--crew); }
+  .note.ship { border-left-color: var(--ship); }
+  .note p { margin: 0; }
+
+  /* compare */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+  .compare > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .compare h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .compare .pick { border-color: color-mix(in srgb, var(--method) 55%, transparent); background: var(--method-soft); }
+  .compare .pick h4 { color: var(--method); }
+  .compare ul { margin: 0; font-size: 14px; }
+
+  /* week strip */
+  .weeks { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 6px 0 8px; }
+  .weeks div { height: 44px; border-radius: 7px; display: grid; place-items: center; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 600; background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
+  .weeks .g1 { background: var(--method-soft); border-color: var(--method); color: var(--ink); }
+  .weeks .g2 { background: var(--elective-soft); border-color: var(--elective); color: var(--ink); }
+  .weeks .g3 { background: var(--crew-soft); border-color: var(--crew); color: var(--ink); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 4px 0 16px; }
+  .lg { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-soft); }
+  .lg .sw { width: 11px; height: 11px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
+  .lg .sw.g1 { background: var(--method-soft); border-color: var(--method); }
+  .lg .sw.g2 { background: var(--elective-soft); border-color: var(--elective); }
+  .lg .sw.g3 { background: var(--crew-soft); border-color: var(--crew); }
+
+  /* flow */
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; margin: 6px 0 18px; }
+  .flow .box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; box-shadow: var(--shadow); }
+  .flow .box b { display: block; margin-bottom: 4px; }
+  .flow .box small { display: block; color: var(--ink-soft); font-size: 12.5px; line-height: 1.45; }
+  .flow .arw { display: grid; place-items: center; color: var(--ink-faint); font-size: 18px; }
+  .flow .box.mem { border-color: color-mix(in srgb, var(--method) 45%, transparent); background: var(--method-soft); }
+  @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } .flow .arw { transform: rotate(90deg); } }
+
+  /* decisions */
+  .decisions { list-style: none; display: grid; gap: 9px; margin-top: 6px; }
+  .decisions li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; font-size: 14.5px; box-shadow: var(--shadow); }
+  .decisions .n { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--crew); }
+  .decisions .rec { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ship); background: var(--ship-soft); padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+  .decisions .done { color: var(--method); background: var(--method-soft); }
+
+  .rec.open { color: var(--crew); background: var(--crew-soft); }
+  .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .lanes { grid-template-columns: 1fr; } }
+  .lanes > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .lanes h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .lanes .astra { border-color: color-mix(in srgb, var(--crew) 55%, transparent); }
+  .lanes .astra h4 { color: var(--crew); }
+  .lanes .cc { border-color: color-mix(in srgb, var(--method) 55%, transparent); }
+  .lanes .cc h4 { color: var(--method); }
+  .lanes ul { margin: 0; font-size: 14px; }
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span><a href="/documentation/">← Documentation</a> · <a href="/documentation/classroom/v1/">Classroom v1</a> · <a href="/documentation/v2/">Blueprint v2</a></span>
+    <span class="badge">Documentation · Home v1</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span><span>Game Track · Home v1 · 20 Sep 2026 · Proposal for Neo &amp; Lan</span></div>
+    <h1>Its own home, off Neo's estate</h1>
+    <p class="dek">Neo's note of 20 September: the program is shared with the Academy team, so it should not run on his personal domain (neotodak.com) or his personal machines (the office fleet, the NAS, the Bandung box). This page proposes a home that Todak Academy and Todak Studios own, names what moves, and prices it. Everything in the student's path lands on Academy or Studios accounts. Neo's fleet may lend a hand in the dry run and nowhere else.</p>
+
+    <div class="answers">
+      <div class="k-head">Short version</div>
+      <ol>
+        <li><span class="k">Domain</span><span><b>creator.todakacademy.edu.my</b>, on the Academy's own institution domain. Site, documentation and the showcase live there. A short vanity address, <b>todakcreator.com</b>, is free to register today and would simply redirect. Nothing stays on neotodak.com.</span></li>
+        <li><span class="k">Ownership</span><span>One rule: every account in the chain belongs to a Todak entity, with Lan and Neo as owners and Kai as IT admin. No personal accounts, no personal tokens, no Siti, no neo-brain.</span></li>
+        <li><span class="k">Hosting</span><span>Static site and showcase on the Todak Cloudflare account (free). Code in a new <b>todak-academy</b> GitHub organisation (free). Classroom system and course database in a Supabase project inside the Todak organisation, next to the Academy portal's. Collector and publisher desk on the Academy's own server in the Kay rack.</span></li>
+        <li><span class="k">Machines</span><span>The Mac mini becomes an <b>Academy asset</b>, placed at the Academy, reached through a Cloudflare Tunnel on the Todak account, not Neo's private network. No Academy workload on EdgeXpert, tr-home, the NAS or bandung-01.</span></li>
+        <li><span class="k">AI services</span><span>The two seats do most of the work. Bulk images, 3D and sound go to <b>rented GPU by the hour</b> during class weeks and pay-per-use services through the kit, on Academy accounts with a per-student budget. An Academy GPU box is bought only if a second cohort proves the demand.</span></li>
+        <li><span class="k">Cost</span><span>Almost nothing new: the hosting is free, the database is the same line as before, GPU rental is a few hundred ringgit per cohort. The one-off is the Mac mini, already approved.</span></li>
+      </ol>
+    </div>
+  </header>
+
+  <section id="why">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Why this matters</h2></div>
+    <ul>
+      <li><b>Continuity.</b> If the program lives on Neo's personal domain and machines, it lives only as long as Neo's personal setup does. Lan's team, the lecturers and Kai need a home they can run without Neo in the loop.</li>
+      <li><b>Access.</b> Neo's fleet holds his personal agents, his WhatsApp lanes and his brain. Giving the Academy team access to it, or running student jobs next to it, mixes two worlds that should stay apart.</li>
+      <li><b>Credibility.</b> A JPK-aligned course on an .edu.my address reads as the institution's course. The same course on a personal domain reads as a side project.</li>
+      <li><b>Data.</b> Student prompt records, signed paperwork and grades belong to the Academy under its own data-protection consent, on the Academy's accounts.</li>
+    </ul>
+  </section>
+
+  <section id="home">
+    <div class="sec-head"><span class="sec-num">02</span><h2>The new home, piece by piece</h2></div>
+    <p class="sec-sub">What each piece moves to, who owns it, and what it costs. "Exists" means the account or box is already Todak's.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Piece</th><th>Today</th><th>Proposed home</th><th>Owner</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td><b>Domain</b></td><td>course.neotodak.com, classroom.neotodak.com</td><td><code>creator.todakacademy.edu.my</code> (site, docs), <code>play.todakacademy.edu.my</code> (showcase), <code>classroom.todakacademy.edu.my</code> (LMS), <code>collect.todakacademy.edu.my</code> (prompt collector). Optional vanity <code>todakcreator.com</code> → redirect.</td><td>Todak Academy. Who holds the registrar and DNS for the .edu.my is to confirm with Lan or Kai; the portal already runs on it.</td><td class="num">RM0 · vanity .com ~RM60/yr</td></tr>
+        <tr><td><b>Site, documentation, showcase</b></td><td>Netlify on Neo's account, repo under Neo's GitHub</td><td>Cloudflare Pages on the <b>Todak</b> Cloudflare account, deploying from the new GitHub organisation. Godot's two web headers set once in the project. Same static files, same "push = deploy".</td><td>Todak Studios' Cloudflare account, admins Lan + Neo + Kai</td><td class="num">RM0</td></tr>
+        <tr><td><b>Code</b></td><td>Repos under Neo's personal GitHub</td><td>New GitHub organisation <b>todak-academy</b>: the site, the Game Kit, the classroom system, and one private repository per student game per cohort. Fine-grained tokens for the kit's hands; no personal tokens.</td><td>Owners Lan + Neo, admin Kai</td><td class="num">RM0 on the free plan</td></tr>
+        <tr><td><b>Classroom system and course database</b></td><td>Supabase project on a separate personal account</td><td>A new Supabase project <b>creator-classroom</b> inside the <b>Todak organisation</b>, the same organisation that already holds the Academy portal's database. Students, progress, prompt logs, review reports, signed paperwork, the project brains.</td><td>Todak organisation</td><td class="num">Free tier, then ~RM120/mo</td></tr>
+        <tr><td><b>Collector, publisher desk, build queue, store-review watch</b></td><td>Planned on Neo's fleet (EdgeXpert watchers, Kay .213)</td><td>The Academy's own server in the Kay rack (<code>.213</code>, already keys-only, already the Academy's): small services that receive prompt events, queue publishing manifests and build jobs, and watch the stores. Alerts by e-mail and a WhatsApp group through a plain business API, not Siti.</td><td>Todak Academy, Kayrule-managed</td><td class="num">RM0 (exists)</td></tr>
+        <tr><td><b>Build farm</b></td><td>Mac mini at the Kenwingston office on Neo's private network</td><td>The same Mac mini, bought as an <b>Academy asset</b>, placed in the Academy's IT room on wired power and network, reached through a <b>Cloudflare Tunnel</b> on the Todak account (free) with Cloudflare Access in front. Holds the Studios signing keys in a dedicated keychain, because Studios is the publisher. If it must sit at Kenwingston for practical reasons, it still joins nothing of Neo's: its own tunnel, its own accounts.</td><td>Todak Academy (asset), Todak Studios (keys)</td><td class="num">One-off, approved</td></tr>
+        <tr><td><b>Files: builds, assets, exports</b></td><td>Neo's NAS</td><td><b>Cloudflare R2</b> bucket on the Todak account, private, signed links for the showcase and the review reports. The Mac mini's 1 TB is the working cache.</td><td>Todak</td><td class="num">~RM0–20/mo</td></tr>
+        <tr><td><b>Images, 3D, sound in bulk</b></td><td>bandung-01 and tr-home (Neo's), EdgeXpert's 3D pipeline</td><td>Three layers. The seats first (Astra draws, Claude writes). Then <b>rented GPU by the hour</b> on an Academy account during the weeks that need it, running the same open image and 3D tools the fleet runs today. Then pay-per-use services through the kit's asset service, on Academy keys, with the RM50 per-student budget. An Academy GPU workstation only after cohort 1 shows the load.</td><td>Todak Academy</td><td class="num">GPU rental ~RM300–700 per cohort (estimate)</td></tr>
+        <tr><td><b>Secrets</b></td><td>Neo's credential vault</td><td>A team password manager for the Academy (or the Supabase vault of the classroom project), holding the tunnel token, store keys' locations, service tokens. Lan, Neo, Kai.</td><td>Todak Academy</td><td class="num">RM0–40/mo</td></tr>
+        <tr><td><b>The kit's AI hands</b> (build, publish, review)</td><td>Neo's Claude and Codex logins</td><td>An <b>academy-cc</b> service identity on the Mac mini and the Kay server, signed into Academy-owned seats in the Team and Business workspaces from Classroom v1. Its work is logged like a student's.</td><td>Todak Academy</td><td class="num">Two seats, already in the seat budget</td></tr>
+        <tr><td><b>Monitoring</b></td><td>Neo's fleet monitors and Siti alerts</td><td>Cloudflare health checks plus an uptime checker on the Kay server. Alerts to a shared inbox and the WhatsApp group.</td><td>Todak Academy</td><td class="num">RM0</td></tr>
+        <tr><td><b>Store accounts</b></td><td>Todak Studios' Apple, Google Play, itch.io, Steam</td><td>Unchanged. These are company accounts and Studios is the publisher of record.</td><td>Todak Studios</td><td class="num">RM0</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><p><b>Why Cloudflare and not Netlify.</b> Todak already has the Cloudflare account that holds todak.com and todakstudios.com, so the site, the tunnel to the Mac mini, the file bucket and the access control all sit under one company login with no new vendor. Netlify would need a new team on a company card for the same result.</p></div>
+  </section>
+
+  <section id="network">
+    <div class="sec-head"><span class="sec-num">03</span><h2>How the pieces reach each other</h2></div>
+    <div class="flow">
+      <div class="box"><b>Student PC or laptop</b><small>Workbench pushes code to the todak-academy GitHub organisation. Prompt events go to the collector over HTTPS.</small></div>
+      <div class="arw">→</div>
+      <div class="box mem"><b>Kay .213 · Academy server</b><small>Collector, publisher desk, build queue, store watch, uptime. Public address, keys-only SSH, Cloudflare in front.</small></div>
+      <div class="arw">→</div>
+      <div class="box"><b>Mac mini · build farm</b><small>Pulls jobs from the queue over its Cloudflare Tunnel, builds every platform, uploads to the stores and to R2, posts the link back.</small></div>
+    </div>
+    <ul>
+      <li><b>No private network to join.</b> The student never needs a VPN. The Mac mini is reached only through its tunnel, with Cloudflare Access deciding who may open it (Lan, Neo, Kai, the academy-cc identity).</li>
+      <li><b>If a private network is wanted anyway</b> for admin convenience, a small Tailscale network on an Academy plan is the alternative. The free personal plan now allows six users and unlimited devices, but it is meant for personal use, so the Academy should be on a paid starter seat per admin if it goes that way.</li>
+      <li><b>Nothing here touches Neo's tailnet</b>, his agents or his brain. The one exception allowed: during the dry run, before cohort 1, Neo's tr-home may build the first reference game to save time. It is removed from the path before enrolment.</li>
+    </ul>
+  </section>
+
+  <section id="access">
+    <div class="sec-head"><span class="sec-num">04</span><h2>Who can do what</h2></div>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Person or identity</th><th>Role</th><th>Has</th></tr></thead>
+      <tbody>
+        <tr><td><b>Lan</b> (Todak)</td><td>Owner</td><td>Every account and the domain. Approves at the review gate.</td></tr>
+        <tr><td><b>Neo</b> (Todak Studios)</td><td>Owner</td><td>Every account. Holds the Studios store accounts and signing keys. Bypass at the review gate.</td></tr>
+        <tr><td><b>Kai</b> (Academy IT)</td><td>Admin</td><td>GitHub organisation, Cloudflare project, Supabase project, the Kay server, the Mac mini. Runs the lab image and the installer.</td></tr>
+        <tr><td><b>Lecturers</b></td><td>Staff</td><td>Classroom system: their classes, prompt journeys, review reports. No server access.</td></tr>
+        <tr><td><b>Students</b></td><td>Member</td><td>Their own repositories in the organisation, their own seats, their own journey.</td></tr>
+        <tr><td><b>academy-cc</b> (the kit's hands)</td><td>Service</td><td>Fine-grained tokens: push to student repositories, read the queue, upload to stores and R2. Nothing else.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="move">
+    <div class="sec-head"><span class="sec-num">05</span><h2>What moves, in what order</h2></div>
+    <p class="sec-sub">About one week of work once the accounts exist. Nothing on the current pages changes until the new home is live and checked.</p>
+    <ol class="plain">
+      <li><b>Accounts</b> (Lan or Kai, one afternoon): the todak-academy GitHub organisation; the creator-classroom Supabase project in the Todak organisation; the Cloudflare Pages project, tunnel and R2 bucket on the Todak account; the todakcreator.com registration if wanted; the Academy password manager.</li>
+      <li><b>DNS</b>: the four subdomains under todakacademy.edu.my. Needs whoever runs that zone.</li>
+      <li><b>Site and docs</b>: transfer the site repository into the organisation, connect Cloudflare Pages, check the Godot headers, go live on creator.todakacademy.edu.my.</li>
+      <li><b>Classroom</b>: export the current classroom database, import into creator-classroom, transfer the repository, deploy at classroom.todakacademy.edu.my, re-test login and grading.</li>
+      <li><b>Kay .213</b>: deploy the collector, the publisher desk, the build queue and the store watch as services; wire alerts.</li>
+      <li><b>Mac mini</b>: set up as the Academy asset with the tunnel and the Studios keychain, connect to the queue.</li>
+      <li><b>Redirects</b>: course.neotodak.com and classroom.neotodak.com point to the new addresses with temporary redirects for three months, then permanent.</li>
+      <li><b>Clean-up</b>: remove the Academy's crons and watchers from Neo's fleet; Neo's fleet keeps nothing of the program.</li>
+    </ol>
+  </section>
+
+  <section id="cost">
+    <div class="sec-head"><span class="sec-num">06</span><h2>What it changes in the bill</h2></div>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Line</th><th>Classroom v1 said</th><th>Home v1 says</th></tr></thead>
+      <tbody>
+        <tr><td>Site, docs, showcase hosting</td><td class="num">RM0 (Neo's Netlify)</td><td class="num">RM0 (Todak Cloudflare)</td></tr>
+        <tr><td>Course database</td><td class="num">RM0 → ~RM120/mo</td><td class="num">Same, in the Todak organisation</td></tr>
+        <tr><td>Files</td><td class="num">RM0 (Neo's NAS)</td><td class="num">~RM0–20/mo (R2)</td></tr>
+        <tr><td>Bulk images, 3D, sound</td><td class="num">RM0 (Neo's GPU boxes)</td><td class="num">~RM300–700 per cohort, rented by the hour (estimate)</td></tr>
+        <tr><td>Academy GPU workstation</td><td class="num">Not needed</td><td class="num">Deferred; ~RM9k–15k if a second cohort needs it</td></tr>
+        <tr><td>Secrets, monitoring, tunnel</td><td class="num">RM0 (Neo's)</td><td class="num">RM0–40/mo</td></tr>
+        <tr><td>Vanity domain</td><td class="num">–</td><td class="num">~RM60/yr, optional</td></tr>
+        <tr><td>Mac mini, seats, asset budget, legal</td><td colspan="2">Unchanged from Classroom v1</td></tr>
+      </tbody>
+    </table></div>
+    <p>Net effect: a few hundred ringgit per cohort for GPU time, in exchange for a program that the Academy owns end to end.</p>
+  </section>
+
+  <section id="decide">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Decisions for Neo &amp; Lan</h2></div>
+    <ol class="decisions">
+      <li><span class="n">1</span><span>Primary address <b>creator.todakacademy.edu.my</b>, with todakcreator.com as an optional vanity redirect. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">2</span><span>Hosting on the Todak Cloudflare account (Pages, Tunnel, R2, Access) and a new todak-academy GitHub organisation. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">3</span><span>Classroom system and course database as a new project in the Todak Supabase organisation. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">4</span><span>Collector and desk services on the Academy's Kay .213 server, or a new small box on the Todak Hetzner account if Kayrule prefers.</span></li>
+      <li><span class="n">5</span><span>Mac mini as an Academy asset at the Academy's IT room, reached by Cloudflare Tunnel. Kenwingston only as a fallback location, and even then on its own tunnel.</span></li>
+      <li><span class="n">6</span><span>Bulk generation on rented GPU hours and pay-per-use services for cohort 1; an Academy GPU box deferred. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">7</span><span>Who opens the accounts and runs the move: Kai, with Lan as owner. Neo stays owner on everything.</span></li>
+    </ol>
+  </section>
+
+  <section id="changelog">
+    <div class="sec-head"><span class="sec-num">08</span><h2>Changelog</h2></div>
+    <ul>
+      <li><b>v1 · 20 Sep 2026.</b> First proposal, on Neo's note that the program must not sit on his personal domain or fleet. Supersedes the machine locations in Blueprint v2 section 07 and Classroom v1 section 08.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Todak AI Creator Program · Game Track · Home v1</span>
+    <span>Proposal · not yet approved · Sept 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>
