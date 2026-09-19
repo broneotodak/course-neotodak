@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Classroom v1 — Todak AI Creator Program</title>
+<meta name="description" content="Classroom v1 for the Game Track: what the student sees on screen, how a lesson runs, the Astra design desk and the Claude Code build desk, what we build versus use as-is, Astra’s own point of view, accounts and seats, machines, local AI and the bill.">
+<style>
+  :root {
+    --bg: #e9ebee;
+    --surface: #f6f7f8;
+    --surface-2: #ffffff;
+    --line: #d3d8dd;
+    --line-soft: #e0e4e8;
+    --ink: #14181c;
+    --ink-soft: #545c64;
+    --ink-faint: #828d97;
+    --method: #37627f;
+    --method-soft: rgba(55,98,127,.11);
+    --crew: #9a6a1c;
+    --crew-soft: rgba(154,106,28,.13);
+    --ship: #2c8a66;
+    --ship-soft: rgba(44,138,102,.13);
+    --elective: #7a5aa0;
+    --elective-soft: rgba(122,90,160,.13);
+    --shadow: 0 1px 2px rgba(20,24,28,.05), 0 8px 24px rgba(20,24,28,.05);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+      --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+      --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+      --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+      --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+      --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+    --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+    --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+    --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+    --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+    --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--method); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--method); outline-offset: 2px; }
+
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint);
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
+  .topbar .badge { color: var(--method); }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--method); }
+
+  header { padding: 48px 0 26px; }
+  .eyebrow {
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--crew); box-shadow: 0 0 0 3px var(--crew-soft); }
+  h1 { font-size: clamp(29px, 5.2vw, 44px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; text-wrap: balance; }
+  .dek { color: var(--ink-soft); font-size: 16.5px; max-width: 680px; margin-top: 15px; }
+
+  /* short version */
+  .answers { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--crew); border-radius: 13px; padding: 20px 24px; box-shadow: var(--shadow); margin-top: 28px; }
+  .answers .k-head { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+  .answers ol { list-style: none; display: grid; gap: 11px; }
+  .answers li { display: grid; grid-template-columns: 110px 1fr; gap: 14px; font-size: 14.5px; }
+  .answers .k { font-weight: 750; color: var(--method); letter-spacing: -.01em; }
+  @media (max-width: 560px) { .answers li { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* sections */
+  section { padding: 46px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 13px; margin-bottom: 6px; flex-wrap: wrap; }
+  .sec-num { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; color: var(--method); }
+  .sec-head h2 { font-size: 22px; font-weight: 760; letter-spacing: -.015em; }
+  .sec-sub { color: var(--ink-soft); font-size: 14.5px; margin: 4px 0 20px; max-width: 740px; }
+  h3 { font-size: 15.5px; font-weight: 700; margin: 24px 0 8px; letter-spacing: -.01em; }
+  p { font-size: 14.5px; margin-bottom: 12px; max-width: 740px; }
+  ul, ol.plain { padding-left: 20px; font-size: 14.5px; max-width: 740px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--ink-faint); }
+  b, strong { font-weight: 700; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--surface-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px; }
+  pre { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; padding: 13px 15px; overflow-x: auto; margin: 0 0 14px; max-width: 740px; }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+  /* tables (same look as the module spec) */
+  .cp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin: 6px 0 16px; }
+  table.cp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: var(--surface); }
+  table.cp th, table.cp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  table.cp thead th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-2); }
+  table.cp tbody tr:last-child td { border-bottom: none; }
+  table.cp .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .yes { color: var(--ship); font-weight: 700; }
+  .no { color: var(--ink-faint); }
+  .opt { color: var(--crew); font-weight: 700; }
+  .type-pill { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .type-pill.action { color: var(--method); background: var(--method-soft); }
+  .type-pill.puzzle { color: var(--elective); background: var(--elective-soft); }
+  .type-pill.story { color: var(--crew); background: var(--crew-soft); }
+  .type-pill.sim { color: var(--ship); background: var(--ship-soft); }
+
+  /* callouts */
+  .note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0 16px; max-width: 760px; font-size: 14.5px; }
+  .note.crew { border-left-color: var(--crew); }
+  .note.ship { border-left-color: var(--ship); }
+  .note p { margin: 0; }
+
+  /* compare */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+  .compare > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .compare h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .compare .pick { border-color: color-mix(in srgb, var(--method) 55%, transparent); background: var(--method-soft); }
+  .compare .pick h4 { color: var(--method); }
+  .compare ul { margin: 0; font-size: 14px; }
+
+  /* week strip */
+  .weeks { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 6px 0 8px; }
+  .weeks div { height: 44px; border-radius: 7px; display: grid; place-items: center; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 600; background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
+  .weeks .g1 { background: var(--method-soft); border-color: var(--method); color: var(--ink); }
+  .weeks .g2 { background: var(--elective-soft); border-color: var(--elective); color: var(--ink); }
+  .weeks .g3 { background: var(--crew-soft); border-color: var(--crew); color: var(--ink); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 4px 0 16px; }
+  .lg { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-soft); }
+  .lg .sw { width: 11px; height: 11px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
+  .lg .sw.g1 { background: var(--method-soft); border-color: var(--method); }
+  .lg .sw.g2 { background: var(--elective-soft); border-color: var(--elective); }
+  .lg .sw.g3 { background: var(--crew-soft); border-color: var(--crew); }
+
+  /* flow */
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; margin: 6px 0 18px; }
+  .flow .box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; box-shadow: var(--shadow); }
+  .flow .box b { display: block; margin-bottom: 4px; }
+  .flow .box small { display: block; color: var(--ink-soft); font-size: 12.5px; line-height: 1.45; }
+  .flow .arw { display: grid; place-items: center; color: var(--ink-faint); font-size: 18px; }
+  .flow .box.mem { border-color: color-mix(in srgb, var(--method) 45%, transparent); background: var(--method-soft); }
+  @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } .flow .arw { transform: rotate(90deg); } }
+
+  /* decisions */
+  .decisions { list-style: none; display: grid; gap: 9px; margin-top: 6px; }
+  .decisions li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; font-size: 14.5px; box-shadow: var(--shadow); }
+  .decisions .n { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--crew); }
+  .decisions .rec { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ship); background: var(--ship-soft); padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+  .decisions .done { color: var(--method); background: var(--method-soft); }
+
+  .rec.open { color: var(--crew); background: var(--crew-soft); }
+  .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .lanes { grid-template-columns: 1fr; } }
+  .lanes > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .lanes h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .lanes .astra { border-color: color-mix(in srgb, var(--crew) 55%, transparent); }
+  .lanes .astra h4 { color: var(--crew); }
+  .lanes .cc { border-color: color-mix(in srgb, var(--method) 55%, transparent); }
+  .lanes .cc h4 { color: var(--method); }
+  .lanes ul { margin: 0; font-size: 14px; }
+  .screen { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; margin: 8px 0 14px; }
+  @media (max-width: 720px) { .screen { grid-template-columns: 1fr; } }
+  .mon { background: var(--surface-2); border: 2px solid var(--line); border-radius: 12px; padding: 10px; box-shadow: var(--shadow); }
+  .mon .cap { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; text-align: center; }
+  .wb { display: grid; grid-template-columns: 1fr 2fr 1.4fr; gap: 6px; min-height: 210px; }
+  .wb > div, .gd > div { border: 1px solid var(--line); border-radius: 8px; padding: 8px 9px; font-size: 12px; line-height: 1.4; background: var(--surface); }
+  .wb .side { background: var(--crew-soft); border-color: var(--crew); }
+  .wb .code { background: var(--surface); }
+  .wb .desks { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; padding: 0; border: 0; background: none; }
+  .wb .desks > div { border: 1px solid var(--line); border-radius: 8px; padding: 8px 9px; }
+  .wb .astra { background: var(--elective-soft); border-color: var(--elective); }
+  .wb .cc { background: var(--method-soft); border-color: var(--method); }
+  .gd { display: grid; grid-template-rows: 1fr 1.3fr; gap: 6px; min-height: 210px; }
+  .gd .play { background: var(--ship-soft); border-color: var(--ship); display: grid; place-items: center; text-align: center; font-weight: 700; }
+  .wb b, .gd b { display: block; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 4px; }
+  .wb small, .gd small { color: var(--ink-soft); display: block; }
+  .quote { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--elective); border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 10px 0 16px; max-width: 760px; font-size: 14.5px; }
+  .quote p { margin-bottom: 10px; } .quote p:last-child { margin-bottom: 0; }
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <span><a href="/documentation/">← Documentation</a> · <a href="/documentation/v2/">Blueprint v2</a> · <a href="/">Module spec</a></span>
+    <span class="badge">Documentation · Classroom v1</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow"><span class="dot"></span><span>Game Track · Classroom v1 · 20 Sep 2026 · Draft for Neo &amp; Lan</span></div>
+    <h1>What the student sees, how we teach, what it runs on</h1>
+    <p class="dek">Neo's question of 20 September: "If I am a student and I walk in, what should I expect? A Claude Code terminal? Codex? A front end for both, where I type in one place and see the result in another?" This page answers it from Claude Code's side and from Astra's side, then prices the seats, the machines and the services around it. The profit split decided the same day (50% Todak Studios, 20% Todak Academy, 30% the student) is recorded in <a href="/documentation/v2/#publishing">Blueprint v2.1</a>.</p>
+
+    <div class="answers">
+      <div class="k-head">Short version</div>
+      <ol>
+        <li><span class="k">The screen</span><span><b>One workbench, two desks, one game window.</b> The student works in an editor workspace the kit sets up: a <b>Design desk</b> (Astra) and a <b>Build desk</b> (Claude Code) as side panels, one open at a time until week 7, the code in the middle, and the game itself running in the Godot window next to it. No raw terminal on day 1. The terminal is a skill taught in week 4.</span></li>
+        <li><span class="k">Build or buy</span><span>The two tools' own editor panels already give "type here, see it there" once the Godot game window is the "there". We build the thin layer around them: the Todak sidebar with today's steps, the design board, the build and publish buttons and the prompt journey. <b>Weeks.</b> A browser-based "Todak Studio" that hides both tools is phase 2, only if cohort 1 shows the need. <b>Months.</b></span></li>
+        <li><span class="k">A lesson</span><span>Three hours: a 15-minute demo on the projector, a design warm-up with Astra, a guided build with Claude Code and Godot, an AI-off walkthrough, a showcase, and five minutes of saving to memory. Section 04.</span></li>
+        <li><span class="k">Astra's view</span><span>Astra was asked the same question, in writing, and answered on its own. It agrees on a prepared workspace beside Godot and a small Todak panel, prefers <b>one AI panel open at a time</b>, and flags two gaps in v2. Section 06 has its words and where we differ.</span></li>
+        <li><span class="k">Seats</span><span>One Claude seat and one Astra seat per student, paid for in the fee, as Neo decided. Buy them as <b>Team and Business seats the Academy administers</b>: same price as the consumer plans, and the seat is handed to the next student by an admin instead of rotating a password.</span></li>
+        <li><span class="k">Machines</span><span>What Todak already owns covers almost everything. Buy one Mac mini (<b>M6, 32 GB, 1 TB</b>, in stores 22 Sep). The course database, the collector and the showcase run on what exists.</span></li>
+        <li><span class="k">Local AI</span><span>Yes, for images in bulk, 3D and sound, on the idle bandung-01 box first, through the kit. Ideas, moodboards, storyboards, character concepts and presentations are already covered by the two seats.</span></li>
+      </ol>
+    </div>
+  </header>
+
+  <section id="screen">
+    <div class="sec-head"><span class="sec-num">01</span><h2>The student's screen</h2></div>
+    <p class="sec-sub">Three ways to put two AI tools and a game engine in front of a beginner. The middle one is the recommendation for cohort 1.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Option</th><th>What the student sees</th><th>Effort</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td><b>A · The tools as they ship</b></td><td>Claude Code and Codex in their own windows (desktop apps or terminal), Godot in another. The student juggles three windows and learns each tool's own layout.</td><td class="num">None</td><td>Fine for the dry run. Too loose for a class: nothing tells the student where they are in the course, and the two lanes blur.</td></tr>
+        <tr><td><b>B · Todak Workbench</b> (recommended)</td><td>One editor workspace the kit installs, with a Todak sidebar, the code in the middle, the two desks as side panels, and Godot beside it as the live view. The student never opens a terminal until we teach it.</td><td class="num">2–3 weeks</td><td>Both tools stay real and improve for free every month. The kit adds the course on top. Grows into option C without a rebuild.</td></tr>
+        <tr><td><b>C · Todak Studio</b> (phase 2)</td><td>One browser app we build: chat with either desk on the left, the game running live in the middle, memory and journey on the right. Both tools hidden behind it.</td><td class="num">2–3 months</td><td>Best for weak laptops and for recording nothing can switch off. Build it only if cohort 1 proves students need a browser-only option.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Option B, drawn</h3>
+    <div class="screen">
+      <div class="mon">
+        <div class="cap">Monitor 1 · Todak Workbench (the editor)</div>
+        <div class="wb">
+          <div class="side"><b>Todak sidebar</b><small>Week 3 · Game 1 · Pong</small><small>Today's steps ✓ ✓ ☐ ☐</small><small>Design board</small><small>Builds &amp; links</small><small>▶ Run · Build · Publish · Review</small><small>My prompt journey</small></div>
+          <div class="code"><b>The code and files</b><small>The student's game, visible at all times. This is where "not vibe coders" lives: whatever either desk changes appears here, and the student reads it.</small></div>
+          <div class="desks">
+            <div class="astra"><b>Design desk · Astra</b><small>Design doc, moodboards, sprites, UI mock-ups, gameplay on a branch.</small></div>
+            <div class="cc"><b>Build desk · Claude Code</b><small>Memory, scaffolding, builds, publish, review report.</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="mon">
+        <div class="cap">Monitor 2 · Godot (the live view)</div>
+        <div class="gd">
+          <div><b>Godot editor</b><small>Scenes, nodes, the script the desks just edited. Reloads on every change.</small></div>
+          <div class="play">▶ The game, running<small>Press Play, or say "run it" to either desk.</small></div>
+        </div>
+      </div>
+    </div>
+    <ul>
+      <li><b>The "type here, see it there" Neo described is real</b> in this layout. The student types in a desk, the code changes in the middle, Godot reloads it and the game runs on the right. No custom viewer is needed for that; Godot is the viewer.</li>
+      <li><b>One monitor?</b> The layout still works: the game window floats over the desks while it runs. Two 24-inch monitors per lab PC make the day noticeably calmer and cost little. Decision 6.</li>
+      <li><b>Under the hood</b> the Workbench is a VS Code profile installed by the kit, with the official Claude Code and Codex editor panels, the Godot tools, and one small Todak extension that draws the sidebar and calls the kit's commands. Nothing exotic.</li>
+      <li><b>The lecturer's projector</b> shows the lecturer's own Workbench during demos, and the class dashboard from the classroom system during work time: who is on which step, whose build just went live, the showcase links.</li>
+    </ul>
+    <div class="note"><p><b>Why not the terminal first.</b> A black window with a blinking cursor tells a beginner nothing about where they are or what to do next. The desks in the Workbench are chat panels with the code beside them. The terminal arrives in week 4 as a skill, with the no-AI debugging drills, when the student already knows what the commands are for.</p></div>
+  </section>
+
+  <section id="walk">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Walk in as the student: day 1, week 3, week 10</h2></div>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>When</th><th>What happens</th><th>Design desk (Astra)</th><th>Build desk (Claude Code)</th><th>The student leaves with</th></tr></thead>
+      <tbody>
+        <tr><td><b>Day 1</b><br><span class="mono" style="font-size:12px;color:var(--ink-soft)">Week 1 · no Godot yet</span></td><td>Signs in to their own Claude seat, Astra seat and GitHub. Double-clicks "Todak Workbench". The sidebar says <i>Week 1 · Your first loop</i>. The lecturer's demo shows what an AI agent is by doing one loop on the projector.</td><td>Asks what game the student dreams of. Makes a one-image moodboard and a five-line idea card.</td><td>Creates the student's project brain, saves the idea and the moodboard into it, shows the student the memory it just wrote.</td><td>A project brain that remembers their idea, and a recorded first prompt in their journey.</td></tr>
+        <tr><td><b>Week 3</b><br><span class="mono" style="font-size:12px;color:var(--ink-soft)">First Godot game · Pong</span></td><td>Sidebar steps: scaffold, paddle, ball, score, title screen, publish. Student asks the Build desk to scaffold Pong from the kit template; Godot opens on monitor 2. "Make the left paddle move with W and S." Code changes, Godot reloads, student presses Play.</td><td>Draws the paddles, ball and a title screen mock-up in the student's chosen style. Files land in the game's design folder and show on the design board.</td><td>Scaffolds, edits scripts on request, runs the playtester, and on "publish to web" sends the build to the farm and returns a link.</td><td>A playable Pong on the web with their name on it, and a walkthrough of the paddle script done with both desks closed.</td></tr>
+        <tr><td><b>Week 10</b><br><span class="mono" style="font-size:12px;color:var(--ink-soft)">3D capstone · vertical slice</span></td><td>Sidebar shows the slice plan. Student and Astra lock the core loop. Character comes out of the Academy asset service as a 3D model, cleaned in Blender, wired into Godot. Android test build on the student's own phone. "Review my game" files the report; the lecturer, Neo and Lan see it.</td><td>Character sheet, storyboard of the core loop, UI mock-ups, the store icon and listing copy draft. Gameplay feel passes on a branch.</td><td>Wires the character, camera and state machine, merges Astra's branch after tests, sends builds to the farm, runs the review, pushes to Play internal testing.</td><td>A vertical slice on their phone, a review report with a fix list, and a prompt journey that shows twelve weeks of growth.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="desks">
+    <div class="sec-head"><span class="sec-num">03</span><h2>The two desks, and what each one shows</h2></div>
+    <p class="sec-sub">Neo asked whether each tool should show "a different visualisation". Yes. The Design desk is mostly pictures and documents. The Build desk is mostly code, builds and reports. Both write into the same game folder, which is how work moves between them.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Thing</th><th>Kind</th><th>Where it lives</th><th>Where the student sees it</th><th>Desk</th></tr></thead>
+      <tbody>
+        <tr><td>Idea card and game design document</td><td>Text</td><td><code>design/</code> folder in the game's repository, mirrored into project memory</td><td>Design board tab in the sidebar</td><td><span class="type-pill puzzle">Astra</span></td></tr>
+        <tr><td>Moodboard, character sheet, storyboard, UI mock-ups</td><td>Pictures</td><td><code>design/</code> folder</td><td>Design board, as a gallery</td><td><span class="type-pill puzzle">Astra</span></td></tr>
+        <tr><td>Sprites, tilesets, 3D models, sounds</td><td>Files</td><td><code>assets/</code> folder, generated through the Academy asset service</td><td>Godot's file dock and the design board</td><td><span class="type-pill puzzle">Astra</span> requests · <span class="type-pill action">Claude</span> runs the service</td></tr>
+        <tr><td>Gameplay code, UI passes, feel passes</td><td>Code on a branch</td><td>The repository</td><td>The middle of the Workbench, and a "branch ready" card on the Build desk</td><td><span class="type-pill puzzle">Astra</span> writes · <span class="type-pill action">Claude</span> reviews and merges</td></tr>
+        <tr><td>Project memory (the project brain)</td><td>Text</td><td>Course database</td><td>Memory tab; both desks quote it</td><td><span class="type-pill action">Claude</span> owns · Astra reads</td></tr>
+        <tr><td>Builds and links</td><td>Links</td><td>Build farm, showcase</td><td>Builds tab in the sidebar</td><td><span class="type-pill action">Claude</span></td></tr>
+        <tr><td>Review report</td><td>One page</td><td>Classroom system</td><td>Review card in the sidebar; the lecturer, Neo and Lan see the same page</td><td><span class="type-pill action">Claude</span></td></tr>
+        <tr><td>Prompt journey</td><td>Timeline</td><td>Classroom system</td><td>Journey tab; the lecturer's class view</td><td>Both lanes recorded</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Handing work across.</b> Astra finishes a piece of work as files on a branch plus a short note. The Build desk sees the note, reviews and merges. The other direction is a brief: Claude Code writes a one-page brief into the design folder and Astra picks it up, which is exactly how the RUSH store listing was made.</p>
+  </section>
+
+  <section id="lesson">
+    <div class="sec-head"><span class="sec-num">04</span><h2>One lesson, minute by minute</h2></div>
+    <p class="sec-sub">A three-hour classroom session. Proposed rhythm: three of these a week, plus about eleven hours of self-driven work at home, which lands on the module spec's 240 hours over 12 weeks. Lan sets the timetable.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Time</th><th>Block</th><th>What happens</th><th>Design desk</th><th>Build desk</th><th>Godot</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0:00–0:15</td><td><b>Demo</b></td><td>The lecturer does today's skill live on the projector, with the AI, and explains what came back and why it works.</td><td>Open</td><td>Open</td><td>Open</td></tr>
+        <tr><td class="num">0:15–0:30</td><td><b>Design warm-up</b></td><td>Each student writes today's design intent with Astra: one paragraph and one picture into the design board.</td><td class="yes">Open</td><td class="no">Closed</td><td>Closed</td></tr>
+        <tr><td class="num">0:30–1:45</td><td><b>Guided build</b></td><td>The sidebar lists today's steps. Students build with the desks and Godot. Mentors circulate. The playtester runs when a step is ticked.</td><td>Open</td><td class="yes">Open</td><td class="yes">Open</td></tr>
+        <tr><td class="num">1:45–2:00</td><td>Break</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td class="num">2:00–2:30</td><td><b>AI-off walkthrough</b></td><td>In pairs, each student explains their own code to the other. From week 4 the mentor breaks one thing and the pair fixes it without AI.</td><td class="no">Closed</td><td class="no">Closed</td><td>Open</td></tr>
+        <tr><td class="num">2:30–2:50</td><td><b>Showcase</b></td><td>Three or four students play their web build on the projector from the showcase page. Two questions each.</td><td>Closed</td><td>Closed</td><td>Projector</td></tr>
+        <tr><td class="num">2:50–3:00</td><td><b>Save</b></td><td>The student saves today's decisions to project memory and marks their best prompt of the day in the journey.</td><td>Closed</td><td class="yes">Open</td><td>Closed</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li><b>Week 1 has no Godot.</b> Its three sessions are the "how AI actually works" unit, done inside the Workbench, so the student meets both desks and the project brain before they meet an engine.</li>
+      <li><b>Home work is the same Workbench</b> on the student's own laptop, signed into the same seats, so the journey follows the login.</li>
+      <li><b>Who leads which week</b> stays as the module spec says: Academy for weeks 1–3, Fusion for 4–9, Studios for 10–12.</li>
+    </ul>
+  </section>
+
+  <section id="build">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Build, or use as-is</h2></div>
+    <p class="sec-sub">Neo: "We will have to build this." Yes, but less than it sounds. The heavy parts are products that already exist. What we build is the course layer on top.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Piece</th><th>Build or use</th><th>Effort</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Claude Code as an editor panel and desktop app on Windows</td><td>Use as-is</td><td class="num">0</td><td>Ships today for Windows: editor panel, a redesigned desktop app, terminal, web. Included in the seat.</td></tr>
+        <tr><td>Codex (Astra) as an editor panel and desktop app on Windows</td><td>Use as-is</td><td class="num">0</td><td>Ships today. One thing to verify in the dry run: a reported gap where the Astra model did not appear in the Windows desktop app's picker for some accounts.</td></tr>
+        <tr><td>Godot 4 editor, export templates</td><td>Use as-is</td><td class="num">0</td><td>Free. The live view.</td></tr>
+        <tr><td><b>Todak sidebar</b> (today's steps, design board, builds, run/build/publish/review buttons, journey)</td><td><b>Build</b></td><td class="num">2 weeks</td><td>One small editor extension whose buttons call the kit's commands. The same commands the "later" option would call.</td></tr>
+        <tr><td>Workbench profile, lab image, home installer</td><td><b>Build</b></td><td class="num">3 days</td><td>Both editor panels, Godot tools, the sidebar, the kit, the telemetry switch, in one install.</td></tr>
+        <tr><td>Lecturer's class dashboard</td><td><b>Build</b></td><td class="num">1 week</td><td>A page in the classroom system: steps per student, builds, review queue, showcase links.</td></tr>
+        <tr><td>The Game Kit itself (templates, memory, asset service, farm, publisher desk, review gate, collector)</td><td><b>Build</b></td><td class="num">~6 weeks</td><td>Already planned in <a href="/documentation/v2/#build">Blueprint v2 section 11</a>. The sidebar is a face on top of it.</td></tr>
+        <tr><td>Todak Studio browser front end</td><td>Phase 2</td><td class="num">2–3 months</td><td>Only if cohort 1 shows the need. Reuses every kit command.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="astra">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Astra's point of view</h2></div>
+    <p class="sec-sub">Astra was given a written brief (the fixed facts from v2 and Neo's question) and asked for its own answer, in its own words, with no draft from Claude Code to copy. It could read the site and search the web. What follows is its answer, lightly trimmed, then where the two views differ and what we take from it.</p>
+    <div class="quote">
+      <p><b>The screen.</b> "Choose the middle option: a prepared workspace with a small Todak lesson panel, beside Godot. The student's first experience should be playing something, changing it and explaining the difference. Using two untouched apps is quickest, but leaves beginners managing windows and handovers. A complete Todak Studio could look simpler, but makes us responsible for a software product before we have tested the teaching." Astra uses the same editor and the same two official panels we do, and adds one rule: <b>"Open one AI panel at a time."</b> A terminal "opens only for a taught task".</p>
+      <p><b>Day 1.</b> "Students sign in, see their name and today's task, and play a supplied practice scene. They change one visible setting themselves. Claude Code then guides one recorded task and saves its outcome to project memory. Astra stays closed until the lecturer introduces the design desk."</p>
+      <p><b>The design desk.</b> "Show the current design beside two or three alternatives. The student chooses and explains why before we build." Moodboard, character sheet, storyboard, interface mock-up and the one-page design document are pictures and text the student <i>keeps</i>, in the repository: "Chat alone is not the deliverable."</p>
+      <p><b>Handing over.</b> "After playtesting, the student hands Claude Code the branch and a short note: intention, changed files, tests, known problems and asset sources. Stop Astra's work first. Claude Code checks it, returns specific fixes or merges approved changes into the main project and updates memory. Neither tool silently overwrites the other's work."</p>
+      <p><b>The projector.</b> "Show one decision, its changed file and its result. Keep individual prompt histories and assessment notes off the projector."</p>
+      <p><b>Build or buy.</b> "Two weeks for a demonstrator, then six to ten further weeks for a dependable pilot," assuming two experienced developers and a lecturer testing weekly. A full custom Studio is "three to six months or more, plus maintenance." And: "I disagree with v2 section 11's two-week kit scope covering every genre and all services."</p>
+      <p><b>What v2 still needs to confront.</b> (1) "Experienced staff shipping reference games proves the pipeline. Add observed trials with four to six actual beginners before enrolment." (2) Test the recording end to end, "long prompts, restarts, offline queues and both interfaces. Show saved versus waiting to upload; a recording fault needs recovery, not an automatic student penalty." (3) On shared PCs, "verify work and records reached storage before logout." (4) "AI scores need lecturer moderation. A publish approval or Neo bypass does not prove competence. Simultaneous class builds need a queue."</p>
+    </div>
+    <p>The full text is at <a href="/documentation/classroom/astra-pov.md">astra-pov.md</a>, with Astra's own lesson plan for a week-3 session.</p>
+
+    <h3>Where the two views differ, and what we take</h3>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Point</th><th>Claude Code said</th><th>Astra said</th><th>What goes in the plan</th></tr></thead>
+      <tbody>
+        <tr><td>Two desks on screen</td><td>Both desks visible side by side, the student picks.</td><td>One AI panel open at a time.</td><td><b>Astra's rule for weeks 1–6.</b> The Todak sidebar sets which desk is active per lesson block and the other stays shut. Both open together only from week 7, when students can handle a handover. Fewer lost beginners, cleaner records.</td></tr>
+        <tr><td>Day 1</td><td>Astra makes a moodboard, Claude saves the idea.</td><td>Play a practice scene first, change one setting, explain the difference. Astra closed until the design desk is introduced.</td><td><b>Astra's day 1.</b> It matches "not vibe coders" better: the first thing a student does is read and change a game, not prompt for one. The design desk opens on day 2 or 3 of week 1.</td></tr>
+        <tr><td>How long the kit takes</td><td>About six weeks in total, the kit itself two.</td><td>Two weeks to a demonstrator, six to ten more to a dependable pilot. Two-week kit "covering every genre" is not credible.</td><td><b>Astra's estimate.</b> Blueprint v2.2 restates the build as ten to twelve weeks to a pilot, with genre templates built for the dry-run games first and the rest of the menu grown cohort by cohort.</td></tr>
+        <tr><td>Who tests it</td><td>We do, by pushing reference games through the kit.</td><td>Also four to six real beginners, observed, before enrolment.</td><td><b>Added to the gate before cohort 1.</b> The reference games prove the pipeline; the beginners prove the teaching.</td></tr>
+        <tr><td>If the recording breaks</td><td>Work without a record does not count as evidence.</td><td>Show saved versus waiting to upload; a fault needs recovery, not a penalty.</td><td><b>Both.</b> The penalty rule applies to switching recording off on purpose; a fault gets recovery. The sidebar shows the recording status at all times. v2.2 wording.</td></tr>
+        <tr><td>What proves competence</td><td>Review gate, viva, prompt journey growth.</td><td>Not the publish approval or the bypass. Lecturer moderates the AI scores.</td><td><b>Astra's line, adopted.</b> The gate decides if a game ships; the walkthroughs and the viva decide if a student passes. AI grading proposes, the lecturer signs.</td></tr>
+        <tr><td>Class builds</td><td>The farm builds on request.</td><td>Twenty students pressing build at once need a queue.</td><td>A queue with position and progress shown in the sidebar. Already how the fleet's hands agents work.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note"><p><b>Both views agree on the core:</b> the two official panels beside Godot, a small Todak panel we build, no terminal until it is taught, Godot as the live view, the design desk producing things the student keeps in the repository, and the Studio front end deferred. The disagreements were about pace and rigour, and Astra was right on those.</p></div>
+
+  </section>
+
+  <section id="seats">
+    <div class="sec-head"><span class="sec-num">07</span><h2>Accounts and seats</h2></div>
+    <p class="sec-sub">Decided by Neo: each student gets their own account for the term, on an Academy-owned email, the password rotated at graduation, the cost absorbed in the fee. Below is the cleanest way to run exactly that.</p>
+    <ul>
+      <li><b>Buy the seats as a Claude Team workspace and a ChatGPT Business workspace owned by the Academy.</b> A standard Claude Team seat is about USD 20 a month billed yearly or USD 25 monthly, includes Claude Code, and the plan starts at two seats. A ChatGPT Business seat is about USD 20 a month billed yearly or USD 25 monthly, with Codex included at the same allowance as a Plus account. Both prices are as published in September 2026 and worth re-checking at purchase.</li>
+      <li><b>Same money as the consumer plans, fewer chores.</b> At enrolment an admin adds the student to a seat. At graduation the admin removes them and the seat goes to the next student. No password rotation, no shared logins (which the consumer terms do not allow anyway), one invoice, and the workspace's content is not used for training by default.</li>
+      <li><b>One person per seat at a time.</b> The Academy owns the workspace, the student brings nothing and takes nothing but their published games and their journey export.</li>
+      <li><b>Heavy weeks.</b> The Claude allowance will be hit in the 3D weeks; Blueprint v2 already keeps a buffer of five Claude Max seats for the capstone month. Plan the same buffer on the Astra side, a few higher-tier seats or extra credits for weeks 7–11, and confirm the amount in the dry run.</li>
+      <li><b>What the seats already cover.</b> Ideas, moodboards, storyboards, character concepts, design documents, presentations and slide decks: Astra makes pictures inside its seat (the RUSH icon and cover were made this way) and Claude makes documents and slides inside its seat. No extra tool is needed for any of that.</li>
+    </ul>
+  </section>
+
+  <section id="machines">
+    <div class="sec-head"><span class="sec-num">08</span><h2>Machines, local AI and outside services</h2></div>
+    <p class="sec-sub">What Todak already owns, what it does for the course, and the one machine to buy.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Machine</th><th>Where</th><th>Job in the course</th><th>Cost</th></tr></thead>
+      <tbody>
+        <tr><td><b>Academy Windows PCs</b></td><td>Classroom</td><td>The Workbench. High spec already; a second monitor each is the only addition worth making.</td><td class="num">Exists · monitors optional</td></tr>
+        <tr><td><b>Mac mini</b> (new)</td><td>Kenwingston office, on the fleet network</td><td>Build farm: web, Windows, Mac, Linux and Android exports, iPhone builds through Xcode, store uploads with the Studios keys, the AI reviewer's headless playtests.</td><td class="num">Buy · see below</td></tr>
+        <tr><td><b>tr-home</b> (32-core Threadripper, 64 GB, 24 GB GPU)</td><td>Kenwingston office</td><td>Android and web builds for the dry run until the mini arrives. Drives the store consoles by browser. Image generation overflow.</td><td class="num">Exists · RM0</td></tr>
+        <tr><td><b>EdgeXpert</b> (GB10, 130 GB unified memory)</td><td>Kenwingston office</td><td>The 3D asset pipeline (photo or sketch to 3D model) and the watchers that message Neo when a store changes state. It is also Siti's home and the twin's brain, so <b>no student load during class hours</b>.</td><td class="num">Exists · RM0</td></tr>
+        <tr><td><b>bandung-01</b> (RTX 5070 12 GB, 30 GB RAM, idle)</td><td>Bandung</td><td>Proposed <b>Academy AI box</b> for cohort 1: student image jobs (sprites, tilesets, textures, moodboards in bulk) and a small local text model for cheap tasks, served through the kit with a queue and per-student metering.</td><td class="num">Exists · electricity</td></tr>
+        <tr><td><b>NAS</b> (22 TB, mostly free)</td><td>Kenwingston office</td><td>Every build, every generated asset, per cohort. Retention rule to set.</td><td class="num">Exists · RM0</td></tr>
+        <tr><td><b>Kay rack .213</b> (Academy's own server)</td><td>Kay rack</td><td>The telemetry collector and the publisher desk queue.</td><td class="num">Exists · RM0</td></tr>
+        <tr><td><b>classroom.neotodak.com</b> database</td><td>Cloud</td><td>Students, classes, progress, prompt logs, review reports, signed paperwork. Free tier today; the paid tier (about USD 25 a month) once prompt logs grow.</td><td class="num">RM0 → ~RM120/mo</td></tr>
+        <tr><td><b>course.neotodak.com</b> hosting</td><td>Cloud</td><td>The showcase: every student's web builds, with the required headers.</td><td class="num">RM0 on the free tier</td></tr>
+        <tr><td><b>GitHub organisation</b> for student repositories</td><td>Cloud</td><td>Private repositories, the tamper-proof timeline. Builds happen on the farm, not on GitHub, so the free tier holds.</td><td class="num">RM0</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Which Mac mini to buy</h3>
+    <p>The 2026 lineup reaches stores on <b>22 September</b>. Two chips: M6 from RM3,799 (education RM3,399) with 16 GB and 256 GB, and M5 Pro from RM7,499 (education RM7,099) with 24 GB and 512 GB. The build farm is a processor-and-disk job, not a graphics job, so the M6 is enough. What matters is memory and disk.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Configuration</th><th>Price</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>M6 · 16 GB · 256 GB</td><td class="num">RM3,799 (edu RM3,399)</td><td class="no">No. Xcode, the iPhone simulators, the Android tools and Godot's templates alone fill the disk, and 16 GB chokes when an iPhone build and an Android build run together.</td></tr>
+        <tr><td><b>M6 · 32 GB · 1 TB</b></td><td class="num">Stock configuration on apple.com/my; price to confirm at the store, expect roughly RM6k</td><td class="yes">Recommended. Runs an Xcode build, a Godot export and the headless reviewer at the same time, with room for twenty students' build caches. Serves every cohort.</td></tr>
+        <tr><td>M5 Pro · 24 GB · 512 GB</td><td class="num">RM7,499 (edu RM7,099)</td><td class="opt">Only if Neo wants headroom to run local models on the farm later. More chip than the farm needs, less disk.</td></tr>
+      </tbody>
+    </table></div>
+    <ul>
+      <li>Standard 2.5 Gb Ethernet is fine; the office network and the NAS do not need the 10 Gb option.</li>
+      <li>Education pricing applies if the Academy qualifies as an institution on Apple's education store. Worth a call before ordering.</li>
+      <li>Setup is a copy of the recipe that built RUSH and ApaNakMakan: Xcode with the Studios signing certificates in a dedicated keychain, the Android tools with the upload key from the vault, Godot with export templates, and the fleet's own hands agent so builds can be driven from the kit.</li>
+    </ul>
+
+    <h3>Local AI for students: yes, in this order</h3>
+    <ol class="plain">
+      <li><b>The seats first.</b> Text, ideas, design documents, moodboards, storyboards, character concepts, presentations: the two seats do all of this already, and the cost is in the fee.</li>
+      <li><b>The fleet for pictures in bulk, 3D and sound.</b> Sprites, tilesets and textures by the dozen run on the Academy AI box (bandung-01, with tr-home as overflow) through the kit's asset service, with a queue and a per-student meter. 3D models go through Todak's own photo-to-3D pipeline on EdgeXpert, outside class hours or queued. Music and sound effects through the fleet's existing song and sound lanes or free libraries with store-safe licences.</li>
+      <li><b>Paid services only for what the fleet cannot do well</b>, through the kit with Todak's own accounts and a per-student budget of about RM50 (the v1 figure stands). A pay-per-use provider for higher-quality 3D when the pipeline falls short; the Studios crew's video tools for showcase trailers. Retail subscriptions per student (Meshy and the like) are dropped.</li>
+    </ol>
+    <div class="note crew"><p><b>Two licence flags.</b> The twin's voice engine on EdgeXpert is licensed for personal use only, so student games must not ship voices from it; use a properly licensed voice service on a Todak account, metered, or a voice tool with a commercial licence, to verify. And Higgsfield is Neo's personal subscription, driven through its own login; it is not a tool twenty students share.</p></div>
+  </section>
+
+  <section id="bill">
+    <div class="sec-head"><span class="sec-num">09</span><h2>The bill</h2></div>
+    <p class="sec-sub">Rounded, in ringgit at about 4.75 to the dollar. Seat prices as published in September 2026. Everything marked "estimate" is confirmed in the dry run.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Item</th><th>Type</th><th>Amount</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Mac mini M6 · 32 GB · 1 TB</td><td>One-off</td><td class="num">~RM6,000 (estimate; range RM3.8k–7.5k)</td><td>Neo buys it. Education price if eligible.</td></tr>
+        <tr><td>Second monitor per lab PC</td><td>One-off, optional</td><td class="num">~RM400 each</td><td>Only if the lab does not already have two.</td></tr>
+        <tr><td>Legal drafting: consent, IP licence with the 50/20/30 split, NDA</td><td>One-off</td><td class="num">To quote</td><td>Reused every cohort.</td></tr>
+        <tr><td>Kit, Workbench, sidebar, dashboard</td><td>One-off, internal</td><td class="num">~8 weeks of Claude Code and Astra work</td><td>No cash; fleet time.</td></tr>
+        <tr><td>Course database, paid tier</td><td>Monthly</td><td class="num">~RM120</td><td>When prompt logs outgrow the free tier. Shared across cohorts.</td></tr>
+        <tr><td>Electricity for bandung-01 and the mini</td><td>Monthly</td><td class="num">Small</td><td>Already-running boxes.</td></tr>
+        <tr><td>Claude Team seat + ChatGPT Business seat</td><td>Per student, 12 weeks</td><td class="num">RM570–710</td><td>USD 120–150 for both seats over three months. In the fee.</td></tr>
+        <tr><td>Asset budget through the kit</td><td>Per student</td><td class="num">~RM50</td><td>Paid services only; fleet generation is free.</td></tr>
+        <tr><td>Seats for a cohort of 15 · 20</td><td>Per cohort</td><td class="num">RM8.6k–10.7k · RM11.4k–14.3k</td><td>Both seats, 12 weeks. In the fees.</td></tr>
+        <tr><td>Heavy-week buffer</td><td>Per cohort</td><td class="num">~RM2.4k Claude + Astra to confirm</td><td>Higher-tier seats for weeks 7–11, handed to whoever runs dry.</td></tr>
+        <tr><td>Store publishing</td><td>–</td><td class="num">RM0</td><td>Studios accounts exist. Steam optional at USD 100 per game, recoupable.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>What this means for the fee.</b> Seats and assets come to roughly RM620–760 per student for the term before any teaching cost. Whatever the fee is, that is the floor it has to clear.</p>
+  </section>
+
+  <section id="decide">
+    <div class="sec-head"><span class="sec-num">10</span><h2>Decisions for Neo &amp; Lan</h2></div>
+    <ol class="decisions">
+      <li><span class="n">1</span><span>The student's screen is the <b>Todak Workbench</b> (option B), with one desk open at a time until week 7. Todak Studio (option C) waits for evidence from cohort 1. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">2</span><span>Mac mini: <b>M6, 32 GB, 1 TB</b>. Confirm the price at the store and whether the Academy gets education pricing. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">3</span><span>Seats as <b>Team and Business workspaces owned by the Academy</b>, rather than rotating passwords on consumer accounts. Same money. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">4</span><span><b>bandung-01</b> becomes the Academy AI box for cohort 1. A dedicated lab GPU box is bought only if it saturates.</span></li>
+      <li><span class="n">5</span><span>Timetable: <b>three 3-hour sessions a week</b> plus home work, or Lan's alternative that reaches the same hours.</span></li>
+      <li><span class="n">6</span><span>Two monitors per lab PC.</span></li>
+      <li><span class="n">7</span><span>Astra's two flags in section 06: a beginner dry run, and an end-to-end test of the recording before enrolment. <span class="rec">Recommended yes to both</span></span></li>
+    </ol>
+  </section>
+
+  <section id="changelog">
+    <div class="sec-head"><span class="sec-num">11</span><h2>Changelog</h2></div>
+    <ul>
+      <li><b>v1 · 20 Sep 2026.</b> First version. Answers Neo's "what does the student see" question with the Todak Workbench, includes Astra's independent point of view, and prices seats, machines, local AI and services. Profit split 50/20/30 recorded in Blueprint v2.1 the same day.</li>
+    </ul>
+  </section>
+
+  <footer>
+    <span>Todak AI Creator Program · Game Track · Classroom v1</span>
+    <span>Working plan · not yet approved · Sept 2026</span>
+  </footer>
+
+</div>
+</body>
+</html>

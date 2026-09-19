@@ -402,7 +402,7 @@
     <ul>
       <li><b>Publisher of record:</b> Todak Studios, under its own brand. No separate "Academy Games" label.</li>
       <li><b>The student keeps authorship.</b> At enrolment they sign an IP licence that lets Todak Studios publish, market and update the game and use its design and characters. Section 09 lists what the licence must cover.</li>
-      <li><b>If a game earns money, the student gets a share.</b> Neo has confirmed the principle. The percentage is still to be set; v1 carried a 70/30 figure from 3 Sep as a starting point.</li>
+      <li><b>If a game earns money, it is split three ways:</b> <b>50% Todak Studios, 20% Todak Academy, 30% the student.</b> Decided by Neo on 20 Sep (v2.1). The split goes into the IP licence in section 09.</li>
       <li><b>Naming rule</b> is fixed in the kit before anyone publishes, because a package name can never change after the first upload: <code>com.todakstudios.academy.&lt;game&gt;</code>. RUSH itself is <code>com.todakstudios.policesentrirush</code>.</li>
       <li><b>Credit.</b> The student's name goes on the store listing and in the game's credits screen.</li>
     </ul>
@@ -489,7 +489,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://telemetry.course.neotodak.com</code></pre>
     <ul>
       <li>Consent at enrolment under Malaysian data protection law, as one of the three documents in section 09.</li>
       <li>Students see their own journey. Lecturers see their class. Exports and deletion on request, within what the NDA and the IP licence allow.</li>
-      <li>A student can technically switch recording off on their own laptop. The answer is a course rule, not a lock: work without a record does not count as evidence, and the Git history stays either way. If cohort 1 shows this being gamed, the "later" option in section 02 puts the backbone on our server and makes the record unavoidable.</li>
+      <li>A student can technically switch recording off on their own laptop. The answer is a course rule, not a lock: work with recording switched off on purpose does not count as evidence, and the Git history stays either way. A recording <i>fault</i> is different: the Workbench shows "saved" or "waiting to upload" at all times, and a fault gets recovery, never a penalty (v2.2, on Astra's advice). If cohort 1 shows this being gamed, the "later" option in section 02 puts the backbone on our server and makes the record unavoidable.</li>
     </ul>
   </section>
 
@@ -500,7 +500,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://telemetry.course.neotodak.com</code></pre>
       <thead><tr><th>Document</th><th>What it must cover</th></tr></thead>
       <tbody>
         <tr><td><b>1 · Consent to record</b></td><td>What is captured (every prompt, reply, tool call and transcript in both tools, plus Git history). Why (assessment evidence and course improvement). Who sees it (the student, their lecturer, the review gate, Neo and Lan). How long it is kept. That it is stored on Todak systems. The student's rights to a copy and to deletion after the course, subject to the licence below. Personal Data Protection Act basis.</td></tr>
-        <tr><td><b>2 · IP licence and profit share</b></td><td>The student is the author. Todak Studios is the publisher of record and may publish, market, update, localise and keep the game live under its brand, and use the game's design, characters and art in Studios marketing and course material. The student's share of any profit, as a percentage, and how and when it is paid. Credit in the listing and in the game. What happens if the student leaves the course early, and what happens after graduation (the game stays published unless both sides agree otherwise). The student may show their published games in their own portfolio.</td></tr>
+        <tr><td><b>2 · IP licence and profit share</b></td><td>The student is the author. Todak Studios is the publisher of record and may publish, market, update, localise and keep the game live under its brand, and use the game's design, characters and art in Studios marketing and course material. The profit split, 50% Todak Studios, 20% Todak Academy, 30% the student, and how and when the student's share is paid. Credit in the listing and in the game. What happens if the student leaves the course early, and what happens after graduation (the game stays published unless both sides agree otherwise). The student may show their published games in their own portfolio.</td></tr>
         <tr><td><b>3 · NDA</b></td><td>Confidential: the Game Kit, the pipeline and the agents behind it, the prompts and instruction files, the build farm, the publisher desk, the recording system, any unreleased Todak Studios material seen during the course, and the other students' unreleased games. Survives graduation. Carve-outs: the student's own published games, general skills learned, and anything Todak makes public. Consequences of a breach.</td></tr>
       </tbody>
     </table></div>
@@ -518,7 +518,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://telemetry.course.neotodak.com</code></pre>
       <thead><tr><th>Addition</th><th>Type</th><th>Estimate</th><th>Note</th></tr></thead>
       <tbody>
         <tr><td>Codex Astra seat</td><td>Per learner, monthly</td><td class="num">About the same as a Claude Pro seat</td><td>New in v2. To confirm at purchase. Roughly doubles the AI bill per cohort. Option: Astra seats from week 2 only, when game design starts, and pooled seats for the 3D weeks.</td></tr>
-        <tr><td>Mac mini for the build farm</td><td>One-off</td><td class="num">RM2.6k–4k</td><td>Approved 19 Sep. Neo buys it. Depends on memory size. Serves every cohort.</td></tr>
+        <tr><td>Mac mini for the build farm</td><td>One-off</td><td class="num">RM3.8k–7.5k</td><td>Approved 19 Sep. Neo buys it. The 2026 lineup (M6 from RM3,799, M5 Pro from RM7,499, in stores 22 Sep) replaced the v1 figure. Spec recommendation in the <a href="/documentation/classroom/v1/">Classroom v1</a> page. Serves every cohort.</td></tr>
         <tr><td>Asset generation (images, 3D, music, sound)</td><td>Per learner</td><td class="num">~RM50</td><td>Academy-hosted services metered by the kit. Replaces retail Meshy at RM95 per month.</td></tr>
         <tr><td>Claude Max seats for the capstone month</td><td>Per cohort buffer</td><td class="num">~RM2.4k</td><td>Pro's usage window will be hit in heavy 3D weeks. Five Max seats for one month, handed to whoever runs dry.</td></tr>
         <tr><td>Telemetry collector, database, showcase hosting</td><td>Monthly</td><td class="num">~RM120</td><td>One small database project plus space on a fleet machine. Shared across cohorts.</td></tr>
@@ -543,7 +543,8 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://telemetry.course.neotodak.com</code></pre>
       <li><b>Paperwork to the lawyer</b> · start now. Section 09 is the brief. Needed back before the enrolment form goes out.</li>
       <li><b>Windows lab image and home installer</b> · 3 days. One image for the classroom PCs, one script for laptops at home.</li>
     </ol>
-    <div class="note ship"><p><b>Gate before cohort 1:</b> one reference game per slot published under Todak Studios through the kit, with the review gate on and a full prompt record for both lanes. If any of those three is missing, the kit is not ready and the cohort waits.</p></div>
+    <div class="note ship"><p><b>Gate before cohort 1:</b> one reference game per slot published under Todak Studios through the kit, with the review gate on and a full prompt record for both lanes, <b>plus observed trials with four to six real beginners</b> (added in v2.2 on Astra's advice: the reference games prove the pipeline, the beginners prove the teaching). If any of those four is missing, the kit is not ready and the cohort waits.</p></div>
+    <div class="note"><p><b>Timeline, restated in v2.2.</b> Astra reviewed this list on 20 Sep and called the two-week kit "covering every genre" not credible. Adopted: about two weeks to a demonstrator, then six to ten more to a dependable pilot, ten to twelve weeks in all. Genre templates are built for the dry-run games first; the rest of the menu grows cohort by cohort. Details in <a href="/documentation/classroom/v1/#astra">Classroom v1, section 06</a>.</p></div>
   </section>
 
   <section id="decide">
@@ -560,7 +561,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://telemetry.course.neotodak.com</code></pre>
     </ol>
     <h3>Still open, all small</h3>
     <ol class="decisions">
-      <li><span class="n">a</span><span>The profit-share percentage for the student. <span class="rec open">Neo &amp; Lan</span></span></li>
+      <li><span class="n">a</span><span>Profit share: 50% Studios, 20% Academy, 30% student. <span class="rec done">Decided 20 Sep</span></span></li>
       <li><span class="n">b</span><span>Who drafts the three documents, and whether cohort 1 accepts under-18s. <span class="rec open">Lan</span></span></li>
       <li><span class="n">c</span><span>Astra seats: one per student for all 12 weeks, or from week 2 with a pooled set for the 3D weeks. <span class="rec open">Cost model</span></span></li>
       <li><span class="n">d</span><span>Mac mini memory size, and its name on the fleet. <span class="rec open">Neo</span></span></li>
@@ -571,6 +572,8 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://telemetry.course.neotodak.com</code></pre>
   <section id="changelog">
     <div class="sec-head"><span class="sec-num">13</span><h2>Changelog</h2></div>
     <ul>
+      <li><b>v2.2 · 20 Sep 2026.</b> Astra's review adopted: beginner trials added to the gate before cohort 1; kit timeline restated as ten to twelve weeks to a pilot; recording faults get recovery, not penalty; the review gate decides whether a game ships, the walkthroughs and viva decide whether a student passes.</li>
+      <li><b>v2.1 · 20 Sep 2026.</b> Profit split decided: 50% Todak Studios, 20% Todak Academy, 30% the student. Mac mini price updated to the 2026 lineup. Teaching format, the student's screen and the infrastructure bill now live in <a href="/documentation/classroom/v1/">Classroom v1</a>.</li>
       <li><b>v2 · 19 Sep 2026.</b> Neo's answers to the seven v1 decisions folded in. Codex Astra added as the second tool with the lanes proven on police sentri : RUSH; publisher fixed as the Todak Studios brand with an IP licence and profit share; one review gate for all three games with Neo's bypass and an update lesson; Mac mini approved and placed at the Kenwingston office on the fleet network; consent, IP licence and NDA at registration; build list reordered to build and test the kit on ourselves first.</li>
       <li><b>v1.1 · 8 Sep 2026.</b> Added the stance "Not prompt-only. Not vibe coders." with the proposed ways of holding that line.</li>
       <li><b>v1 · 8 Sep 2026.</b> First working plan. Genres as a menu; publishing wired to Studios accounts from day one; classroom is Windows PCs; games 1 and 2 small, game 3 final.</li>
@@ -578,8 +581,8 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://telemetry.course.neotodak.com</code></pre>
   </section>
 
   <footer>
-    <span>Todak AI Creator Program · Game Track · Blueprint v2</span>
-    <span>Working plan · decisions of 19 Sep 2026 folded in · not yet signed off by Lan</span>
+    <span>Todak AI Creator Program · Game Track · Blueprint v2.2</span>
+    <span>Working plan · decisions of 19–20 Sep 2026 folded in · not yet signed off by Lan</span>
   </footer>
 
 </div>
