@@ -6,6 +6,7 @@
 <meta name="robots" content="noindex">
 <title>The plan, step by step — Todak AI Creator Program</title>
 <meta name="description" content="A fifteen-step presentation of the Todak AI Creator Program Game Track plan, in English and Bahasa Malaysia, with the Arcade animations of the student’s screen.">
+<link rel="stylesheet" href="/documentation/classroom/v1/anim/arcade.css">
 <style>
   :root {
     --bg: #e9ebee;
@@ -50,219 +51,196 @@
     color-scheme: dark;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
   body {
-    background: var(--bg); color: var(--ink);
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+    height: 100dvh; overflow: hidden; background: var(--bg); color: var(--ink);
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px;
+    line-height: 1.5; -webkit-font-smoothing: antialiased;
   }
-  .mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
-  a { color: var(--method); text-underline-offset: 2px; }
-  a:focus-visible { outline: 2px solid var(--method); outline-offset: 2px; }
-
-  .topbar {
-    border-bottom: 1px solid var(--line);
-    font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint);
-    letter-spacing: .12em; text-transform: uppercase;
+  button, a { -webkit-tap-highlight-color: transparent; }
+  button { font: inherit; cursor: pointer; }
+  a { color: var(--method); text-underline-offset: 4px; }
+  :where(a, button, [tabindex]):focus-visible { outline: 3px solid var(--method); outline-offset: 4px; }
+  button:disabled { opacity: .4; cursor: default; }
+  .dtop, .dbot { background: var(--surface); padding-inline: clamp(16px, 3vw, 48px); }
+  .dtop {
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px;
+    min-height: 64px; padding-block: 8px; border-bottom: 1px solid var(--line);
+    font: 12px/1.4 ui-monospace, Menlo, monospace;
   }
-  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
-  .topbar .badge { color: var(--method); }
-  .topbar a { color: var(--ink-soft); text-decoration: none; }
-  .topbar a:hover { color: var(--method); }
-
-  header { padding: 48px 0 26px; }
-  .eyebrow {
-    font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-    color: var(--ink-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  .dtop > span:first-child { display: flex; align-items: center; flex-wrap: wrap; gap: 0 16px; }
+  .dtop a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink-soft); text-decoration: none; }
+  .dtop a:hover { color: var(--method); text-decoration: underline; }
+  .dtop .ttl { color: var(--method); text-align: center; }
+  .langbtn, .fsbtn {
+    min-height: 44px; border: 1px solid var(--line); border-radius: 8px;
+    background: var(--surface-2); color: var(--ink); padding: 10px 14px; font-size: 13px;
   }
-  .eyebrow .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--crew); box-shadow: 0 0 0 3px var(--crew-soft); }
-  h1 { font-size: clamp(29px, 5.2vw, 44px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; text-wrap: balance; }
-  .dek { color: var(--ink-soft); font-size: 16.5px; max-width: 680px; margin-top: 15px; }
-
-  /* short version */
-  .answers { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--crew); border-radius: 13px; padding: 20px 24px; box-shadow: var(--shadow); margin-top: 28px; }
-  .answers .k-head { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
-  .answers ol { list-style: none; display: grid; gap: 11px; }
-  .answers li { display: grid; grid-template-columns: 110px 1fr; gap: 14px; font-size: 14.5px; }
-  .answers .k { font-weight: 750; color: var(--method); letter-spacing: -.01em; }
-  @media (max-width: 560px) { .answers li { grid-template-columns: 1fr; gap: 2px; } }
-
-  /* sections */
-  section { padding: 46px 0 0; }
-  .sec-head { display: flex; align-items: baseline; gap: 13px; margin-bottom: 6px; flex-wrap: wrap; }
-  .sec-num { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; color: var(--method); }
-  .sec-head h2 { font-size: 22px; font-weight: 760; letter-spacing: -.015em; }
-  .sec-sub { color: var(--ink-soft); font-size: 14.5px; margin: 4px 0 20px; max-width: 740px; }
-  h3 { font-size: 15.5px; font-weight: 700; margin: 24px 0 8px; letter-spacing: -.01em; }
-  p { font-size: 14.5px; margin-bottom: 12px; max-width: 740px; }
-  ul, ol.plain { padding-left: 20px; font-size: 14.5px; max-width: 740px; margin-bottom: 12px; }
-  li { margin-bottom: 6px; }
-  li::marker { color: var(--ink-faint); }
-  b, strong { font-weight: 700; }
-  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--surface-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px; }
-  pre { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; padding: 13px 15px; overflow-x: auto; margin: 0 0 14px; max-width: 740px; }
-  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
-
-  /* tables (same look as the module spec) */
-  .cp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin: 6px 0 16px; }
-  table.cp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: var(--surface); }
-  table.cp th, table.cp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
-  table.cp thead th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-2); }
-  table.cp tbody tr:last-child td { border-bottom: none; }
-  table.cp .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .yes { color: var(--ship); font-weight: 700; }
-  .no { color: var(--ink-faint); }
-  .opt { color: var(--crew); font-weight: 700; }
-  .type-pill { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
-  .type-pill.action { color: var(--method); background: var(--method-soft); }
-  .type-pill.puzzle { color: var(--elective); background: var(--elective-soft); }
-  .type-pill.story { color: var(--crew); background: var(--crew-soft); }
-  .type-pill.sim { color: var(--ship); background: var(--ship-soft); }
-
-  /* callouts */
-  .note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0 16px; max-width: 760px; font-size: 14.5px; }
-  .note.crew { border-left-color: var(--crew); }
-  .note.ship { border-left-color: var(--ship); }
-  .note p { margin: 0; }
-
-  /* compare */
-  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
-  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
-  .compare > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
-  .compare h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
-  .compare .pick { border-color: color-mix(in srgb, var(--method) 55%, transparent); background: var(--method-soft); }
-  .compare .pick h4 { color: var(--method); }
-  .compare ul { margin: 0; font-size: 14px; }
-
-  /* week strip */
-  .weeks { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 6px 0 8px; }
-  .weeks div { height: 44px; border-radius: 7px; display: grid; place-items: center; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 600; background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
-  .weeks .g1 { background: var(--method-soft); border-color: var(--method); color: var(--ink); }
-  .weeks .g2 { background: var(--elective-soft); border-color: var(--elective); color: var(--ink); }
-  .weeks .g3 { background: var(--crew-soft); border-color: var(--crew); color: var(--ink); }
-  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 4px 0 16px; }
-  .lg { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-soft); }
-  .lg .sw { width: 11px; height: 11px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
-  .lg .sw.g1 { background: var(--method-soft); border-color: var(--method); }
-  .lg .sw.g2 { background: var(--elective-soft); border-color: var(--elective); }
-  .lg .sw.g3 { background: var(--crew-soft); border-color: var(--crew); }
-
-  /* flow */
-  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; margin: 6px 0 18px; }
-  .flow .box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; box-shadow: var(--shadow); }
-  .flow .box b { display: block; margin-bottom: 4px; }
-  .flow .box small { display: block; color: var(--ink-soft); font-size: 12.5px; line-height: 1.45; }
-  .flow .arw { display: grid; place-items: center; color: var(--ink-faint); font-size: 18px; }
-  .flow .box.mem { border-color: color-mix(in srgb, var(--method) 45%, transparent); background: var(--method-soft); }
-  @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } .flow .arw { transform: rotate(90deg); } }
-
-  /* decisions */
-  .decisions { list-style: none; display: grid; gap: 9px; margin-top: 6px; }
-  .decisions li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; font-size: 14.5px; box-shadow: var(--shadow); }
-  .decisions .n { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--crew); }
-  .decisions .rec { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ship); background: var(--ship-soft); padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
-  .decisions .done { color: var(--method); background: var(--method-soft); }
-
-  .rec.open { color: var(--crew); background: var(--crew-soft); }
-  .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
-  @media (max-width: 640px) { .lanes { grid-template-columns: 1fr; } }
-  .lanes > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
-  .lanes h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
-  .lanes .astra { border-color: color-mix(in srgb, var(--crew) 55%, transparent); }
-  .lanes .astra h4 { color: var(--crew); }
-  .lanes .cc { border-color: color-mix(in srgb, var(--method) 55%, transparent); }
-  .lanes .cc h4 { color: var(--method); }
-  .lanes ul { margin: 0; font-size: 14px; }
-  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
-  /* deck */
-  html, body { height: 100%; }
-  body { padding-bottom: 0; overflow: hidden; }
-  .dtop { position: fixed; top: 0; left: 0; right: 0; height: 48px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 1px solid var(--line); background: var(--bg); z-index: 5; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); gap: 12px; }
-  .dtop a { color: var(--ink-soft); text-decoration: none; } .dtop a:hover { color: var(--method); }
-  .dtop .ttl { color: var(--method); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .langbtn { font: inherit; letter-spacing: .1em; text-transform: uppercase; padding: 8px 12px; min-height: 36px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); cursor: pointer; }
+  .langbtn { justify-self: end; white-space: nowrap; font: inherit; }
   .langbtn b { color: var(--method); }
-  .langbtn:disabled { opacity: .5; cursor: default; }
-  .deck { position: absolute; top: 48px; bottom: 72px; left: 0; right: 0; overflow: hidden; }
-  .slide { position: absolute; inset: 0; overflow-y: auto; padding: 28px 16px 24px; display: none; }
-  .slide.active { display: block; animation: sl .32s ease both; }
-  @keyframes sl { from { opacity: 0; transform: translateX(14px) } to { opacity: 1; transform: none } }
-  @media (prefers-reduced-motion: reduce) { .slide.active { animation: none; } }
-  .inner { max-width: 960px; margin: 0 auto; }
-  .kicker { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--crew); margin-bottom: 14px; }
-  .slide h1 { font-size: clamp(28px, 4.6vw, 46px); font-weight: 800; letter-spacing: -.022em; line-height: 1.06; margin-bottom: 18px; text-wrap: balance; }
-  .points { list-style: none; padding: 0; margin: 0 0 18px; max-width: 820px; }
-  .points li { font-size: clamp(16px, 2.1vw, 21px); line-height: 1.5; margin-bottom: 12px; padding-left: 22px; position: relative; }
-  .points li::before { content: ""; position: absolute; left: 0; top: .62em; width: 9px; height: 9px; border-radius: 50%; background: var(--method); }
-  .points li b { color: var(--ink); }
-  .visual { margin-top: 10px; }
-  .bigrow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 8px 0 22px; max-width: 720px; }
-  .big { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px; box-shadow: var(--shadow); text-align: center; }
-  .big .n { font-size: clamp(36px, 6vw, 64px); font-weight: 800; letter-spacing: -.03em; color: var(--method); line-height: 1; }
-  .big .l { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-top: 8px; }
-  .strip { display: flex; gap: 4px; margin: 6px 0 14px; max-width: 900px; }
-  .strip div { border-radius: 8px; padding: 10px 8px; font-size: 12px; line-height: 1.3; background: var(--method-soft); border: 1px solid var(--method); min-width: 0; }
-  .strip div b { display: block; font-size: 12.5px; } .strip div small { color: var(--ink-soft); display: block; }
-  .strip .brk { background: var(--surface); border-color: var(--line); }
-  @media (max-width: 640px) { .strip { flex-direction: column; } .strip div { padding: 8px 12px; } }
-  .stairs { display: grid; gap: 8px; max-width: 760px; margin: 6px 0 14px; }
-  .stairs div { background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--ship); border-radius: 10px; padding: 12px 16px; font-size: 15.5px; box-shadow: var(--shadow); }
-  .stairs div:nth-child(1) { margin-left: 0 } .stairs div:nth-child(2) { margin-left: 6% } .stairs div:nth-child(3) { margin-left: 12% } .stairs div:nth-child(4) { margin-left: 18% }
-  @media (max-width: 640px) { .stairs div { margin-left: 0 !important; } }
-  .stairs b { display: block; } .stairs small { color: var(--ink-soft); }
-  .buyrows { display: grid; gap: 8px; max-width: 820px; margin: 6px 0 16px; }
-  .buyrows div { display: grid; grid-template-columns: 1fr 1.2fr; gap: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 11px 14px; font-size: 15px; }
-  .buyrows div span:last-child { color: var(--ink-soft); }
-  @media (max-width: 560px) { .buyrows div { grid-template-columns: 1fr; gap: 2px; } }
-  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; max-width: 900px; }
-  @media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
-  .col { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; box-shadow: var(--shadow); }
-  .col h3 { margin: 0 0 10px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; }
-  .col.ok h3 { color: var(--ship); } .col.open h3 { color: var(--crew); }
-  .col ul { margin: 0; padding-left: 18px; font-size: 15.5px; } .col li { margin-bottom: 6px; }
-  .linkrow { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-  .linkrow a { display: inline-block; padding: 12px 16px; min-height: 44px; border-radius: 10px; border: 1px solid var(--method); background: var(--method-soft); color: var(--ink); text-decoration: none; font-weight: 700; font-size: 15px; }
-  .animnote { font-size: 13px; color: var(--ink-soft); margin-top: 8px; }
-  .dbot { position: fixed; bottom: 0; left: 0; right: 0; height: 72px; border-top: 1px solid var(--line); background: var(--bg); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; gap: 12px; z-index: 5; }
-  .dbot button { min-height: 44px; min-width: 96px; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 700; font-size: 15px; cursor: pointer; }
-  .dbot button.primary { border-color: var(--method); background: var(--method-soft); }
-  .dbot button:disabled { opacity: .35; cursor: default; }
-  .prog { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: center; min-width: 0; }
-  .dots { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
-  .dots button { width: 14px; height: 14px; min-width: 0; min-height: 0; padding: 0; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); }
-  .dots button.on { background: var(--method); border-color: var(--method); }
-  .counter { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .12em; color: var(--ink-faint); white-space: nowrap; }
-  @media (max-width: 560px) { .dots { display: none; } .dbot button { min-width: 80px; } }
-  .arcade-storyboard { margin-top: 6px; }
+  .langbtn:hover, .fsbtn:hover { border-color: var(--method); }
+  .deck { position: relative; min-height: 0; min-width: 0; }
+  .slide { display: none; position: absolute; inset: 0; overflow: auto; overscroll-behavior: contain; padding: clamp(24px, 4vh, 48px) clamp(24px, 5vw, 80px); scrollbar-gutter: stable both-edges; }
+  .slide.active { display: block; animation: slide-in .18s ease-out; }
+  @keyframes slide-in { from { opacity: 0; } to { opacity: 1; } }
+  .inner { width: 100%; max-width: 1120px; margin-inline: auto; }
+  .kicker { margin: 0 0 16px; color: var(--crew); font: 12px/1.5 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; }
+  .slide h1 { margin: 0 0 24px; max-width: 30ch; font-size: clamp(32px, 3.5vw, 50px); font-weight: 750; letter-spacing: -.035em; line-height: 1.12; text-wrap: balance; }
+  .points { list-style: none; padding: 0; margin: 0; max-width: 1000px; }
+  .points li { position: relative; padding-left: 22px; margin: 0 0 12px; font-size: clamp(18px, 1.6vw, 22px); line-height: 1.5; }
+  .points li::before { content: ""; position: absolute; left: 0; top: .62em; width: 6px; height: 6px; border-radius: 50%; background: var(--method); }
+  .points li:last-child { margin-bottom: 0; }
+  .points:empty, .visual:empty { display: none; }
+  .visual { min-width: 0; margin-top: 28px; }
+  .slide[data-id="title"] .inner { min-height: 100%; display: flex; flex-direction: column; justify-content: center; }
+  .slide[data-id="title"] h1 { max-width: 18ch; font-size: clamp(42px, 5.3vw, 76px); margin-bottom: 32px; }
+  .slide[data-id="title"] .points li:last-child { color: var(--ink-soft); font-size: 14px; border-top: 1px solid var(--line); padding: 20px 0 0; margin-top: 32px; max-width: 680px; }
+  .slide[data-id="title"] .points li:last-child::before { display: none; }
 
-  /* hero slides: the animation fills the space between the bars */
-  .slide.hero { padding: 16px 16px 12px; }
-  .slide.hero .inner { display: flex; flex-direction: column; height: 100%; max-width: 1500px; }
-  .slide.hero .kicker { margin-bottom: 6px; }
-  .slide.hero h1 { font-size: clamp(20px, 2.6vw, 30px); margin-bottom: 6px; }
-  .slide.hero .points { display: flex; flex-wrap: wrap; gap: 2px 22px; margin: 0 0 6px; max-width: none; }
-  .slide.hero .points li { font-size: clamp(13px, 1.3vw, 15.5px); line-height: 1.35; margin: 0; padding-left: 16px; }
-  .slide.hero .points li::before { width: 7px; height: 7px; top: .5em; }
-  .slide.hero .visual { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; margin-top: 4px; }
-  .slide.hero .visual > figure, .slide.hero .visual > .arcade-storyboard { width: 100%; margin: 0 auto; }
-  .slide.hero .animnote { margin: 4px 0 0; font-size: 12px; }
-  .fsbtn { position: absolute; top: 0; right: 0; z-index: 2; min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-weight: 700; font-size: 13px; cursor: pointer; }
-  .fsbtn:hover { border-color: var(--method); }
-  .visual:fullscreen { background: #14152a; padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: auto; }
-  .visual:fullscreen .animnote { color: #9a9cc9; }
-  .visual:fullscreen .fsbtn { top: 12px; right: 12px; }
-  @media (max-width: 720px) { .slide.hero .inner { height: auto; display: block; } .slide.hero .points { display: block; } .fsbtn { position: static; margin: 8px 0; } }
+  /* Supporting visuals share the site's quiet surfaces and type. */
+  .bigrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .bigrow .big { padding: 24px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .bigrow .n { color: var(--method); font-size: clamp(48px, 6vw, 80px); line-height: 1; font-weight: 750; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+  .bigrow .l { margin-top: 14px; color: var(--ink-soft); font: 13px/1.5 ui-monospace, Menlo, monospace; }
+  .strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+  .strip > div { position: relative; display: grid; grid-template-rows: auto 1fr auto; gap: 12px; padding: 16px 12px 24px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow-wrap: anywhere; }
+  .strip > div::after { content: ""; position: absolute; height: 3px; bottom: 0; left: 0; width: var(--duration); background: var(--method); }
+  .strip .time { font: 13px/1.5 ui-monospace, Menlo, monospace; color: var(--method); }
+  .strip b { font-size: 15px; line-height: 1.4; }
+  .strip small { font-size: 13px; color: var(--ink-soft); }
+  .strip .brk { background: transparent; }
+  .strip .brk::after { background: var(--ink-soft); }
+  .stairs { display: grid; gap: 10px; counter-reset: rung; }
+  .stairs > div { position: relative; counter-increment: rung; padding: 16px 20px 16px 64px; background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--ship); border-radius: 8px; }
+  .stairs > div::before { content: "0" counter(rung); position: absolute; top: 18px; left: 20px; font: 13px/1.5 ui-monospace, Menlo, monospace; color: var(--ship); }
+  .stairs > div:nth-child(2) { margin-left: 3%; } .stairs > div:nth-child(3) { margin-left: 6%; } .stairs > div:nth-child(4) { margin-left: 9%; }
+  .stairs b { display: block; font-size: 18px; }
+  .stairs small { display: block; margin-top: 4px; font-size: 15px; color: var(--ink-soft); }
+  .buyrows { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+  .buyrows > div { display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.3fr); gap: 24px; padding: 16px 20px; font-size: 17px; }
+  .buyrows > div + div { border-top: 1px solid var(--line); }
+  .buyrows span:first-child { font-weight: 650; }
+  .buyrows span:last-child { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+  .col { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--ship); border-radius: 10px; padding: 24px; }
+  .col.open { border-top-color: var(--crew); }
+  .col h3 { margin: 0 0 20px; font: 600 13px/1.5 ui-monospace, Menlo, monospace; letter-spacing: .07em; text-transform: uppercase; color: var(--ship); }
+  .col.open h3 { color: var(--crew); }
+  .col ul { list-style: none; margin: 0; padding: 0; }
+  .col li { font-size: 17px; padding: 10px 0; border-top: 1px solid var(--line-soft); }
+  .col li:first-child { border: 0; padding-top: 0; }
+  .col li:last-child { padding-bottom: 0; }
+  .linkrow { display: flex; flex-wrap: wrap; gap: 12px; }
+  .linkrow a { display: inline-flex; align-items: center; min-height: 48px; padding: 12px 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--method); font-size: 16px; font-weight: 650; text-decoration: none; }
+  .linkrow a:hover { border-color: var(--method); background: var(--method-soft); }
+
+  /* Bars take their own grid rows, including when links or dots wrap. */
+  .dbot { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; padding-block: 12px max(12px, env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+  .dbot > button { min-height: 44px; min-width: 104px; border: 1px solid var(--line); border-radius: 8px; padding: 10px 18px; background: var(--surface-2); color: var(--ink); font-size: 14px; font-weight: 650; }
+  .dbot > button.primary { background: var(--method); color: var(--surface-2); border-color: var(--method); }
+  .dbot > button:not(:disabled):hover { box-shadow: inset 0 0 0 1px var(--method); }
+  .prog { min-width: 0; display: flex; align-items: center; justify-content: center; gap: 20px; }
+  .dots { display: flex; min-width: 0; flex: 0 1 660px; }
+  .dots button { display: grid; place-items: center; flex: 1; min-width: 0; height: 44px; padding: 0; border: 0; background: transparent; border-radius: 6px; }
+  .dots button::before { content: ""; width: 7px; height: 7px; border: 1px solid var(--ink-soft); border-radius: 50%; background: transparent; }
+  .dots button.on::before { width: 10px; height: 10px; background: var(--method); border-color: var(--method); }
+  .dots button:hover { background: var(--method-soft); }
+  .dots button:focus-visible { outline-offset: -3px; }
+  .counter { color: var(--ink-soft); white-space: nowrap; font: 12px/1.5 ui-monospace, Menlo, monospace; font-variant-numeric: tabular-nums; }
+
+  /* Text and controls reserve their natural size. Only the SVG drawing flexes.
+     The min-content tracks grow downwards and the slide scrolls if space runs out. */
+  .slide.hero { padding: 20px clamp(24px, 3vw, 48px); }
+  .slide.hero .inner { max-width: 1500px; height: 100%; display: grid; grid-template-rows: auto auto auto minmax(min-content, 1fr); }
+  .slide.hero .kicker { margin-bottom: 8px; }
+  .slide.hero h1 { font-size: clamp(30px, 2.6vw, 40px); margin-bottom: 14px; max-width: none; }
+  .slide.hero .points { max-width: 1320px; }
+  .slide.hero .points li { font-size: clamp(16px, 1.25vw, 19px); margin-bottom: 4px; }
+  .slide.hero .visual { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto minmax(min-content, 1fr); align-content: start; gap: 12px 20px; margin-top: 12px; }
+  .animnote { grid-column: 1; grid-row: 1; align-self: center; margin: 0; color: var(--ink-soft); font-size: 12px; line-height: 1.5; }
+  .fsbtn { grid-column: 2; grid-row: 1; align-self: center; font-weight: 650; }
+  .animation-stage { grid-column: 1 / -1; grid-row: 2; display: grid; min-width: 0; }
+  .slide.hero .arcade-storyboard { margin: 0; }
+  .slide.hero .arcade { margin: 0; display: grid; grid-template-rows: auto minmax(180px, 1fr) auto auto auto auto; padding: 14px; }
+  .slide.hero .arcade > svg { min-height: 180px; height: 100%; max-height: 100%; aspect-ratio: auto; contain: size; }
+  .slide.hero .arcade-heading { margin-bottom: 12px; }
+  .slide.hero .arcade-storyboard .arcade-heading { min-height: 48px; }
+  .slide.hero .arcade-help { line-height: 1.5; }
+  .slide.hero .visual:fullscreen {
+    width: 100%; height: 100%; margin: 0; padding: 20px max(20px, calc((100vw - 1500px) / 2));
+    overflow: auto; background: #0c0e11; color-scheme: dark;
+  }
+  .visual:fullscreen .animnote { color: #9aa4ad; }
+  .visual:fullscreen .fsbtn { color: #e7eaed; border-color: #545c64; background: #1a1f25; }
+  .visual:fullscreen .fsbtn:focus-visible { outline-color: #86b2ce; }
+
+  @media (max-width: 1100px) {
+    .dtop { grid-template-columns: minmax(0, 1fr) auto; }
+    .dtop .ttl { display: none; }
+    .prog { gap: 8px; }
+    .strip { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  @media (max-width: 900px) {
+    .slide, .slide.hero { padding: 28px 24px; }
+    .slide.hero .inner { display: block; height: auto; }
+    .slide.hero .visual { grid-template-rows: auto auto; }
+    .slide.hero .arcade { display: block; }
+    .slide.hero .arcade > svg { height: auto; min-height: 0; aspect-ratio: auto; contain: none; }
+    .slide.hero .arcade-storyboard { grid-template-columns: 1fr; }
+    .slide.hero .arcade-storyboard .arcade-heading { min-height: 0; }
+    .slide.hero .arcade-storyboard .arcade-dialog { font-size: 14px; }
+    .slide.hero .arcade-storyboard .arcade-controls button { flex: initial; font-size: 13px; padding: 8px 12px; }
+    .slide.hero .arcade-storyboard .arcade-controls button[data-action="toggle"] { flex: initial; }
+    .slide.hero .points li { font-size: 18px; margin-bottom: 10px; }
+    .cols { grid-template-columns: 1fr; }
+    .strip { grid-template-columns: 1fr; }
+    .strip > div { grid-template-columns: 56px minmax(0, 1fr) auto; grid-template-rows: auto; align-items: baseline; padding: 16px; }
+    .buyrows > div { grid-template-columns: 1fr; gap: 6px; }
+    .stairs > div:nth-child(n) { margin-left: 0; }
+    .slide.hero .visual:fullscreen { display: flex; flex-direction: column; align-items: stretch; padding: 16px; gap: 16px; }
+    .visual:fullscreen .fsbtn { align-self: flex-end; order: -2; }
+    .visual:fullscreen .animnote { order: -1; align-self: stretch; }
+    .visual:fullscreen .animation-stage { margin-block: auto; }
+    .dbot { gap: 0 12px; padding-block: 4px max(12px, env(safe-area-inset-bottom)); }
+    .prog { display: contents; }
+    .dots { grid-column: 1 / -1; grid-row: 1; }
+    .counter { grid-column: 2; grid-row: 2; text-align: center; }
+    #prev { grid-column: 1; grid-row: 2; } #next { grid-column: 3; grid-row: 2; }
+  }
+  @media (max-width: 560px) {
+    .dtop { gap: 12px; padding-block: 4px; font-size: 11px; }
+    .dtop > span:first-child { display: grid; }
+    .dtop a { min-height: 44px; }
+    .langbtn { padding-inline: 12px; }
+    .slide, .slide.hero { padding: 24px 18px; }
+    .slide h1 { font-size: 34px; margin-bottom: 20px; }
+    .kicker { font-size: 11px; }
+    .points li { font-size: 18px; padding-left: 18px; }
+    .visual { margin-top: 24px; }
+    .bigrow { grid-template-columns: 1fr; gap: 10px; }
+    .bigrow .big { display: flex; align-items: center; gap: 24px; padding: 20px; }
+    .bigrow .n { min-width: 2ch; } .bigrow .l { margin: 0; }
+    .col { padding: 20px; }
+    .strip > div { grid-template-columns: 46px minmax(0, 1fr); gap: 4px 12px; }
+    .strip small { grid-column: 2; }
+    .slide.hero .visual { grid-template-columns: 1fr; gap: 12px; }
+    .slide.hero .fsbtn { grid-column: 1; grid-row: 2; justify-self: start; }
+    .slide.hero .animation-stage { grid-row: 3; }
+    .slide.hero .arcade { padding: 10px; }
+    .animnote { font-size: 13px; }
+    .dbot > button { min-width: 88px; padding-inline: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .slide.active { animation: none; } }
 </style>
 </head>
 <body>
-<div class="dtop">
-  <span><a href="/documentation/summary/v1/" data-ui="summary">The program in five minutes</a> · <a href="/documentation/" data-ui="docs">All documentation</a></span>
+<nav class="dtop" aria-label="Documentation">
+  <span><a href="/documentation/summary/v1/" data-ui="summary">The program in five minutes</a><a href="/documentation/" data-ui="docs">All documentation</a></span>
   <span class="ttl">The plan, step by step</span>
   <button class="langbtn" id="langbtn" type="button" aria-label="Switch language"><b data-lang-cur>EN</b> / <span data-lang-other>BM</span></button>
-</div>
+</nav>
 <main class="deck" id="deck">
 <section class="slide" data-id="title" aria-label="1"><div class="inner"><div class="kicker"></div><h1></h1><ul class="points"></ul><div class="visual"></div></div></section>
 <section class="slide" data-id="what" aria-label="2"><div class="inner"><div class="kicker"></div><h1></h1><ul class="points"></ul><div class="visual"></div></div></section>
@@ -518,22 +496,21 @@
 <section class="slide" data-id="status" aria-label="14"><div class="inner"><div class="kicker"></div><h1></h1><ul class="points"></ul><div class="visual"><div class="vis-status"></div></div></div></section>
 <section class="slide" data-id="next" aria-label="15"><div class="inner"><div class="kicker"></div><h1></h1><ul class="points"></ul><div class="visual"><div class="vis-links"></div></div></div></section>
 </main>
-<div class="dbot">
+<nav class="dbot" aria-label="Slides">
   <button type="button" id="prev" data-ui="prev">Back</button>
-  <div class="prog"><div class="dots" id="dots" aria-hidden="true"></div><span class="counter" id="counter"></span></div>
+  <div class="prog"><div class="dots" id="dots"></div><span class="counter" id="counter" aria-live="polite" aria-atomic="true"></span></div>
   <button type="button" id="next" class="primary" data-ui="next">Next</button>
-</div>
-<link rel="stylesheet" href="/documentation/classroom/v1/anim/arcade.css">
+</nav>
 <script src="/documentation/classroom/v1/anim/arcade.js" defer="defer"></script>
 <script>
-const EN = {"ui": {"lang": "EN", "other": "BM", "prev": "Back", "next": "Next", "of": "of", "start": "Start", "tap": "Arrows, swipe or tap the edges to move. EN / BM at the top right.", "anim": "Animation, not a screenshot. The real Workbench is built in the kit phase.", "docs": "All documentation", "summary": "The program in five minutes", "classroom": "Classroom v2", "full": "Full screen"}, "slides": [{"id": "title", "kicker": "Todak AI Creator Program · Game Track", "title": "The plan, step by step", "points": ["Fifteen short steps for Neo, Lan and the Academy team.", "Everything here is decided or clearly marked as still open."]}, {"id": "what", "kicker": "Step 1", "title": "What it is", "points": ["A 12-week course for beginners.", "Each student makes <b>three games</b>: two small, then one final.", "<b>Todak Studios</b> publishes them under its brand, with the student's name in the credits."], "big": [["12", "weeks"], ["3", "games"], ["1", "publisher"]]}, {"id": "rule", "kicker": "Step 2", "title": "Not prompt-only. Not vibe coders.", "points": ["AI writes a lot of the code. The student directs it.", "A graduate can open the game with AI switched off, explain it, fix it, and ship it.", "Prompting is taught and graded. Understanding what comes back is what makes it worth anything."]}, {"id": "screen", "kicker": "Step 3", "title": "What a student sees", "points": ["One <b>Workbench</b>. Astra is the Design desk, Claude Code is the Build desk.", "One desk open at a time until week 7. Godot beside them shows the game running.", "No terminal until week 4."], "visual": "tour"}, {"id": "journey", "kicker": "Step 4", "title": "Day 1, week 3, week 10", "points": ["<b>Day 1:</b> play a practice scene, change one setting, explain the difference.", "<b>Week 3:</b> Pong, published to the web with the student's name on it.", "<b>Week 10:</b> a 3D game on the student's own phone, reviewed before release."], "visual": "story"}, {"id": "lesson", "kicker": "Step 5", "title": "A lesson, three hours", "points": ["Three sessions a week plus work at home. Lan sets the timetable.", "From week 4, one fault is fixed with the AI switched off."], "visual": "lesson", "lesson": [["0:00", "Demo", "15 min"], ["0:15", "Design warm-up", "15 min"], ["0:30", "Guided build", "75 min"], ["1:45", "Break", "15 min"], ["2:00", "AI-off walkthrough", "30 min"], ["2:30", "Showcase", "20 min"], ["2:50", "Save", "10 min"]]}, {"id": "games", "kicker": "Step 6", "title": "Three games, three families", "points": ["<b>Game 1</b> (weeks 2–3): 2D, one mechanic, web only.", "<b>Game 2</b> (weeks 4–6): several levels, saved progress, touch controls, Android testing.", "<b>Game 3</b> (weeks 7–11): 3D or ambitious 2D, store-ready.", "At least two genre families. Every game ships complete: title screen, win and lose, sound, saved score."]}, {"id": "stores", "kicker": "Step 7", "title": "Where the games go", "points": ["Roblox is its own engine and economy: a separate lane, later, not a rung."], "visual": "ladder", "ladder": [["Web + itch.io", "every game, the day it is finished"], ["PC downloads + Android testing", "from game 2"], ["Google Play + iPhone TestFlight", "the final game"], ["Steam · Epic Games Store", "showcase picks only"]]}, {"id": "gate", "kicker": "Step 8", "title": "Before a game goes live", "points": ["One <b>AI reviewer</b> checks the build and files a one-page report.", "The lecturer, Neo and Lan see it and approve, or send it back.", "Neo can bypass the gate to publish first.", "Every student ships one <b>update</b> to a live game in week 12."]}, {"id": "home", "kicker": "Step 9", "title": "Who owns what", "points": ["The base stays <b>course.neotodak.com</b>, as today. Behind it, the code, the database and the build server sit on company accounts.", "No student work runs on Neo's personal machines.", "<b>One Mac mini, controlled by us. Students never log into it.</b> It exists so that iPhone builds and TestFlight are possible at all; a Windows PC cannot make an iPhone build."]}, {"id": "buy", "kicker": "Step 10", "title": "What we buy", "points": ["Seats and assets come to about <b>RM620–760 per student</b> for the term, before teaching costs."], "visual": "buy", "buy": [["Mac mini M6 · 32 GB · 1 TB", "about RM6,000, to confirm · one-off"], ["Two AI seats per student", "about USD 20–25 a month each · RM570–710 per student for 12 weeks · in the fee"], ["Assets through the kit", "about RM50 per student"], ["Course database", "RM0, then about RM120 a month"], ["Rented GPU hours", "about RM300–700 per cohort"]]}, {"id": "paper", "kicker": "Step 11", "title": "Signed at registration", "points": ["<b>Consent</b> to record every prompt, in both AI desks.", "<b>IP licence:</b> Todak Studios publishes; profit is split <b>50% Studios / 20% Academy / 30% student</b>.", "<b>NDA:</b> the pipeline is not public knowledge.", "Under-18s: a guardian signs. A lawyer drafts the wording."]}, {"id": "unity", "kicker": "Step 12", "title": "The Unity question", "points": ["The course stays on <b>Godot</b>.", "The studio runs a <b>two-week Unity test</b>, because its own games are Unity games.", "Pass: playable on Android and Windows within ten working days, mostly built by the agents, built by our own build server.", "Pass or fail decides. Cohort 1 is unaffected."]}, {"id": "status", "kicker": "Step 13", "title": "Decided, and still open", "points": [], "visual": "status", "decided": ["Profit split 50 / 20 / 30", "Todak Studios brand", "Review gate, with Neo's bypass", "Consent, IP licence and NDA at registration", "The Workbench and the Arcade look", "Base address: course.neotodak.com"], "open": ["Mac mini order", "Team and Business workspaces", "Timetable", "The Unity fortnight", "Epic and Roblox accounts", "Who drafts the paperwork"]}, {"id": "next", "kicker": "Step 14", "title": "What happens next", "points": ["Build the kit and test it on ourselves: ten to twelve weeks to a pilot.", "Try it with four to six real beginners.", "Open the accounts and move house to the Academy's domain.", "Then schedule cohort 1."], "visual": "links"}], "captions": {"tour": ["<b>1 · The student types in the Build desk.</b> “make the left paddle move with W and S”.", "<b>2 · The code changes in the middle.</b> Three new lines in paddle.gd, highlighted.", "<b>3 · Godot reloads the script</b> on Monitor 2. Nothing to copy, nothing to paste.", "<b>4 · Press Play.</b> The paddle moves, the ball bounces, the score ticks. The student sees it work.", "<b>5 · Step ticked, saved to memory.</b> The prompt is in the journey."], "tour_heading": "TODAK WORKBENCH <small>One prompt. Five beats. A game that moves.</small>", "day1": ["<b>1 · Signs in</b> to their own Claude seat, Astra seat and GitHub. The sidebar says “Week 1 · Your first loop”.", "<b>2 · Plays a supplied practice scene.</b> Astra stays closed until the lecturer introduces the design desk.", "<b>3 · Changes one visible setting.</b> Slides the setting; the practice scene changes.", "<b>4 · Explains the difference.</b> “The jump is higher.” Claude Code saves the outcome to project memory."], "day1_heading": "Day 1<small>Play, change, explain</small>", "week3": ["<b>1 · Scaffold Pong</b> from the kit template; Godot opens on monitor 2.", "<b>2 · “make the left paddle move with W and S”.</b> Code changes, Godot reloads.", "<b>3 · Student presses Play.</b> Paddle moves, ball bounces.", "<b>4 · “publish to web”</b> sends the build to the farm and returns a link."], "week3_heading": "Week 3<small>First game, Pong</small>", "week10": ["<b>1 · Character sheet</b> on the Design desk. Student and Astra lock the core loop.", "<b>2 · Character</b> comes out of the Academy asset service as a 3D model, cleaned in Blender, wired into Godot.", "<b>3 · Android test build</b> on the student’s own phone.", "<b>4 · “Review my game”</b> files the report: approved. The lecturer, Neo and Lan see it."], "week10_heading": "Week 10<small>3D capstone</small>"}};
-const BM = {"ui": {"lang": "BM", "other": "EN", "prev": "Kembali", "next": "Seterusnya", "of": "daripada", "start": "Mula", "tap": "Gunakan anak panah, leret atau ketik tepi skrin untuk bergerak. EN / BM di penjuru kanan atas.", "anim": "Ini animasi, bukan tangkap layar. Workbench sebenar dibina semasa fasa penyediaan kit.", "docs": "Semua dokumentasi", "summary": "Program ini dalam lima minit", "classroom": "Bilik Kelas v2", "full": "Skrin penuh"}, "slides": [{"id": "title", "kicker": "Todak AI Creator Program · Laluan Permainan", "title": "Pelan, langkah demi langkah", "points": ["Lima belas langkah ringkas untuk Neo, Lan dan pasukan Academy.", "Semua perkara di sini sudah diputuskan atau ditandakan dengan jelas jika masih terbuka."]}, {"id": "what", "kicker": "Langkah 1", "title": "Tentang program ini", "points": ["Kursus 12 minggu untuk mereka yang baru bermula.", "Setiap pelajar membina <b>tiga permainan</b>: dua permainan kecil, kemudian satu permainan akhir.", "<b>Todak Studios</b> menerbitkannya di bawah jenamanya, dengan nama pelajar dalam kredit."], "big": [["12", "minggu"], ["3", "permainan"], ["1", "penerbit"]]}, {"id": "rule", "kicker": "Langkah 2", "title": "Bukan sekadar prompt. Bukan mengekod tanpa faham.", "points": ["AI menulis sebahagian besar kod. Pelajar menentukan arahnya.", "Graduan boleh membuka permainan tanpa AI, menerangkannya, membaikinya dan menerbitkannya.", "Cara menulis prompt diajar dan dinilai. Nilainya terletak pada kefahaman pelajar tentang hasil yang diterima."]}, {"id": "screen", "kicker": "Langkah 3", "title": "Apa yang pelajar lihat", "points": ["Satu <b>Workbench</b>. Astra di ruang Reka Bentuk, Claude Code di ruang Bina.", "Hanya satu ruang dibuka pada satu-satu masa sehingga minggu 7. Godot di sebelahnya menunjukkan permainan yang sedang berjalan.", "Terminal hanya diperkenalkan pada minggu 4."], "visual": "tour"}, {"id": "journey", "kicker": "Langkah 4", "title": "Hari 1, minggu 3, minggu 10", "points": ["<b>Hari 1:</b> cuba adegan latihan, ubah satu tetapan, terangkan perbezaannya.", "<b>Minggu 3:</b> Pong, diterbitkan ke web dengan nama pelajar.", "<b>Minggu 10:</b> permainan 3D pada telefon pelajar sendiri, disemak sebelum diterbitkan."], "visual": "story"}, {"id": "lesson", "kicker": "Langkah 5", "title": "Satu kelas, tiga jam", "points": ["Tiga sesi seminggu serta tugasan di rumah. Lan menetapkan jadual.", "Mulai minggu 4, satu masalah dibaiki tanpa bantuan AI."], "visual": "lesson", "lesson": [["0:00", "Demonstrasi", "15 minit"], ["0:15", "Latihan awal reka bentuk", "15 minit"], ["0:30", "Membina dengan bimbingan", "75 minit"], ["1:45", "Rehat", "15 minit"], ["2:00", "Penerangan langkah demi langkah tanpa AI", "30 minit"], ["2:30", "Pembentangan hasil", "20 minit"], ["2:50", "Simpan", "10 minit"]]}, {"id": "games", "kicker": "Langkah 6", "title": "Tiga permainan, tiga kumpulan genre", "points": ["<b>Permainan 1</b> (minggu 2–3): 2D, satu mekanik permainan, web sahaja.", "<b>Permainan 2</b> (minggu 4–6): beberapa tahap, kemajuan disimpan, kawalan sentuh, ujian Android.", "<b>Permainan 3</b> (minggu 7–11): 3D atau 2D yang lebih mencabar, sedia untuk diterbitkan di platform jualan.", "Sekurang-kurangnya dua kumpulan genre. Setiap permainan diterbitkan lengkap: skrin tajuk, menang dan kalah, bunyi, skor disimpan."]}, {"id": "stores", "kicker": "Langkah 7", "title": "Di mana permainan diterbitkan", "points": ["Roblox mempunyai enjin dan ekonominya sendiri: laluan berasingan untuk kemudian, bukan satu peringkat dalam laluan ini."], "visual": "ladder", "ladder": [["Web + itch.io", "setiap permainan, pada hari ia siap"], ["Muat turun PC + ujian Android", "bermula dengan permainan 2"], ["Google Play + iPhone TestFlight", "permainan akhir"], ["Steam · Epic Games Store", "karya pilihan untuk pameran sahaja"]]}, {"id": "gate", "kicker": "Langkah 8", "title": "Sebelum permainan diterbitkan", "points": ["Satu <b>penyemak AI</b> memeriksa binaan permainan dan menyediakan laporan satu halaman.", "Pensyarah, Neo dan Lan melihat laporan itu lalu meluluskan permainan atau menghantarnya semula untuk pembaikan.", "Neo boleh melangkaui semakan ini untuk menerbitkan permainan terlebih dahulu.", "Pada minggu 12, setiap pelajar menerbitkan satu <b>kemas kini</b> untuk permainan yang sudah diterbitkan."]}, {"id": "home", "kicker": "Langkah 9", "title": "Siapa memiliki apa", "points": ["Tapak asas kekal di <b>course.neotodak.com</b>, seperti sekarang. Di belakangnya, kod, pangkalan data dan pelayan binaan diletakkan pada akaun syarikat.", "Tiada kerja pelajar dijalankan pada komputer peribadi Neo.", "<b>Satu Mac mini, di bawah kawalan kita. Pelajar tidak pernah log masuk ke situ.</b> Mac mini ini diperlukan untuk menghasilkan binaan iPhone dan menggunakan TestFlight; PC Windows tidak boleh menghasilkan binaan iPhone."]}, {"id": "buy", "kicker": "Langkah 10", "title": "Apa yang kita beli", "points": ["Langganan pengguna dan aset berjumlah kira-kira <b>RM620–760 bagi setiap pelajar</b> sepanjang kursus, belum termasuk kos pengajaran."], "visual": "buy", "buy": [["Mac mini M6 · 32 GB · 1 TB", "kira-kira RM6,000, perlu disahkan · sekali sahaja"], ["Dua langganan AI bagi setiap pelajar", "kira-kira USD 20–25 sebulan setiap satu · RM570–710 bagi setiap pelajar untuk 12 minggu · termasuk dalam yuran"], ["Aset melalui kit", "kira-kira RM50 bagi setiap pelajar"], ["Pangkalan data kursus", "RM0, kemudian kira-kira RM120 sebulan"], ["Sewaan GPU mengikut jam", "kira-kira RM300–700 bagi setiap kohort"]]}, {"id": "paper", "kicker": "Langkah 11", "title": "Ditandatangani semasa pendaftaran", "points": ["<b>Persetujuan</b> untuk merekod setiap prompt di kedua-dua ruang AI.", "<b>Lesen IP:</b> Todak Studios menerbitkan permainan; keuntungan dibahagi <b>50% Studios / 20% Academy / 30% pelajar</b>.", "<b>NDA:</b> aliran kerja ini tidak didedahkan kepada umum.", "Bawah 18 tahun: penjaga menandatangani. Peguam menyediakan teks perjanjian."]}, {"id": "unity", "kicker": "Langkah 12", "title": "Bagaimana dengan Unity", "points": ["Kursus kekal menggunakan <b>Godot</b>.", "Studio menjalankan <b>ujian Unity selama dua minggu</b>, kerana permainan studio sendiri menggunakan Unity.", "Syarat lulus: boleh dimainkan pada Android dan Windows dalam sepuluh hari bekerja, sebahagian besarnya dibangunkan oleh ejen AI, dengan binaan dihasilkan oleh pelayan binaan kita sendiri.", "Keputusan lulus atau gagal menentukan langkah seterusnya. Kohort 1 tidak terjejas."]}, {"id": "status", "kicker": "Langkah 13", "title": "Sudah diputuskan, masih terbuka", "points": [], "visual": "status", "decided": ["Pembahagian keuntungan 50 / 20 / 30", "Jenama Todak Studios", "Semakan sebelum terbit, dengan hak Neo untuk melangkaunya", "Persetujuan, lesen IP dan NDA semasa pendaftaran", "Workbench dan gaya visual Arcade", "Alamat asas: course.neotodak.com"], "open": ["Pesanan Mac mini", "Ruang kerja Team dan Business", "Jadual kelas", "Ujian Unity selama dua minggu", "Akaun Epic dan Roblox", "Siapa yang menyediakan dokumen perjanjian"]}, {"id": "next", "kicker": "Langkah 14", "title": "Langkah seterusnya", "points": ["Bina kit dan uji sendiri: sepuluh hingga dua belas minggu sebelum percubaan rintis.", "Uji dengan empat hingga enam orang yang benar-benar baru bermula.", "Buka akaun dan pindahkan program ke domain Academy.", "Kemudian tetapkan jadual kohort 1."], "visual": "links"}], "captions": {"tour": ["<b>1 · Pelajar menaip di ruang Bina.</b> “gerakkan pemukul kiri dengan W dan S”.", "<b>2 · Kod di bahagian tengah berubah.</b> Tiga baris baharu dalam paddle.gd ditonjolkan.", "<b>3 · Godot memuat semula skrip</b> pada Monitor 2. Tidak perlu salin atau tampal apa-apa.", "<b>4 · Tekan Main.</b> Pemukul bergerak, bola melantun, skor bertambah. Pelajar nampak sendiri hasilnya.", "<b>5 · Langkah ditandakan selesai, disimpan dalam memori.</b> Prompt disimpan dalam rekod pembelajaran."], "tour_heading": "TODAK WORKBENCH <small>Satu prompt. Lima langkah. Permainan mula bergerak.</small>", "day1": ["<b>1 · Log masuk</b> ke akaun Claude, Astra dan GitHub sendiri. Bar sisi memaparkan “Minggu 1 · Gelung pertama anda”.", "<b>2 · Mencuba adegan latihan yang disediakan.</b> Astra kekal ditutup sehingga pensyarah memperkenalkan ruang Reka Bentuk.", "<b>3 · Mengubah satu tetapan yang kesannya boleh dilihat.</b> Laraskan peluncur tetapan; adegan latihan berubah.", "<b>4 · Menerangkan perbezaannya.</b> “Lompatan jadi lebih tinggi.” Claude Code menyimpan hasilnya dalam memori projek."], "day1_heading": "Hari 1<small>Main, ubah, terangkan</small>", "week3": ["<b>1 · Sediakan rangka Pong</b> daripada templat kit; Godot dibuka pada monitor 2.", "<b>2 · “gerakkan pemukul kiri dengan W dan S”.</b> Kod berubah, Godot memuat semula.", "<b>3 · Pelajar menekan Main.</b> Pemukul bergerak, bola melantun.", "<b>4 · “terbitkan ke web”</b> menghantar binaan ke kumpulan pelayan binaan dan memberikan pautan."], "week3_heading": "Minggu 3<small>Permainan pertama, Pong</small>", "week10": ["<b>1 · Lembaran watak</b> di ruang Reka Bentuk. Pelajar dan Astra memuktamadkan gelung permainan utama.", "<b>2 · Watak</b> dihasilkan oleh perkhidmatan aset Academy sebagai model 3D, dikemaskan dalam Blender, kemudian disepadukan ke dalam Godot.", "<b>3 · Binaan ujian Android</b> pada telefon pelajar sendiri.", "<b>4 · “Semak permainan saya”</b> menghasilkan laporan: diluluskan. Pensyarah, Neo dan Lan melihatnya."], "week10_heading": "Minggu 10<small>Projek akhir 3D</small>"}};
+const EN = {"ui": {"lang": "EN", "other": "BM", "prev": "Back", "next": "Next", "of": "of", "start": "Start", "tap": "Arrows, swipe or tap the edges to move. EN / BM at the top right.", "anim": "Animation, not a screenshot. The real Workbench is built in the kit phase.", "docs": "All documentation", "summary": "The program in five minutes", "classroom": "Classroom v2", "full": "Full screen", "exitFull": "Exit full screen", "fullscreenError": "Full screen is unavailable. You can still scroll through the animation here.", "slide": "Slide", "nav": "Slide navigation", "language": "Switch to Bahasa Malaysia"}, "slides": [{"id": "title", "kicker": "Todak AI Creator Program · Game Track", "title": "The plan, step by step", "points": ["Fifteen short steps for Neo, Lan and the Academy team.", "Everything here is decided or clearly marked as still open."]}, {"id": "what", "kicker": "Step 1", "title": "What it is", "points": ["A 12-week course for beginners.", "Each student makes <b>three games</b>: two small, then one final.", "<b>Todak Studios</b> publishes them under its brand, with the student's name in the credits."], "big": [["12", "weeks"], ["3", "games"], ["1", "publisher"]]}, {"id": "rule", "kicker": "Step 2", "title": "Not prompt-only. Not vibe coders.", "points": ["AI writes a lot of the code. The student directs it.", "A graduate can open the game with AI switched off, explain it, fix it, and ship it.", "Prompting is taught and graded. Understanding what comes back is what makes it worth anything."]}, {"id": "screen", "kicker": "Step 3", "title": "What a student sees", "points": ["One <b>Workbench</b>. Astra is the Design desk, Claude Code is the Build desk.", "One desk open at a time until week 7. Godot beside them shows the game running.", "No terminal until week 4."], "visual": "tour"}, {"id": "journey", "kicker": "Step 4", "title": "Day 1, week 3, week 10", "points": ["<b>Day 1:</b> play a practice scene, change one setting, explain the difference.", "<b>Week 3:</b> Pong, published to the web with the student's name on it.", "<b>Week 10:</b> a 3D game on the student's own phone, reviewed before release."], "visual": "story"}, {"id": "lesson", "kicker": "Step 5", "title": "A lesson, three hours", "points": ["Three sessions a week plus work at home. Lan sets the timetable.", "From week 4, one fault is fixed with the AI switched off."], "visual": "lesson", "lesson": [["0:00", "Demo", "15 min"], ["0:15", "Design warm-up", "15 min"], ["0:30", "Guided build", "75 min"], ["1:45", "Break", "15 min"], ["2:00", "AI-off walkthrough", "30 min"], ["2:30", "Showcase", "20 min"], ["2:50", "Save", "10 min"]]}, {"id": "games", "kicker": "Step 6", "title": "Three games, three families", "points": ["<b>Game 1</b> (weeks 2–3): 2D, one mechanic, web only.", "<b>Game 2</b> (weeks 4–6): several levels, saved progress, touch controls, Android testing.", "<b>Game 3</b> (weeks 7–11): 3D or ambitious 2D, store-ready.", "At least two genre families. Every game ships complete: title screen, win and lose, sound, saved score."]}, {"id": "stores", "kicker": "Step 7", "title": "Where the games go", "points": ["Roblox is its own engine and economy: a separate lane, later, not a rung."], "visual": "ladder", "ladder": [["Web + itch.io", "every game, the day it is finished"], ["PC downloads + Android testing", "from game 2"], ["Google Play + iPhone TestFlight", "the final game"], ["Steam · Epic Games Store", "showcase picks only"]]}, {"id": "gate", "kicker": "Step 8", "title": "Before a game goes live", "points": ["One <b>AI reviewer</b> checks the build and files a one-page report.", "The lecturer, Neo and Lan see it and approve, or send it back.", "Neo can bypass the gate to publish first.", "Every student ships one <b>update</b> to a live game in week 12."]}, {"id": "home", "kicker": "Step 9", "title": "Who owns what", "points": ["The base stays <b>course.neotodak.com</b>, as today. Behind it, the code, the database and the build server sit on company accounts.", "No student work runs on Neo's personal machines.", "<b>One Mac mini, controlled by us. Students never log into it.</b> It exists so that iPhone builds and TestFlight are possible at all; a Windows PC cannot make an iPhone build."]}, {"id": "buy", "kicker": "Step 10", "title": "What we buy", "points": ["Seats and assets come to about <b>RM620–760 per student</b> for the term, before teaching costs."], "visual": "buy", "buy": [["Mac mini M6 · 32 GB · 1 TB", "about RM6,000, to confirm · one-off"], ["Two AI seats per student", "about USD 20–25 a month each · RM570–710 per student for 12 weeks · in the fee"], ["Assets through the kit", "about RM50 per student"], ["Course database", "RM0, then about RM120 a month"], ["Rented GPU hours", "about RM300–700 per cohort"]]}, {"id": "paper", "kicker": "Step 11", "title": "Signed at registration", "points": ["<b>Consent</b> to record every prompt, in both AI desks.", "<b>IP licence:</b> Todak Studios publishes; profit is split <b>50% Studios / 20% Academy / 30% student</b>.", "<b>NDA:</b> the pipeline is not public knowledge.", "Under-18s: a guardian signs. A lawyer drafts the wording."]}, {"id": "unity", "kicker": "Step 12", "title": "The Unity question", "points": ["The course stays on <b>Godot</b>.", "The studio runs a <b>two-week Unity test</b>, because its own games are Unity games.", "Pass: playable on Android and Windows within ten working days, mostly built by the agents, built by our own build server.", "Pass or fail decides. Cohort 1 is unaffected."]}, {"id": "status", "kicker": "Step 13", "title": "Decided, and still open", "points": [], "visual": "status", "decided": ["Profit split 50 / 20 / 30", "Todak Studios brand", "Review gate, with Neo's bypass", "Consent, IP licence and NDA at registration", "The Workbench and the Arcade look", "Base address: course.neotodak.com"], "open": ["Mac mini order", "Team and Business workspaces", "Timetable", "The Unity fortnight", "Epic and Roblox accounts", "Who drafts the paperwork"]}, {"id": "next", "kicker": "Step 14", "title": "What happens next", "points": ["Build the kit and test it on ourselves: ten to twelve weeks to a pilot.", "Try it with four to six real beginners.", "Open the accounts and move house to the Academy's domain.", "Then schedule cohort 1."], "visual": "links"}], "captions": {"tour": ["<b>1 · The student types in the Build desk.</b> “make the left paddle move with W and S”.", "<b>2 · The code changes in the middle.</b> Three new lines in paddle.gd, highlighted.", "<b>3 · Godot reloads the script</b> on Monitor 2. Nothing to copy, nothing to paste.", "<b>4 · Press Play.</b> The paddle moves, the ball bounces, the score ticks. The student sees it work.", "<b>5 · Step ticked, saved to memory.</b> The prompt is in the journey."], "tour_heading": "TODAK WORKBENCH <small>One prompt. Five beats. A game that moves.</small>", "day1": ["<b>1 · Signs in</b> to their own Claude seat, Astra seat and GitHub. The sidebar says “Week 1 · Your first loop”.", "<b>2 · Plays a supplied practice scene.</b> Astra stays closed until the lecturer introduces the design desk.", "<b>3 · Changes one visible setting.</b> Slides the setting; the practice scene changes.", "<b>4 · Explains the difference.</b> “The jump is higher.” Claude Code saves the outcome to project memory."], "day1_heading": "Day 1<small>Play, change, explain</small>", "week3": ["<b>1 · Scaffold Pong</b> from the kit template; Godot opens on monitor 2.", "<b>2 · “make the left paddle move with W and S”.</b> Code changes, Godot reloads.", "<b>3 · Student presses Play.</b> Paddle moves, ball bounces.", "<b>4 · “publish to web”</b> sends the build to the farm and returns a link."], "week3_heading": "Week 3<small>First game, Pong</small>", "week10": ["<b>1 · Character sheet</b> on the Design desk. Student and Astra lock the core loop.", "<b>2 · Character</b> comes out of the Academy asset service as a 3D model, cleaned in Blender, wired into Godot.", "<b>3 · Android test build</b> on the student’s own phone.", "<b>4 · “Review my game”</b> files the report: approved. The lecturer, Neo and Lan see it."], "week10_heading": "Week 10<small>3D capstone</small>"}};
+const BM = {"ui": {"lang": "BM", "other": "EN", "prev": "Kembali", "next": "Seterusnya", "of": "daripada", "start": "Mula", "tap": "Gunakan anak panah, leret atau ketik tepi skrin untuk bergerak. EN / BM di penjuru kanan atas.", "anim": "Ini animasi, bukan tangkap layar. Workbench sebenar dibina semasa fasa penyediaan kit.", "docs": "Semua dokumentasi", "summary": "Program ini dalam lima minit", "classroom": "Bilik Kelas v2", "full": "Skrin penuh", "exitFull": "Keluar skrin penuh", "fullscreenError": "Skrin penuh tidak tersedia. Anda masih boleh menatal animasi di sini.", "slide": "Slaid", "nav": "Navigasi slaid", "language": "Tukar ke bahasa Inggeris"}, "slides": [{"id": "title", "kicker": "Todak AI Creator Program · Laluan Permainan", "title": "Pelan, langkah demi langkah", "points": ["Lima belas langkah ringkas untuk Neo, Lan dan pasukan Academy.", "Semua perkara di sini sudah diputuskan atau ditandakan dengan jelas jika masih terbuka."]}, {"id": "what", "kicker": "Langkah 1", "title": "Tentang program ini", "points": ["Kursus 12 minggu untuk mereka yang baru bermula.", "Setiap pelajar membina <b>tiga permainan</b>: dua permainan kecil, kemudian satu permainan akhir.", "<b>Todak Studios</b> menerbitkannya di bawah jenamanya, dengan nama pelajar dalam kredit."], "big": [["12", "minggu"], ["3", "permainan"], ["1", "penerbit"]]}, {"id": "rule", "kicker": "Langkah 2", "title": "Bukan sekadar prompt. Bukan mengekod tanpa faham.", "points": ["AI menulis sebahagian besar kod. Pelajar menentukan arahnya.", "Graduan boleh membuka permainan tanpa AI, menerangkannya, membaikinya dan menerbitkannya.", "Cara menulis prompt diajar dan dinilai. Nilainya terletak pada kefahaman pelajar tentang hasil yang diterima."]}, {"id": "screen", "kicker": "Langkah 3", "title": "Apa yang pelajar lihat", "points": ["Satu <b>Workbench</b>. Astra di ruang Reka Bentuk, Claude Code di ruang Bina.", "Hanya satu ruang dibuka pada satu-satu masa sehingga minggu 7. Godot di sebelahnya menunjukkan permainan yang sedang berjalan.", "Terminal hanya diperkenalkan pada minggu 4."], "visual": "tour"}, {"id": "journey", "kicker": "Langkah 4", "title": "Hari 1, minggu 3, minggu 10", "points": ["<b>Hari 1:</b> cuba adegan latihan, ubah satu tetapan, terangkan perbezaannya.", "<b>Minggu 3:</b> Pong, diterbitkan ke web dengan nama pelajar.", "<b>Minggu 10:</b> permainan 3D pada telefon pelajar sendiri, disemak sebelum diterbitkan."], "visual": "story"}, {"id": "lesson", "kicker": "Langkah 5", "title": "Satu kelas, tiga jam", "points": ["Tiga sesi seminggu serta tugasan di rumah. Lan menetapkan jadual.", "Mulai minggu 4, satu masalah dibaiki tanpa bantuan AI."], "visual": "lesson", "lesson": [["0:00", "Demonstrasi", "15 minit"], ["0:15", "Latihan awal reka bentuk", "15 minit"], ["0:30", "Membina dengan bimbingan", "75 minit"], ["1:45", "Rehat", "15 minit"], ["2:00", "Penerangan langkah demi langkah tanpa AI", "30 minit"], ["2:30", "Pembentangan hasil", "20 minit"], ["2:50", "Simpan", "10 minit"]]}, {"id": "games", "kicker": "Langkah 6", "title": "Tiga permainan, tiga kumpulan genre", "points": ["<b>Permainan 1</b> (minggu 2–3): 2D, satu mekanik permainan, web sahaja.", "<b>Permainan 2</b> (minggu 4–6): beberapa tahap, kemajuan disimpan, kawalan sentuh, ujian Android.", "<b>Permainan 3</b> (minggu 7–11): 3D atau 2D yang lebih mencabar, sedia untuk diterbitkan di platform jualan.", "Sekurang-kurangnya dua kumpulan genre. Setiap permainan diterbitkan lengkap: skrin tajuk, menang dan kalah, bunyi, skor disimpan."]}, {"id": "stores", "kicker": "Langkah 7", "title": "Di mana permainan diterbitkan", "points": ["Roblox mempunyai enjin dan ekonominya sendiri: laluan berasingan untuk kemudian, bukan satu peringkat dalam laluan ini."], "visual": "ladder", "ladder": [["Web + itch.io", "setiap permainan, pada hari ia siap"], ["Muat turun PC + ujian Android", "bermula dengan permainan 2"], ["Google Play + iPhone TestFlight", "permainan akhir"], ["Steam · Epic Games Store", "karya pilihan untuk pameran sahaja"]]}, {"id": "gate", "kicker": "Langkah 8", "title": "Sebelum permainan diterbitkan", "points": ["Satu <b>penyemak AI</b> memeriksa binaan permainan dan menyediakan laporan satu halaman.", "Pensyarah, Neo dan Lan melihat laporan itu lalu meluluskan permainan atau menghantarnya semula untuk pembaikan.", "Neo boleh melangkaui semakan ini untuk menerbitkan permainan terlebih dahulu.", "Pada minggu 12, setiap pelajar menerbitkan satu <b>kemas kini</b> untuk permainan yang sudah diterbitkan."]}, {"id": "home", "kicker": "Langkah 9", "title": "Siapa memiliki apa", "points": ["Tapak asas kekal di <b>course.neotodak.com</b>, seperti sekarang. Di belakangnya, kod, pangkalan data dan pelayan binaan diletakkan pada akaun syarikat.", "Tiada kerja pelajar dijalankan pada komputer peribadi Neo.", "<b>Satu Mac mini, di bawah kawalan kita. Pelajar tidak pernah log masuk ke situ.</b> Mac mini ini diperlukan untuk menghasilkan binaan iPhone dan menggunakan TestFlight; PC Windows tidak boleh menghasilkan binaan iPhone."]}, {"id": "buy", "kicker": "Langkah 10", "title": "Apa yang kita beli", "points": ["Langganan pengguna dan aset berjumlah kira-kira <b>RM620–760 bagi setiap pelajar</b> sepanjang kursus, belum termasuk kos pengajaran."], "visual": "buy", "buy": [["Mac mini M6 · 32 GB · 1 TB", "kira-kira RM6,000, perlu disahkan · sekali sahaja"], ["Dua langganan AI bagi setiap pelajar", "kira-kira USD 20–25 sebulan setiap satu · RM570–710 bagi setiap pelajar untuk 12 minggu · termasuk dalam yuran"], ["Aset melalui kit", "kira-kira RM50 bagi setiap pelajar"], ["Pangkalan data kursus", "RM0, kemudian kira-kira RM120 sebulan"], ["Sewaan GPU mengikut jam", "kira-kira RM300–700 bagi setiap kohort"]]}, {"id": "paper", "kicker": "Langkah 11", "title": "Ditandatangani semasa pendaftaran", "points": ["<b>Persetujuan</b> untuk merekod setiap prompt di kedua-dua ruang AI.", "<b>Lesen IP:</b> Todak Studios menerbitkan permainan; keuntungan dibahagi <b>50% Studios / 20% Academy / 30% pelajar</b>.", "<b>NDA:</b> aliran kerja ini tidak didedahkan kepada umum.", "Bawah 18 tahun: penjaga menandatangani. Peguam menyediakan teks perjanjian."]}, {"id": "unity", "kicker": "Langkah 12", "title": "Bagaimana dengan Unity", "points": ["Kursus kekal menggunakan <b>Godot</b>.", "Studio menjalankan <b>ujian Unity selama dua minggu</b>, kerana permainan studio sendiri menggunakan Unity.", "Syarat lulus: boleh dimainkan pada Android dan Windows dalam sepuluh hari bekerja, sebahagian besarnya dibangunkan oleh ejen AI, dengan binaan dihasilkan oleh pelayan binaan kita sendiri.", "Keputusan lulus atau gagal menentukan langkah seterusnya. Kohort 1 tidak terjejas."]}, {"id": "status", "kicker": "Langkah 13", "title": "Sudah diputuskan, masih terbuka", "points": [], "visual": "status", "decided": ["Pembahagian keuntungan 50 / 20 / 30", "Jenama Todak Studios", "Semakan sebelum terbit, dengan hak Neo untuk melangkaunya", "Persetujuan, lesen IP dan NDA semasa pendaftaran", "Workbench dan gaya visual Arcade", "Alamat asas: course.neotodak.com"], "open": ["Pesanan Mac mini", "Ruang kerja Team dan Business", "Jadual kelas", "Ujian Unity selama dua minggu", "Akaun Epic dan Roblox", "Siapa yang menyediakan dokumen perjanjian"]}, {"id": "next", "kicker": "Langkah 14", "title": "Langkah seterusnya", "points": ["Bina kit dan uji sendiri: sepuluh hingga dua belas minggu sebelum percubaan rintis.", "Uji dengan empat hingga enam orang yang benar-benar baru bermula.", "Buka akaun dan pindahkan program ke domain Academy.", "Kemudian tetapkan jadual kohort 1."], "visual": "links"}], "captions": {"tour": ["<b>1 · Pelajar menaip di ruang Bina.</b> “gerakkan pemukul kiri dengan W dan S”.", "<b>2 · Kod di bahagian tengah berubah.</b> Tiga baris baharu dalam paddle.gd ditonjolkan.", "<b>3 · Godot memuat semula skrip</b> pada Monitor 2. Tidak perlu salin atau tampal apa-apa.", "<b>4 · Tekan Main.</b> Pemukul bergerak, bola melantun, skor bertambah. Pelajar nampak sendiri hasilnya.", "<b>5 · Langkah ditandakan selesai, disimpan dalam memori.</b> Prompt disimpan dalam rekod pembelajaran."], "tour_heading": "TODAK WORKBENCH <small>Satu prompt. Lima langkah. Permainan mula bergerak.</small>", "day1": ["<b>1 · Log masuk</b> ke akaun Claude, Astra dan GitHub sendiri. Bar sisi memaparkan “Minggu 1 · Gelung pertama anda”.", "<b>2 · Mencuba adegan latihan yang disediakan.</b> Astra kekal ditutup sehingga pensyarah memperkenalkan ruang Reka Bentuk.", "<b>3 · Mengubah satu tetapan yang kesannya boleh dilihat.</b> Laraskan peluncur tetapan; adegan latihan berubah.", "<b>4 · Menerangkan perbezaannya.</b> “Lompatan jadi lebih tinggi.” Claude Code menyimpan hasilnya dalam memori projek."], "day1_heading": "Hari 1<small>Main, ubah, terangkan</small>", "week3": ["<b>1 · Sediakan rangka Pong</b> daripada templat kit; Godot dibuka pada monitor 2.", "<b>2 · “gerakkan pemukul kiri dengan W dan S”.</b> Kod berubah, Godot memuat semula.", "<b>3 · Pelajar menekan Main.</b> Pemukul bergerak, bola melantun.", "<b>4 · “terbitkan ke web”</b> menghantar binaan ke kumpulan pelayan binaan dan memberikan pautan."], "week3_heading": "Minggu 3<small>Permainan pertama, Pong</small>", "week10": ["<b>1 · Lembaran watak</b> di ruang Reka Bentuk. Pelajar dan Astra memuktamadkan gelung permainan utama.", "<b>2 · Watak</b> dihasilkan oleh perkhidmatan aset Academy sebagai model 3D, dikemaskan dalam Blender, kemudian disepadukan ke dalam Godot.", "<b>3 · Binaan ujian Android</b> pada telefon pelajar sendiri.", "<b>4 · “Semak permainan saya”</b> menghasilkan laporan: diluluskan. Pensyarah, Neo dan Lan melihatnya."], "week10_heading": "Minggu 10<small>Projek akhir 3D</small>"}};
 (function(){
   const slides=[...document.querySelectorAll('.slide')];
   const dots=document.getElementById('dots'); const counter=document.getElementById('counter');
   const prev=document.getElementById('prev'), next=document.getElementById('next'), langbtn=document.getElementById('langbtn');
   let lang='en'; try { lang = localStorage.getItem('deck-lang') || 'en'; } catch(e) {}
-  if (!BM) lang='en';
+  if (lang !== 'bm' || !BM) lang='en';
   let idx=0; const n=slides.length;
   const h=parseInt((location.hash||'').replace('#',''),10); if(h>=1&&h<=n) idx=h-1;
   slides.forEach((s,i)=>{ const b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Slide '+(i+1)); b.addEventListener('click',()=>go(i)); dots.appendChild(b); });
@@ -543,13 +520,18 @@ const BM = {"ui": {"lang": "BM", "other": "EN", "prev": "Kembali", "next": "Sete
     document.querySelectorAll('[data-ui]').forEach(el=>{ const k=el.dataset.ui; if(D.ui[k]) el.textContent=D.ui[k]; });
     langbtn.querySelector('[data-lang-cur]').textContent=D.ui.lang; langbtn.querySelector('[data-lang-other]').textContent=D.ui.other;
     langbtn.disabled=!BM;
+    langbtn.setAttribute('aria-label', D.ui.language);
+    document.querySelector('.dtop .ttl').textContent=D.slides[0].title;
+    document.querySelector('.dbot').setAttribute('aria-label', D.ui.nav);
+    [...dots.children].forEach((b,i)=>b.setAttribute('aria-label', D.ui.slide+' '+(i+1)+': '+D.slides[i].title));
+    updateFullscreenButtons();
     slides.forEach((s,i)=>{
-      const sl=D.slides[i]; s.querySelector('.kicker').textContent=sl.kicker; s.querySelector('h1').innerHTML=sl.title;
+      const sl=D.slides[i]; s.setAttribute('aria-label', (i+1)+': '+sl.title); s.querySelector('.kicker').textContent=sl.kicker; s.querySelector('h1').innerHTML=sl.title;
       const ul=s.querySelector('.points'); ul.innerHTML=sl.points.map(p=>'<li>'+p+'</li>').join('');
       if(i===0) ul.insertAdjacentHTML('beforeend','<li>'+D.ui.tap+'</li>');
       const v=sl.visual;
       if(v==='big'||sl.big){ const el=s.querySelector('.visual'); el.innerHTML='<div class="bigrow">'+sl.big.map(b=>'<div class="big"><div class="n">'+b[0]+'</div><div class="l">'+b[1]+'</div></div>').join('')+'</div>'; }
-      if(v==='lesson'){ const tot=sl.lesson.reduce((a,r)=>a+parseInt(r[2],10),0); s.querySelector('.vis-lesson').innerHTML='<div class="strip">'+sl.lesson.map(r=>'<div class="'+(/Break|Rehat/.test(r[1])?'brk':'')+'" style="flex:'+parseInt(r[2],10)/tot*100+' 1 0"><b>'+r[1]+'</b><small>'+r[0]+' · '+r[2]+'</small></div>').join('')+'</div>'; }
+      if(v==='lesson'){ s.querySelector('.vis-lesson').innerHTML='<div class="strip">'+sl.lesson.map(r=>'<div class="'+(/Break|Rehat/.test(r[1])?'brk':'')+'" style="--duration:'+parseInt(r[2],10)/75*100+'%"><span class="time">'+r[0]+'</span><b>'+r[1]+'</b><small>'+r[2]+'</small></div>').join('')+'</div>'; }
       if(v==='ladder'){ s.querySelector('.vis-ladder').innerHTML='<div class="stairs">'+sl.ladder.map(r=>'<div><b>'+r[0]+'</b><small>'+r[1]+'</small></div>').join('')+'</div>'; }
       if(v==='buy'){ s.querySelector('.vis-buy').innerHTML='<div class="buyrows">'+sl.buy.map(r=>'<div><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('')+'</div>'; }
       if(v==='status'){ s.querySelector('.vis-status').innerHTML='<div class="cols"><div class="col ok"><h3>'+(lang==='bm'?'Sudah diputuskan':'Decided')+'</h3><ul>'+sl.decided.map(x=>'<li>'+x+'</li>').join('')+'</ul></div><div class="col open"><h3>'+(lang==='bm'?'Masih terbuka':'Still open')+'</h3><ul>'+sl.open.map(x=>'<li>'+x+'</li>').join('')+'</ul></div></div>'; }
@@ -561,30 +543,81 @@ const BM = {"ui": {"lang": "BM", "other": "EN", "prev": "Kembali", "next": "Sete
     });
   }
 
-  function fit(){
-    document.querySelectorAll('.slide.hero').forEach(s=>{
-      const vis=s.querySelector('.visual'); const el=vis.querySelector(':scope > figure, :scope > .arcade-storyboard'); if(!el) return;
-      if(window.innerWidth<720 && !document.fullscreenElement){ el.style.width=''; return; }
-      const note=vis.querySelector('.animnote'); const avail=vis.clientHeight-(note?note.offsetHeight+6:0);
-      let w=100; el.style.width='100%';
-      for(let i=0;i<16 && el.offsetHeight>avail && w>28;i++){ w-=4.5; el.style.width=w+'%'; }
-    });
-  }
+  // Wrap the existing, unchanged figures without measuring or shrinking them.
   document.querySelectorAll('.slide.hero .visual').forEach(vis=>{
-    const b=document.createElement('button'); b.type='button'; b.className='fsbtn'; b.dataset.ui='full'; b.textContent='Full screen';
-    b.addEventListener('click',()=>{ if(document.fullscreenElement){ document.exitFullscreen(); } else if(vis.requestFullscreen){ vis.requestFullscreen(); } });
+    const artwork=vis.querySelector(':scope > figure, :scope > .arcade-storyboard');
+    const stage=document.createElement('div'); stage.className='animation-stage';
+    artwork.before(stage); stage.appendChild(artwork);
+    const b=document.createElement('button'); b.type='button'; b.className='fsbtn';
+    b.hidden=!document.fullscreenEnabled;
+    b.addEventListener('click',async()=>{
+      try {
+        if(document.fullscreenElement) await document.exitFullscreen();
+        else await vis.requestFullscreen();
+      } catch(e) {
+        const note=vis.querySelector('.animnote');
+        note.textContent=dict().ui.fullscreenError; note.setAttribute('role','status');
+      }
+    });
     vis.appendChild(b);
   });
-  document.addEventListener('fullscreenchange',()=>{ setTimeout(fit,50); });
-  window.addEventListener('resize',()=>{ clearTimeout(window.__fitT); window.__fitT=setTimeout(fit,80); });
-  function go(i){ idx=Math.max(0,Math.min(n-1,i)); slides.forEach((s,j)=>s.classList.toggle('active',j===idx)); [...dots.children].forEach((d,j)=>d.classList.toggle('on',j===idx)); counter.textContent=(idx+1)+' '+dict().ui.of+' '+n; prev.disabled=idx===0; next.disabled=idx===n-1; history.replaceState(null,'','#'+(idx+1)); slides[idx].scrollTop=0; requestAnimationFrame(fit); setTimeout(fit,120); }
+  function updateFullscreenButtons(){
+    document.querySelectorAll('.fsbtn').forEach(b=>{
+      const active=document.fullscreenElement===b.closest('.visual');
+      b.textContent=dict().ui[active?'exitFull':'full'];
+      b.setAttribute('aria-pressed',String(active));
+    });
+  }
+  let fullscreenButton=null;
+  document.addEventListener('fullscreenchange',()=>{
+    updateFullscreenButtons();
+    if(document.fullscreenElement){
+      fullscreenButton=document.fullscreenElement.querySelector('.fsbtn');
+      document.fullscreenElement.scrollTop=0; fullscreenButton.focus({preventScroll:true});
+    } else if(fullscreenButton) fullscreenButton.focus();
+  });
+  function go(i){
+    idx=Math.max(0,Math.min(n-1,i));
+    const focusWasInSlide=slides.some(s=>s.contains(document.activeElement));
+    slides.forEach((s,j)=>s.classList.toggle('active',j===idx));
+    [...dots.children].forEach((d,j)=>{
+      d.classList.toggle('on',j===idx);
+      if(j===idx) d.setAttribute('aria-current','step'); else d.removeAttribute('aria-current');
+    });
+    counter.textContent=(idx+1)+' '+dict().ui.of+' '+n;
+    prev.disabled=idx===0; next.disabled=idx===n-1;
+    history.replaceState(null,'','#'+(idx+1)); slides[idx].scrollTop=0;
+    if(focusWasInSlide){ slides[idx].tabIndex=-1; slides[idx].focus({preventScroll:true}); }
+  }
   prev.addEventListener('click',()=>go(idx-1)); next.addEventListener('click',()=>go(idx+1));
   langbtn.addEventListener('click',()=>{ if(!BM) return; lang = lang==='en'?'bm':'en'; try{localStorage.setItem('deck-lang',lang);}catch(e){} render(); go(idx); });
-  document.addEventListener('keydown',e=>{ if(e.target.closest('input,textarea')) return; if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(idx+1);} if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1);} if(e.key==='Home')go(0); if(e.key==='End')go(n-1); });
-  let tx=null; document.getElementById('deck').addEventListener('touchstart',e=>{tx=e.changedTouches[0].clientX;},{passive:true});
-  document.getElementById('deck').addEventListener('touchend',e=>{ if(tx===null) return; const dx=e.changedTouches[0].clientX-tx; tx=null; if(Math.abs(dx)>60 && !e.target.closest('figure,button,a')) go(idx+(dx<0?1:-1)); },{passive:true});
+  document.addEventListener('keydown',e=>{
+    if(e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || document.fullscreenElement || e.target.closest('input,textarea,select,[contenteditable="true"],[data-arcade]')) return;
+    if(e.key===' ' && e.target.closest('button,a')) return;
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){e.preventDefault();go(idx+1);}
+    if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1);}
+    if(e.key==='Home'){e.preventDefault();go(0);} if(e.key==='End'){e.preventDefault();go(n-1);}
+  });
+  let touch=null;
+  const deck=document.getElementById('deck');
+  deck.addEventListener('touchstart',e=>{
+    if(e.touches.length!==1 || e.target.closest('figure,button,a') || document.fullscreenElement) {touch=null;return;}
+    const t=e.changedTouches[0]; touch={x:t.clientX,y:t.clientY};
+  },{passive:true});
+  deck.addEventListener('touchend',e=>{
+    if(!touch) return;
+    const t=e.changedTouches[0], dx=t.clientX-touch.x, dy=t.clientY-touch.y; touch=null;
+    if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5) go(idx+(dx<0?1:-1));
+  },{passive:true});
+  deck.addEventListener('touchcancel',()=>{touch=null;},{passive:true});
+  deck.addEventListener('click',e=>{
+    if(document.fullscreenElement || e.target.closest('figure,button,a,.arcade-storyboard') || window.getSelection().toString()) return;
+    // Honor the existing edge-tap hint without turning text into a click target.
+    if(e.target!==slides[idx] && e.target!==slides[idx].querySelector('.inner')) return;
+    if(e.clientX<48) go(idx-1); else if(e.clientX>innerWidth-48) go(idx+1);
+  });
   window.addEventListener('hashchange',()=>{ const h=parseInt(location.hash.replace('#',''),10); if(h>=1&&h<=n&&h-1!==idx) go(h-1); });
-  render(); go(idx); window.addEventListener('load',()=>setTimeout(fit,150));
+  render(); go(idx);
 })();
 </script>
 </body>
