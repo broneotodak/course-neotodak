@@ -195,10 +195,11 @@
     <h1>Its own home, off Neo's estate</h1>
     <p class="dek">Neo's note of 20 September: the program is shared with the Academy team, so it should not run on his personal domain (neotodak.com) or his personal machines (the office fleet, the NAS, the Bandung box). This page proposes a home that Todak Academy and Todak Studios own, names what moves, and prices it. Everything in the student's path lands on Academy or Studios accounts. Neo's fleet may lend a hand in the dry run and nowhere else.</p>
 
+    <div class="note ship" style="margin:0 0 16px"><p><b>Update, 20 Sep (later the same day).</b> Neo decided the base stays <b>course.neotodak.com</b>. No domain move, no redirects. Everything else on this page, the accounts, the database, the server and the build farm being Todak-owned, still stands as proposed.</p></div>
     <div class="answers">
       <div class="k-head">Short version</div>
       <ol>
-        <li><span class="k">Domain</span><span><b>creator.todakacademy.edu.my</b>, on the Academy's own institution domain. Site, documentation and the showcase live there. A short vanity address, <b>todakcreator.com</b>, is free to register today and would simply redirect. Nothing stays on neotodak.com.</span></li>
+        <li><span class="k">Domain</span><span><b>Decided 20 Sep: course.neotodak.com stays as the base.</b> Site, documentation, slides and the showcase live there, as today. The classroom and the collector use paths or subdomains under it.</span></li>
         <li><span class="k">Ownership</span><span>One rule: every account in the chain belongs to a Todak entity, with Lan and Neo as owners and Kai as IT admin. No personal accounts, no personal tokens, no Siti, no neo-brain.</span></li>
         <li><span class="k">Hosting</span><span>Static site and showcase on the Todak Cloudflare account (free). Code in a new <b>todak-academy</b> GitHub organisation (free). Classroom system and course database in a Supabase project inside the Todak organisation, next to the Academy portal's. Collector and publisher desk on the Academy's own server in the Kay rack.</span></li>
         <li><span class="k">Machines</span><span>The Mac mini becomes an <b>Academy asset</b>, placed at the Academy, reached through a Cloudflare Tunnel on the Todak account, not Neo's private network. No Academy workload on EdgeXpert, tr-home, the NAS or bandung-01.</span></li>
@@ -224,8 +225,8 @@
     <div class="cp-scroll"><table class="cp">
       <thead><tr><th>Piece</th><th>Today</th><th>Proposed home</th><th>Owner</th><th>Cost</th></tr></thead>
       <tbody>
-        <tr><td><b>Domain</b></td><td>course.neotodak.com, classroom.neotodak.com</td><td><code>creator.todakacademy.edu.my</code> (site, docs), <code>play.todakacademy.edu.my</code> (showcase), <code>classroom.todakacademy.edu.my</code> (LMS), <code>collect.todakacademy.edu.my</code> (prompt collector). Optional vanity <code>todakcreator.com</code> → redirect.</td><td>Todak Academy. Who holds the registrar and DNS for the .edu.my is to confirm with Lan or Kai; the portal already runs on it.</td><td class="num">RM0 · vanity .com ~RM60/yr</td></tr>
-        <tr><td><b>Site, documentation, showcase</b></td><td>Netlify on Neo's account, repo under Neo's GitHub</td><td>Cloudflare Pages on the <b>Todak</b> Cloudflare account, deploying from the new GitHub organisation. Godot's two web headers set once in the project. Same static files, same "push = deploy".</td><td>Todak Studios' Cloudflare account, admins Lan + Neo + Kai</td><td class="num">RM0</td></tr>
+        <tr><td><b>Domain</b></td><td>course.neotodak.com, classroom.neotodak.com</td><td><b>Unchanged: course.neotodak.com stays as the base</b> (Neo, 20 Sep). Showcase at a path under it; classroom and collector as subdomains of neotodak.com.</td><td>Neo's domain, by his decision.</td><td class="num">RM0</td></tr>
+        <tr><td><b>Site, documentation, showcase</b></td><td>Netlify on Neo's account, repo under Neo's GitHub</td><td>Stays on the current deploy (push = deploy). Recommended still: move the repository into the todak-academy organisation and let the deploy pull from there, so the site's code is company-owned even though the address is Neo's.</td><td>Address: Neo. Code: todak-academy organisation (proposed).</td><td class="num">RM0</td></tr>
         <tr><td><b>Code</b></td><td>Repos under Neo's personal GitHub</td><td>New GitHub organisation <b>todak-academy</b>: the site, the Game Kit, the classroom system, and one private repository per student game per cohort. Fine-grained tokens for the kit's hands; no personal tokens.</td><td>Owners Lan + Neo, admin Kai</td><td class="num">RM0 on the free plan</td></tr>
         <tr><td><b>Classroom system and course database</b></td><td>Supabase project on a separate personal account</td><td>A new Supabase project <b>creator-classroom</b> inside the <b>Todak organisation</b>, the same organisation that already holds the Academy portal's database. Students, progress, prompt logs, review reports, signed paperwork, the project brains.</td><td>Todak organisation</td><td class="num">Free tier, then ~RM120/mo</td></tr>
         <tr><td><b>Collector, publisher desk, build queue, store-review watch</b></td><td>Planned on Neo's fleet (EdgeXpert watchers, Kay .213)</td><td>The Academy's own server in the Kay rack (<code>.213</code>, already keys-only, already the Academy's): small services that receive prompt events, queue publishing manifests and build jobs, and watch the stores. Alerts by e-mail and a WhatsApp group through a plain business API, not Siti.</td><td>Todak Academy, Kayrule-managed</td><td class="num">RM0 (exists)</td></tr>
@@ -277,13 +278,11 @@
     <p class="sec-sub">About one week of work once the accounts exist. Nothing on the current pages changes until the new home is live and checked.</p>
     <ol class="plain">
       <li><b>Accounts</b> (Lan or Kai, one afternoon): the todak-academy GitHub organisation; the creator-classroom Supabase project in the Todak organisation; the Cloudflare Pages project, tunnel and R2 bucket on the Todak account; the todakcreator.com registration if wanted; the Academy password manager.</li>
-      <li><b>DNS</b>: the four subdomains under todakacademy.edu.my. Needs whoever runs that zone.</li>
-      <li><b>Site and docs</b>: transfer the site repository into the organisation, connect Cloudflare Pages, check the Godot headers, go live on creator.todakacademy.edu.my.</li>
-      <li><b>Classroom</b>: export the current classroom database, import into creator-classroom, transfer the repository, deploy at classroom.todakacademy.edu.my, re-test login and grading.</li>
+      <li><b>Site and docs</b>: nothing to move. Transfer the repository into the organisation and point the existing deploy at it.</li>
+      <li><b>Classroom</b>: export the current classroom database, import into creator-classroom, transfer the repository, keep it at classroom.neotodak.com, re-test login and grading.</li>
       <li><b>Kay .213</b>: deploy the collector, the publisher desk, the build queue and the store watch as services; wire alerts.</li>
       <li><b>Mac mini</b>: set up as the Academy asset with the tunnel and the Studios keychain, connect to the queue.</li>
-      <li><b>Redirects</b>: course.neotodak.com and classroom.neotodak.com point to the new addresses with temporary redirects for three months, then permanent.</li>
-      <li><b>Clean-up</b>: remove the Academy's crons and watchers from Neo's fleet; Neo's fleet keeps nothing of the program.</li>
+            <li><b>Clean-up</b>: remove the Academy's crons and watchers from Neo's fleet; Neo's fleet keeps nothing of the program.</li>
     </ol>
   </section>
 
@@ -298,8 +297,7 @@
         <tr><td>Bulk images, 3D, sound</td><td class="num">RM0 (Neo's GPU boxes)</td><td class="num">~RM300–700 per cohort, rented by the hour (estimate)</td></tr>
         <tr><td>Academy GPU workstation</td><td class="num">Not needed</td><td class="num">Deferred; ~RM9k–15k if a second cohort needs it</td></tr>
         <tr><td>Secrets, monitoring, tunnel</td><td class="num">RM0 (Neo's)</td><td class="num">RM0–40/mo</td></tr>
-        <tr><td>Vanity domain</td><td class="num">–</td><td class="num">~RM60/yr, optional</td></tr>
-        <tr><td>Mac mini, seats, asset budget, legal</td><td colspan="2">Unchanged from Classroom v1</td></tr>
+                <tr><td>Mac mini, seats, asset budget, legal</td><td colspan="2">Unchanged from Classroom v1</td></tr>
       </tbody>
     </table></div>
     <p>Net effect: a few hundred ringgit per cohort for GPU time, in exchange for a program that the Academy owns end to end.</p>
@@ -308,7 +306,7 @@
   <section id="decide">
     <div class="sec-head"><span class="sec-num">07</span><h2>Decisions for Neo &amp; Lan</h2></div>
     <ol class="decisions">
-      <li><span class="n">1</span><span>Primary address <b>creator.todakacademy.edu.my</b>, with todakcreator.com as an optional vanity redirect. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">1</span><span>Base address stays <b>course.neotodak.com</b>. <span class="rec done">Decided 20 Sep</span></span></li>
       <li><span class="n">2</span><span>Hosting on the Todak Cloudflare account (Pages, Tunnel, R2, Access) and a new todak-academy GitHub organisation. <span class="rec">Recommended</span></span></li>
       <li><span class="n">3</span><span>Classroom system and course database as a new project in the Todak Supabase organisation. <span class="rec">Recommended</span></span></li>
       <li><span class="n">4</span><span>Collector and desk services on the Academy's Kay .213 server, or a new small box on the Todak Hetzner account if Kayrule prefers.</span></li>
@@ -321,12 +319,13 @@
   <section id="changelog">
     <div class="sec-head"><span class="sec-num">08</span><h2>Changelog</h2></div>
     <ul>
+      <li><b>v1.1 · 20 Sep 2026.</b> Neo: the base stays course.neotodak.com. Domain move, DNS step and redirects removed; the ownership plan for accounts, database, server and build farm unchanged.</li>
       <li><b>v1 · 20 Sep 2026.</b> First proposal, on Neo's note that the program must not sit on his personal domain or fleet. Supersedes the machine locations in Blueprint v2 section 07 and Classroom v1 section 08.</li>
     </ul>
   </section>
 
   <footer>
-    <span>Todak AI Creator Program · Game Track · Home v1</span>
+    <span>Todak AI Creator Program · Game Track · Home v1.1</span>
     <span>Proposal · not yet approved · Sept 2026</span>
   </footer>
 
