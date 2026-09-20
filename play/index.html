@@ -37,10 +37,16 @@
   <p class="note">Godot 4 web builds. They need a recent browser; on a phone, use landscape.</p>
 </div>
 <script>
-fetch('games.json', { cache: 'no-store' }).then(r => r.json()).then(list => {
-  const grid = document.getElementById('grid'); if (!Array.isArray(list) || !list.length) return;
-  grid.innerHTML = list.slice().reverse().map(g => `<a class="card" href="${g.path}"><div class="k">Week ${g.week} · ${new Date(g.published).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</div><h2>${g.name}</h2><p>by ${g.student}</p><span class="play">Play →</span></a>`).join('');
-}).catch(()=>{});
+const TEAM = 'https://broneotodak.github.io/todak-showcase/';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+Promise.all([
+  fetch('games.json', { cache: 'no-store' }).then(r => r.json()).catch(() => []),
+  fetch(TEAM + 'games.json', { cache: 'no-store' }).then(r => r.json()).then(l => l.map(g => ({ ...g, path: TEAM + g.path, team: true }))).catch(() => []),
+]).then(([site, team]) => {
+  const list = [...site, ...team].sort((a, b) => String(a.published).localeCompare(String(b.published)));
+  const grid = document.getElementById('grid'); if (!list.length) return;
+  grid.innerHTML = list.reverse().map(g => `<a class="card" href="${esc(g.path)}"><div class="k">Week ${esc(g.week)} · ${new Date(g.published).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}${g.team ? ' · team' : ''}</div><h2>${esc(g.name)}</h2><p>by ${esc(g.student)}</p><span class="play">Play →</span></a>`).join('');
+});
 </script>
 </body>
 </html>
