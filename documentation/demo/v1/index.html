@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Demonstrator v1 — Todak AI Creator Program</title>
+<meta name="description" content="The two-week build of a working demonstrator of the Todak Game Kit: a beginner makes and publishes Pong in a ten-minute live demo for Lan and the Academy team. What gets built, by whom, day by day, and what does not.">
+<style>
+  :root {
+    --bg: #e9ebee;
+    --surface: #f6f7f8;
+    --surface-2: #ffffff;
+    --line: #d3d8dd;
+    --line-soft: #e0e4e8;
+    --ink: #14181c;
+    --ink-soft: #545c64;
+    --ink-faint: #828d97;
+    --method: #37627f;
+    --method-soft: rgba(55,98,127,.11);
+    --crew: #9a6a1c;
+    --crew-soft: rgba(154,106,28,.13);
+    --ship: #2c8a66;
+    --ship-soft: rgba(44,138,102,.13);
+    --elective: #7a5aa0;
+    --elective-soft: rgba(122,90,160,.13);
+    --shadow: 0 1px 2px rgba(20,24,28,.05), 0 8px 24px rgba(20,24,28,.05);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+      --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+      --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+      --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+      --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+      --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+    --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+    --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+    --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+    --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+    --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--method); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--method); outline-offset: 2px; }
+
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint);
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
+  .topbar .badge { color: var(--method); }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--method); }
+
+  header { padding: 48px 0 26px; }
+  .eyebrow {
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--crew); box-shadow: 0 0 0 3px var(--crew-soft); }
+  h1 { font-size: clamp(29px, 5.2vw, 44px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; text-wrap: balance; }
+  .dek { color: var(--ink-soft); font-size: 16.5px; max-width: 680px; margin-top: 15px; }
+
+  /* short version */
+  .answers { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--crew); border-radius: 13px; padding: 20px 24px; box-shadow: var(--shadow); margin-top: 28px; }
+  .answers .k-head { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+  .answers ol { list-style: none; display: grid; gap: 11px; }
+  .answers li { display: grid; grid-template-columns: 110px 1fr; gap: 14px; font-size: 14.5px; }
+  .answers .k { font-weight: 750; color: var(--method); letter-spacing: -.01em; }
+  @media (max-width: 560px) { .answers li { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* sections */
+  section { padding: 46px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 13px; margin-bottom: 6px; flex-wrap: wrap; }
+  .sec-num { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; color: var(--method); }
+  .sec-head h2 { font-size: 22px; font-weight: 760; letter-spacing: -.015em; }
+  .sec-sub { color: var(--ink-soft); font-size: 14.5px; margin: 4px 0 20px; max-width: 740px; }
+  h3 { font-size: 15.5px; font-weight: 700; margin: 24px 0 8px; letter-spacing: -.01em; }
+  p { font-size: 14.5px; margin-bottom: 12px; max-width: 740px; }
+  ul, ol.plain { padding-left: 20px; font-size: 14.5px; max-width: 740px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--ink-faint); }
+  b, strong { font-weight: 700; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--surface-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px; }
+  pre { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; padding: 13px 15px; overflow-x: auto; margin: 0 0 14px; max-width: 740px; }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+  /* tables (same look as the module spec) */
+  .cp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin: 6px 0 16px; }
+  table.cp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: var(--surface); }
+  table.cp th, table.cp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  table.cp thead th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-2); }
+  table.cp tbody tr:last-child td { border-bottom: none; }
+  table.cp .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .yes { color: var(--ship); font-weight: 700; }
+  .no { color: var(--ink-faint); }
+  .opt { color: var(--crew); font-weight: 700; }
+  .type-pill { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .type-pill.action { color: var(--method); background: var(--method-soft); }
+  .type-pill.puzzle { color: var(--elective); background: var(--elective-soft); }
+  .type-pill.story { color: var(--crew); background: var(--crew-soft); }
+  .type-pill.sim { color: var(--ship); background: var(--ship-soft); }
+
+  /* callouts */
+  .note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0 16px; max-width: 760px; font-size: 14.5px; }
+  .note.crew { border-left-color: var(--crew); }
+  .note.ship { border-left-color: var(--ship); }
+  .note p { margin: 0; }
+
+  /* compare */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+  .compare > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .compare h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .compare .pick { border-color: color-mix(in srgb, var(--method) 55%, transparent); background: var(--method-soft); }
+  .compare .pick h4 { color: var(--method); }
+  .compare ul { margin: 0; font-size: 14px; }
+
+  /* week strip */
+  .weeks { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 6px 0 8px; }
+  .weeks div { height: 44px; border-radius: 7px; display: grid; place-items: center; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 600; background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
+  .weeks .g1 { background: var(--method-soft); border-color: var(--method); color: var(--ink); }
+  .weeks .g2 { background: var(--elective-soft); border-color: var(--elective); color: var(--ink); }
+  .weeks .g3 { background: var(--crew-soft); border-color: var(--crew); color: var(--ink); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 4px 0 16px; }
+  .lg { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-soft); }
+  .lg .sw { width: 11px; height: 11px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
+  .lg .sw.g1 { background: var(--method-soft); border-color: var(--method); }
+  .lg .sw.g2 { background: var(--elective-soft); border-color: var(--elective); }
+  .lg .sw.g3 { background: var(--crew-soft); border-color: var(--crew); }
+
+  /* flow */
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; margin: 6px 0 18px; }
+  .flow .box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; box-shadow: var(--shadow); }
+  .flow .box b { display: block; margin-bottom: 4px; }
+  .flow .box small { display: block; color: var(--ink-soft); font-size: 12.5px; line-height: 1.45; }
+  .flow .arw { display: grid; place-items: center; color: var(--ink-faint); font-size: 18px; }
+  .flow .box.mem { border-color: color-mix(in srgb, var(--method) 45%, transparent); background: var(--method-soft); }
+  @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } .flow .arw { transform: rotate(90deg); } }
+
+  /* decisions */
+  .decisions { list-style: none; display: grid; gap: 9px; margin-top: 6px; }
+  .decisions li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; font-size: 14.5px; box-shadow: var(--shadow); }
+  .decisions .n { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--crew); }
+  .decisions .rec { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ship); background: var(--ship-soft); padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+  .decisions .done { color: var(--method); background: var(--method-soft); }
+
+  .rec.open { color: var(--crew); background: var(--crew-soft); }
+  .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .lanes { grid-template-columns: 1fr; } }
+  .lanes > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .lanes h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .lanes .astra { border-color: color-mix(in srgb, var(--crew) 55%, transparent); }
+  .lanes .astra h4 { color: var(--crew); }
+  .lanes .cc { border-color: color-mix(in srgb, var(--method) 55%, transparent); }
+  .lanes .cc h4 { color: var(--method); }
+  .lanes ul { margin: 0; font-size: 14px; }
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap"><span><a href="/documentation/">← Documentation</a> · <a href="/documentation/deck/v1/">Slides</a> · <a href="/documentation/summary/v1/">Five minutes</a></span><span class="badge">Documentation · Demonstrator v1</span></div></div>
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="dot"></span><span>Game Track · Demonstrator v1 · 20 Sep 2026 · Neo said go</span></div>
+    <h1>Two weeks to a working demo</h1>
+    <p class="dek">Everything else on this site is a proposal. This page is a build. In two weeks a real beginner sits at a Todak Workbench, makes Pong with the two AI desks, publishes it to the web, and Lan watches the prompts land in the classroom system. Ten minutes, live. It doubles as the first dry-run item the plan already calls for, so nothing is wasted if the answer afterwards is "not yet".</p>
+    <div class="answers">
+      <div class="k-head">Short version</div>
+      <ol>
+        <li><span class="k">Goal</span><span>A ten-minute live demo: open the Workbench, design with Astra, build with Claude Code, press Play in Godot, publish to the web, see the prompt journey, get the review report. Done means a beginner has done it, not us.</span></li>
+        <li><span class="k">Scope</span><span>Web only. One game, Pong. One lab PC. The pieces of the kit that the demo touches, and nothing else.</span></li>
+        <li><span class="k">Who</span><span>Claude Code builds the backbone. Codex builds the sidebar and the Pong art. Claude Code directs and verifies. Neo picks the date and the beginner.</span></li>
+        <li><span class="k">Cost</span><span>No new cash. The two seats we have, tr-home for web builds during this dry run only, and one Academy Windows PC on the day.</span></li>
+        <li><span class="k">Label</span><span>The screen says "demonstrator, not the kit" the whole time, the way the animations say "animation, not a screenshot".</span></li>
+      </ol>
+    </div>
+  </header>
+
+  <section id="demo">
+    <div class="sec-head"><span class="sec-num">01</span><h2>The ten minutes</h2></div>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Min</th><th>The beginner does</th><th>Lan sees</th><th>Built by</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0–1</td><td>Signs in, opens "Todak Workbench". Sidebar: Week 3 · Pong, today's steps.</td><td>One window, no terminal.</td><td>Workbench profile, sidebar</td></tr>
+        <tr><td class="num">1–3</td><td>Asks Astra for paddles, a ball and a title screen in a style they choose.</td><td>Pictures land on the design board.</td><td>Design desk, kit's design folder</td></tr>
+        <tr><td class="num">3–6</td><td>Asks Claude Code to scaffold Pong, then "make the left paddle move with W and S". Presses Play.</td><td>Code changes in the middle, Godot reloads, the paddle moves.</td><td>Pong template, kit commands, project memory</td></tr>
+        <tr><td class="num">6–8</td><td>Says "publish to web".</td><td>A link on course.neotodak.com with the beginner's name. Opens on Lan's phone.</td><td>Build and publish command, showcase</td></tr>
+        <tr><td class="num">8–9</td><td>Opens the journey tab.</td><td>Every prompt from both desks, timestamped, in the classroom system.</td><td>Recording hooks, journey page</td></tr>
+        <tr><td class="num">9–10</td><td>Says "review my game".</td><td>A one-page report: what passed, what to fix.</td><td>Reviewer</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="build">
+    <div class="sec-head"><span class="sec-num">02</span><h2>What gets built</h2></div>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Piece</th><th>What it is</th><th>Owner</th></tr></thead>
+      <tbody>
+        <tr><td><b>Kit commands</b></td><td>One small tool the desks call: new game, run, build for web, publish, review, remember. Speaks Godot on Mac, Windows and Linux.</td><td>Claude Code</td></tr>
+        <tr><td><b>Shared instructions</b></td><td>One file both desks read, telling them the week, the game, the lanes and the rules.</td><td>Claude Code</td></tr>
+        <tr><td><b>Pong template</b></td><td>A Godot 4 project with the pieces the student assembles: paddles, ball, score, title screen, win state, sound, saved high score.</td><td>Claude Code (code) · Codex (art)</td></tr>
+        <tr><td><b>Project memory</b></td><td>The student's project brain: decisions and conventions saved and recalled by the Build desk.</td><td>Claude Code</td></tr>
+        <tr><td><b>Recording</b></td><td>Hooks that write every prompt from both desks to the classroom database with the student, game and week.</td><td>Claude Code</td></tr>
+        <tr><td><b>Showcase</b></td><td>A "play" area on course.neotodak.com that serves Godot web builds with the two headers they need.</td><td>Claude Code</td></tr>
+        <tr><td><b>Journey page</b></td><td>The lecturer's view in the classroom system: prompts per student, per game, both desks.</td><td>Claude Code</td></tr>
+        <tr><td><b>Reviewer</b></td><td>Runs the game headless, checks the "ships complete" list, writes a one-page report.</td><td>Claude Code</td></tr>
+        <tr><td><b>Todak sidebar</b></td><td>The panel in the Workbench: steps, design board, buttons, journey link, recording status.</td><td>Codex</td></tr>
+        <tr><td><b>Workbench profile and installer</b></td><td>The editor profile with both desks, the Godot tools and the sidebar; one script to install on a lab PC.</td><td>Claude Code · Codex reviews the feel</td></tr>
+      </tbody>
+    </table></div>
+    <div class="note crew"><p><b>Not built:</b> store publishing, Android or iPhone builds, the Mac mini, the genre menu beyond Pong, the browser-based Studio, Unity, the Academy accounts move. Those wait for the answer after the demo.</p></div>
+  </section>
+
+  <section id="days">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Day by day</h2></div>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Day</th><th>Done means</th></tr></thead>
+      <tbody>
+        <tr><td class="num">1–2</td><td>Repository up. Kit commands scaffold Pong, run it, build it for the web. Shared instructions in place. Codex briefed on the sidebar and the art.</td></tr>
+        <tr><td class="num">3–4</td><td>Publish command puts a build on the showcase with a working link. Recording hooks write prompts to the classroom database. Reviewer produces a report for the Pong build.</td></tr>
+        <tr><td class="num">5</td><td>Workbench profile and installer. Claude Code runs the whole ten minutes alone on a Mac, start to finish.</td></tr>
+        <tr><td class="num">6–7</td><td>Codex's sidebar and art integrated. Journey page live. First run on a Windows PC. First beginner trial; the fix list from it.</td></tr>
+        <tr><td class="num">8–9</td><td>Second beginner trial. Fixes. Rehearsal at demo speed. "Demonstrator" label on screen.</td></tr>
+        <tr><td class="num">10</td><td>Demo day. Neo picks it.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="risks">
+    <div class="sec-head"><span class="sec-num">04</span><h2>What could bite</h2></div>
+    <ul>
+      <li><b>The Codex desk on Windows.</b> A reported case of the Astra model missing from the Windows app's picker. Checked on day 6; the fallback is the Codex panel in the editor or Codex in the browser.</li>
+      <li><b>Godot web builds need two headers</b> on the hosting site. Set once on the showcase, tested on day 3.</li>
+      <li><b>Windows testing.</b> The build happens on Mac and Linux; the first Windows run is day 6. If the lab PC is not available, Neo's Windows machine stands in.</li>
+      <li><b>Recording both desks.</b> Claude Code's hooks are documented; Codex's session transcripts are collected from disk. If either fails on the day, the journey page shows what was captured and says so.</li>
+      <li><b>A demo looks like a product.</b> It is not. The label stays on screen.</li>
+    </ul>
+  </section>
+
+  <section id="ask">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Neo's two calls</h2></div>
+    <ol class="decisions">
+      <li><span class="n">1</span><span>The demo date, about two weeks out.</span></li>
+      <li><span class="n">2</span><span>The beginner who sits in the chair: ideally Academy staff who has never coded.</span></li>
+    </ol>
+  </section>
+
+  <section id="changelog">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Changelog</h2></div>
+    <ul><li><b>v1 · 20 Sep 2026.</b> Build plan, on Neo's go. Progress is logged here as it happens.</li></ul>
+  </section>
+  <footer><span>Todak AI Creator Program · Game Track · Demonstrator v1</span><span>Build in progress · Sept 2026</span></footer>
+</div>
+</body>
+</html>
