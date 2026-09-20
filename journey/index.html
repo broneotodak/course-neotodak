@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex">
+<title>Prompt Journey — Todak AI Creator Program</title>
+<style>
+  :root { --bg:#e9ebee; --surface:#f6f7f8; --line:#d3d8dd; --ink:#14181c; --soft:#545c64; --faint:#828d97; --method:#37627f; --crew:#9a6a1c; --ship:#2c8a66; --elective:#7a5aa0; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0c0e11; --surface:#14181d; --line:#2a3138; --ink:#e7eaed; --soft:#9aa4ad; --faint:#69737c; --method:#86b2ce; --crew:#d2a052; --ship:#5cbf95; --elective:#b298d6; color-scheme: dark; } }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 16px 60px; }
+  .top { border-bottom: 1px solid var(--line); font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .top .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; padding-bottom: 0; }
+  .top a { color: var(--soft); text-decoration: none; }
+  h1 { font-size: clamp(26px, 5vw, 38px); font-weight: 800; letter-spacing: -.02em; margin: 36px 0 6px; }
+  .dek { color: var(--soft); margin-bottom: 20px; max-width: 640px; }
+  .gate { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  input, select, button { font: inherit; min-height: 44px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); }
+  button { border-color: var(--method); background: color-mix(in srgb, var(--method) 12%, transparent); font-weight: 700; cursor: pointer; }
+  .row { display: grid; grid-template-columns: 150px 90px 1fr; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 14.5px; }
+  .row .t { font-family: ui-monospace, Menlo, monospace; font-size: 11.5px; color: var(--faint); }
+  .pill { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; }
+  .pill.claude { color: var(--method); background: color-mix(in srgb, var(--method) 14%, transparent); }
+  .pill.codex { color: var(--elective); background: color-mix(in srgb, var(--elective) 14%, transparent); }
+  .pill.ev { color: var(--ship); background: color-mix(in srgb, var(--ship) 14%, transparent); }
+  .who { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--faint); margin-left: 8px; }
+  @media (max-width: 640px) { .row { grid-template-columns: 1fr; gap: 2px; } }
+  .empty { color: var(--soft); border: 1px dashed var(--line); border-radius: 12px; padding: 20px; }
+  .note { font-size: 12.5px; color: var(--faint); margin-top: 24px; }
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap"><span><a href="/">← Course</a> · <a href="/play/">Showcase</a></span><span>Prompt Journey · demonstrator</span></div></div>
+<div class="wrap">
+  <h1>Prompt Journey</h1>
+  <p class="dek">Every prompt a student typed, in both AI desks, with the builds, publishes and reviews in between. Lecturer view. Demonstrator, not the kit.</p>
+  <form class="gate" id="gate"><input id="pin" type="password" inputmode="numeric" placeholder="PIN" autocomplete="off" required><select id="student"><option value="">All students</option></select><button type="submit">Show</button></form>
+  <div id="list"><div class="empty">Enter the PIN.</div></div>
+  <p class="note">Recorded by the kit's hooks and synced from each machine. If a machine was offline, its prompts arrive when it reconnects.</p>
+</div>
+<script>
+const list = document.getElementById('list'); const sel = document.getElementById('student');
+let pin = ''; try { pin = sessionStorage.getItem('journey-pin') || ''; } catch {}
+if (pin) document.getElementById('pin').value = pin;
+document.getElementById('gate').addEventListener('submit', async (e) => { e.preventDefault(); pin = document.getElementById('pin').value; try { sessionStorage.setItem('journey-pin', pin); } catch {} load(); });
+sel.addEventListener('change', load);
+async function load() {
+  list.innerHTML = '<div class="empty">Loading…</div>';
+  const q = new URLSearchParams({ pin }); if (sel.value) q.set('student', sel.value);
+  const r = await fetch('/api/journey/read?' + q); if (!r.ok) { list.innerHTML = '<div class="empty">' + (r.status === 403 ? 'Wrong PIN.' : 'Could not load (' + r.status + ').') + '</div>'; return; }
+  const rows = await r.json();
+  const students = [...new Set(rows.map(x => x.student))].sort(); const cur = sel.value; sel.innerHTML = '<option value="">All students</option>' + students.map(s => `<option ${s===cur?'selected':''}>${s}</option>`).join('');
+  if (!rows.length) { list.innerHTML = '<div class="empty">Nothing recorded yet.</div>'; return; }
+  list.innerHTML = rows.map(x => { const d = new Date(x.at); const when = d.toLocaleDateString('en-GB',{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});
+    const kind = x.kind === 'prompt' ? `<span class="pill ${x.desk||'claude'}">${x.desk||'claude'}</span>` : `<span class="pill ev">${x.kind}</span>`;
+    const text = x.kind === 'prompt' ? esc(x.prompt||'') : (x.data && x.data.url ? `<a href="${esc(x.data.url)}">${esc(x.data.url)}</a>` : x.data && x.data.passed!=null ? `${x.data.passed} of ${x.data.total} checks passed` : esc(JSON.stringify(x.data||{})));
+    return `<div class="row"><span class="t">${when}<span class="who">${esc(x.student)} · ${esc(x.game)} · wk ${x.week??''}</span></span><span>${kind}</span><span>${text}</span></div>`; }).join('');
+}
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+if (pin) load();
+</script>
+</body>
+</html>
