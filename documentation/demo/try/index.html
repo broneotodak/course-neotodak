@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
-<title>Demonstrator v1 — Todak AI Creator Program</title>
-<meta name="description" content="The two-week build of a working demonstrator of the Todak Game Kit: a beginner makes and publishes Pong in a ten-minute live demo for Lan and the Academy team. What gets built, by whom, day by day, and what does not.">
+<title>Try the demo — Todak AI Creator Program</title>
+<meta name="description" content="Play around with the Todak Game Kit demonstrator as a student (install the Workbench, make Pong with the two AI desks, publish to the team showcase) or as a lecturer (the Prompt Journey and the showcase).">
 <style>
   :root {
     --bg: #e9ebee;
@@ -180,105 +180,62 @@
 </style>
 </head>
 <body>
-<div class="topbar"><div class="wrap"><span><a href="/documentation/">← Documentation</a> · <a href="/documentation/deck/v1/">Slides</a> · <a href="/documentation/summary/v1/">Five minutes</a></span><span class="badge">Documentation · Demonstrator v1</span></div></div>
+<div class="topbar"><div class="wrap"><span><a href="/documentation/demo/v1/">← Demo plan</a> · <a href="/play/">Showcase</a> · <a href="/journey/">Journey</a></span><span class="badge">Documentation · Try the demo</span></div></div>
 <div class="wrap">
   <header>
-    <div class="eyebrow"><span class="dot"></span><span>Game Track · Demonstrator v1 · 20 Sep 2026 · Neo said go</span></div>
-    <h1>Two weeks to a working demo</h1>
-    <p class="dek">Everything else on this site is a proposal. This page is a build. In two weeks a real beginner sits at a Todak Workbench, makes Pong with the two AI desks, publishes it to the web, and Lan watches the prompts land in the classroom system. Ten minutes, live. It doubles as the first dry-run item the plan already calls for, so nothing is wasted if the answer afterwards is "not yet".</p>
-    <div class="note ship" style="margin:0 0 16px"><p><b>Open to the team since 20 Sep.</b> Play around as a student or as a lecturer: <a href="/documentation/demo/try/">Try the demo</a>.</p></div>
+    <div class="eyebrow"><span class="dot"></span><span>Game Track · Try the demo · opened 20 Sep 2026 · for the Academy and Studios team</span></div>
+    <h1>Play around with it</h1>
+    <p class="dek">The demonstrator is open to the team. Be a student: install the Workbench, make Pong with the two AI desks, publish it. Be a lecturer: watch the prompts arrive and play the games. It is a two-week build in its first days, so expect rough edges; tell Neo what breaks. Demonstrator, not the kit.</p>
     <div class="answers">
-      <div class="k-head">Short version</div>
+      <div class="k-head">You will get from Neo</div>
       <ol>
-        <li><span class="k">Goal</span><span>A ten-minute live demo: open the Workbench, design with Astra, build with Claude Code, press Play in Godot, publish to the web, see the prompt journey, get the review report. Done means a beginner has done it, not us.</span></li>
-        <li><span class="k">Scope</span><span>Web only. One game, Pong. One lab PC. The pieces of the kit that the demo touches, and nothing else.</span></li>
-        <li><span class="k">Who</span><span>Claude Code builds the backbone. Codex builds the sidebar and the Pong art. Claude Code directs and verifies. Neo picks the date and the beginner.</span></li>
-        <li><span class="k">Cost</span><span>No new cash. The two seats we have, tr-home for web builds during this dry run only, and one Academy Windows PC on the day.</span></li>
-        <li><span class="k">Label</span><span>The screen says "demonstrator, not the kit" the whole time, the way the animations say "animation, not a screenshot".</span></li>
+        <li><span class="k">Team PIN</span><span>Six digits. Opens the lecturer page <a href="/journey/">course.neotodak.com/journey</a>.</span></li>
+        <li><span class="k">Two files</span><span><code>workbench.env</code> (the recording token) and <code>showcase-deploy-key</code> (lets your machine publish to the team showcase). Keep them private; they are demo keys and can be revoked at any time.</span></li>
+        <li><span class="k">Your own AI logins</span><span>Claude Code needs a paid Claude plan; Codex needs a ChatGPT plan. If you only have one of them, use that desk for everything: both read the same instructions.</span></li>
       </ol>
     </div>
   </header>
 
-  <section id="demo">
-    <div class="sec-head"><span class="sec-num">01</span><h2>The ten minutes</h2></div>
-    <div class="cp-scroll"><table class="cp">
-      <thead><tr><th>Min</th><th>The beginner does</th><th>Lan sees</th><th>Built by</th></tr></thead>
-      <tbody>
-        <tr><td class="num">0–1</td><td>Signs in, opens "Todak Workbench". Sidebar: Week 3 · Pong, today's steps.</td><td>One window, no terminal.</td><td>Workbench profile, sidebar</td></tr>
-        <tr><td class="num">1–3</td><td>Asks Astra for paddles, a ball and a title screen in a style they choose.</td><td>Pictures land on the design board.</td><td>Design desk, kit's design folder</td></tr>
-        <tr><td class="num">3–6</td><td>Asks Claude Code to scaffold Pong, then "make the left paddle move with W and S". Presses Play.</td><td>Code changes in the middle, Godot reloads, the paddle moves.</td><td>Pong template, kit commands, project memory</td></tr>
-        <tr><td class="num">6–8</td><td>Says "publish to web".</td><td>A link on course.neotodak.com with the beginner's name. Opens on Lan's phone.</td><td>Build and publish command, showcase</td></tr>
-        <tr><td class="num">8–9</td><td>Opens the journey tab.</td><td>Every prompt from both desks, timestamped, in the classroom system.</td><td>Recording hooks, journey page</td></tr>
-        <tr><td class="num">9–10</td><td>Says "review my game".</td><td>A one-page report: what passed, what to fix.</td><td>Reviewer</td></tr>
-      </tbody>
-    </table></div>
+  <section id="student">
+    <div class="sec-head"><span class="sec-num">01</span><h2>As a student</h2></div>
+    <p class="sec-sub">About 20 minutes the first time, mostly downloads. Mac, Windows or Linux. You need Node 18 or newer and VS Code with its <code>code</code> command.</p>
+    <ol class="plain">
+      <li><b>Get the kit.</b> <code>git clone https://github.com/broneotodak/todak-game-kit.git</code> (ask Neo for access; it is private for now).</li>
+      <li><b>Install the Workbench.</b> Put the two files from Neo somewhere, then run the installer. Mac or Linux: <code>TGK_INGEST_TOKEN=$(grep TGK_INGEST_TOKEN workbench.env | cut -d= -f2 | tr -d '"') TGK_PUBLISH_KEY_FILE=./showcase-deploy-key bash todak-game-kit/workbench/install/install.sh</code>. Windows PowerShell: set <code>$env:TGK_INGEST_TOKEN</code> and <code>$env:TGK_PUBLISH_KEY_FILE</code>, then <code>powershell -ExecutionPolicy Bypass -File todak-game-kit\workbench\install\install.ps1</code>. It installs the three editor extensions and the Todak sidebar, downloads Godot 4.7.2 with its web export files (about 1 GB, once), and writes your environment. Open a new terminal afterwards.</li>
+      <li><b>Import the profile once.</b> VS Code → Profiles → Import Profile → <code>todak-game-kit/workbench/profile/todak-workbench.code-profile.json</code>. Sign in to the Claude Code panel and the Codex panel with your own accounts.</li>
+      <li><b>Make a game.</b> <code>tgk new pong my-pong --student yourname --week 3</code>, then <code>code my-pong</code>. The Todak sidebar shows Week 3 · Pong and four steps.</li>
+      <li><b>Play it first.</b> Press Run in the sidebar (or <code>tgk run</code>). The right paddle plays by itself; yours does not move yet. That is step 2.</li>
+      <li><b>Design desk.</b> Open the Codex panel and ask Astra for paddles, a ball and a title in a style you like. Pictures land in <code>design/</code> and show on the design board.</li>
+      <li><b>Build desk.</b> Open the Claude Code panel and type: <i>make the left paddle move with W and S</i>. Watch <code>scripts/paddle.gd</code> change, then Run and press W and S. Then: <i>make the ball launch and bounce off the top, the bottom and the paddles</i>.</li>
+      <li><b>Review.</b> Press Review. Read the report. Fix what it says, review again.</li>
+      <li><b>Publish.</b> Press Publish (or <code>tgk publish web</code>). In about a minute your game is on the <a href="https://broneotodak.github.io/todak-showcase/">team showcase</a> and in the <a href="/play/">course showcase</a>, with your name on it.</li>
+      <li><b>Look at your own journey.</b> Press "Open journey" in the sidebar, or <code>tgk journey</code>. Every prompt you typed in either desk is there. The lecturer sees the same on the web.</li>
+    </ol>
+    <div class="note"><p><b>Rules of the game while you play.</b> Do not paste real student or company data into prompts; this is a demo store. Prompts are recorded on purpose. Keep the two AI desks to their lanes if you can (Astra designs, Claude Code builds), and notice how it feels when you break that rule.</p></div>
   </section>
 
-  <section id="build">
-    <div class="sec-head"><span class="sec-num">02</span><h2>What gets built</h2></div>
-    <div class="cp-scroll"><table class="cp">
-      <thead><tr><th>Piece</th><th>What it is</th><th>Owner</th></tr></thead>
-      <tbody>
-        <tr><td><b>Kit commands</b></td><td>One small tool the desks call: new game, run, build for web, publish, review, remember. Speaks Godot on Mac, Windows and Linux.</td><td>Claude Code</td></tr>
-        <tr><td><b>Shared instructions</b></td><td>One file both desks read, telling them the week, the game, the lanes and the rules.</td><td>Claude Code</td></tr>
-        <tr><td><b>Pong template</b></td><td>A Godot 4 project with the pieces the student assembles: paddles, ball, score, title screen, win state, sound, saved high score.</td><td>Claude Code (code) · Codex (art)</td></tr>
-        <tr><td><b>Project memory</b></td><td>The student's project brain: decisions and conventions saved and recalled by the Build desk.</td><td>Claude Code</td></tr>
-        <tr><td><b>Recording</b></td><td>Hooks that write every prompt from both desks to the classroom database with the student, game and week.</td><td>Claude Code</td></tr>
-        <tr><td><b>Showcase</b></td><td>A "play" area on course.neotodak.com that serves Godot web builds with the two headers they need.</td><td>Claude Code</td></tr>
-        <tr><td><b>Journey page</b></td><td>The lecturer's view in the classroom system: prompts per student, per game, both desks.</td><td>Claude Code</td></tr>
-        <tr><td><b>Reviewer</b></td><td>Runs the game headless, checks the "ships complete" list, writes a one-page report.</td><td>Claude Code</td></tr>
-        <tr><td><b>Todak sidebar</b></td><td>The panel in the Workbench: steps, design board, buttons, journey link, recording status.</td><td>Codex</td></tr>
-        <tr><td><b>Workbench profile and installer</b></td><td>The editor profile with both desks, the Godot tools and the sidebar; one script to install on a lab PC.</td><td>Claude Code · Codex reviews the feel</td></tr>
-      </tbody>
-    </table></div>
-    <div class="note crew"><p><b>Not built:</b> store publishing, Android or iPhone builds, the Mac mini, the genre menu beyond Pong, the browser-based Studio, Unity, the Academy accounts move. Those wait for the answer after the demo.</p></div>
-  </section>
-
-  <section id="days">
-    <div class="sec-head"><span class="sec-num">03</span><h2>Day by day</h2></div>
-    <div class="cp-scroll"><table class="cp">
-      <thead><tr><th>Day</th><th>Done means</th></tr></thead>
-      <tbody>
-        <tr><td class="num">1–2</td><td>Repository up. Kit commands scaffold Pong, run it, build it for the web. Shared instructions in place. Codex briefed on the sidebar and the art.</td></tr>
-        <tr><td class="num">3–4</td><td>Publish command puts a build on the showcase with a working link. Recording hooks write prompts to the classroom database. Reviewer produces a report for the Pong build.</td></tr>
-        <tr><td class="num">5</td><td>Workbench profile and installer. Claude Code runs the whole ten minutes alone on a Mac, start to finish.</td></tr>
-        <tr><td class="num">6–7</td><td>Codex's sidebar and art integrated. Journey page live. First run on a Windows PC. First beginner trial; the fix list from it.</td></tr>
-        <tr><td class="num">8–9</td><td>Second beginner trial. Fixes. Rehearsal at demo speed. "Demonstrator" label on screen.</td></tr>
-        <tr><td class="num">10</td><td>Demo day. Neo picks it.</td></tr>
-      </tbody>
-    </table></div>
-  </section>
-
-  <section id="risks">
-    <div class="sec-head"><span class="sec-num">04</span><h2>What could bite</h2></div>
-    <ul>
-      <li><b>The Codex desk on Windows.</b> A reported case of the Astra model missing from the Windows app's picker. Checked on day 6; the fallback is the Codex panel in the editor or Codex in the browser.</li>
-      <li><b>Godot web builds need two headers</b> on the hosting site. Set once on the showcase, tested on day 3.</li>
-      <li><b>Windows testing.</b> The build happens on Mac and Linux; the first Windows run is day 6. If the lab PC is not available, Neo's Windows machine stands in.</li>
-      <li><b>Recording both desks.</b> Claude Code's hooks are documented; Codex's session transcripts are collected from disk. If either fails on the day, the journey page shows what was captured and says so.</li>
-      <li><b>A demo looks like a product.</b> It is not. The label stays on screen.</li>
-    </ul>
-  </section>
-
-  <section id="ask">
-    <div class="sec-head"><span class="sec-num">05</span><h2>Neo's two calls</h2></div>
-    <ol class="decisions">
-      <li><span class="n">1</span><span>The demo date, about two weeks out.</span></li>
-      <li><span class="n">2</span><span>The beginner who sits in the chair: ideally Academy staff who has never coded.</span></li>
+  <section id="lecturer">
+    <div class="sec-head"><span class="sec-num">02</span><h2>As a lecturer</h2></div>
+    <ol class="plain">
+      <li><b>The Prompt Journey.</b> <a href="/journey/">course.neotodak.com/journey</a>, enter the team PIN. Filter by student. Each row is a prompt (with its desk), a review score, or a publish link. New prompts appear within seconds of being typed on a connected machine.</li>
+      <li><b>The showcase.</b> <a href="/play/">course.neotodak.com/play</a> lists every published game; the ones marked "team" come from the team showcase. Play them on a laptop or in landscape on a phone.</li>
+      <li><b>Try the walkthrough test.</b> Ask a "student" to explain their paddle code with both panels closed. That is the assessment idea in one minute.</li>
+      <li><b>What to tell Neo.</b> Where a beginner would get stuck, what the sidebar should say differently, what the review missed, and how long the install took on your machine.</li>
     </ol>
   </section>
 
-  <section id="changelog">
-    <div class="sec-head"><span class="sec-num">06</span><h2>Changelog</h2></div>
+  <section id="known">
+    <div class="sec-head"><span class="sec-num">03</span><h2>Known rough edges</h2></div>
     <ul>
-      <li><b>Day 2, early · 20 Sep 2026.</b> Codex delivered the Todak sidebar (a small editor extension: game, steps, Run · Build · Publish · Review buttons, design board, recording status, recent prompts, review summary, the demonstrator label; 12 tests, no network, commands run in a real terminal) and the Pong pixel art (paddle, ball, title backdrop, icon, 5 KB in total). Packaged and installed into an isolated editor profile. Still to check by eye in a real editor window: that is day 5's dry run.</li>
-      <li><b>Day 1, late · 20 Sep 2026.</b> The core moment of the demo works unaided: a real Claude Code run, reading only the kit's instruction file, made the paddle move with W and S, ran the review itself, ticked the step and saved its reasoning to the project brain, in two plain sentences to the student. A real Codex session's prompt was collected into the same journey.</li>
-      <li><b>Day 1, evening · 20 Sep 2026.</b> Recording is live end to end: the Build desk hook records each prompt, the kit syncs prompts, builds, publishes and reviews to the course site, which stores them in a locked table in the Academy's own database, and the lecturer page at <a href="/journey/">course.neotodak.com/journey</a> shows them behind a PIN. The Workbench profile and the Mac, Linux and Windows installers are written.</li>
-      <li><b>Day 1 · 20 Sep 2026.</b> Repository <code>todak-game-kit</code> up. The kit command scaffolds Pong, runs it, builds it for the web on Mac and on tr-home, reviews it headless (the two student steps show as not done until they are), keeps the project brain and records prompts. Reference solutions make the review pass 8 of 8. The showcase is live: <a href="/play/">course.neotodak.com/play</a>, first test game published through <code>tgk publish web</code>. Codex briefed on the sidebar and the Pong art.</li>
-      <li><b>v1 · 20 Sep 2026.</b> Build plan, on Neo's go. Progress is logged here as it happens.</li>
+      <li>Windows has not been tested yet by us; you may be the first. Node and VS Code's <code>code</code> command must be on the PATH.</li>
+      <li>The Codex panel on Windows reportedly sometimes hides the Astra model; the Codex desktop app or Codex in the browser is the fallback.</li>
+      <li>The first web export takes a minute. Publishing pushes about 40 MB; on a slow connection wait for "Published".</li>
+      <li>The sidebar has been tested in a browser mock and installs cleanly; the first real editor session may show layout quirks. Screenshots welcome.</li>
+      <li>Only Pong exists. The genre menu, stores, the Mac mini and Unity are all later.</li>
     </ul>
   </section>
-  <footer><span>Todak AI Creator Program · Game Track · Demonstrator v1</span><span>Build in progress · Sept 2026</span></footer>
+
+  <footer><span>Todak AI Creator Program · Game Track · Try the demo</span><span>Opened 20 Sep 2026 · demonstrator, not the kit</span></footer>
 </div>
 </body>
 </html>
