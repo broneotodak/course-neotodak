@@ -1,0 +1,6 @@
+/play/*
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Embedder-Policy: require-corp
+  Cache-Control: no-cache
+/play/*/*/index.wasm
+  Content-Type: application/wasm
