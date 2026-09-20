@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Classroom v2 — Todak AI Creator Program</title>
+<meta name="description" content="The Todak Workbench, a three-hour lesson, the seats and machines, and decisions for Neo and Lan. Classroom v2: shorter copy, unchanged Arcade animations.">
+<style>
+  :root {
+    --bg: #e9ebee;
+    --surface: #f6f7f8;
+    --surface-2: #ffffff;
+    --line: #d3d8dd;
+    --line-soft: #e0e4e8;
+    --ink: #14181c;
+    --ink-soft: #545c64;
+    --ink-faint: #828d97;
+    --method: #37627f;
+    --method-soft: rgba(55,98,127,.11);
+    --crew: #9a6a1c;
+    --crew-soft: rgba(154,106,28,.13);
+    --ship: #2c8a66;
+    --ship-soft: rgba(44,138,102,.13);
+    --elective: #7a5aa0;
+    --elective-soft: rgba(122,90,160,.13);
+    --shadow: 0 1px 2px rgba(20,24,28,.05), 0 8px 24px rgba(20,24,28,.05);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+      --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+      --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+      --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+      --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+      --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c0e11; --surface: #14181d; --surface-2: #1a1f25; --line: #2a3138; --line-soft: #21272d;
+    --ink: #e7eaed; --ink-soft: #9aa4ad; --ink-faint: #69737c;
+    --method: #86b2ce; --method-soft: rgba(134,178,206,.13);
+    --crew: #d2a052; --crew-soft: rgba(210,160,82,.14);
+    --ship: #5cbf95; --ship-soft: rgba(92,191,149,.14);
+    --elective: #b298d6; --elective-soft: rgba(178,152,214,.15);
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6; -webkit-font-smoothing: antialiased; padding-bottom: 72px;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 26px; }
+  a { color: var(--method); text-underline-offset: 2px; }
+  a:focus-visible { outline: 2px solid var(--method); outline-offset: 2px; }
+
+  .topbar {
+    border-bottom: 1px solid var(--line);
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--ink-faint);
+    letter-spacing: .12em; text-transform: uppercase;
+  }
+  .topbar .wrap { display: flex; justify-content: space-between; align-items: center; height: 44px; gap: 12px; }
+  .topbar .badge { color: var(--method); }
+  .topbar a { color: var(--ink-soft); text-decoration: none; }
+  .topbar a:hover { color: var(--method); }
+
+  header { padding: 48px 0 26px; }
+  .eyebrow {
+    font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+    color: var(--ink-faint); margin-bottom: 18px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .eyebrow .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--crew); box-shadow: 0 0 0 3px var(--crew-soft); }
+  h1 { font-size: clamp(29px, 5.2vw, 44px); font-weight: 800; letter-spacing: -.023em; line-height: 1.05; text-wrap: balance; }
+  .dek { color: var(--ink-soft); font-size: 16.5px; max-width: 680px; margin-top: 15px; }
+
+  /* short version */
+  .answers { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--crew); border-radius: 13px; padding: 20px 24px; box-shadow: var(--shadow); margin-top: 28px; }
+  .answers .k-head { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 12px; }
+  .answers ol { list-style: none; display: grid; gap: 11px; }
+  .answers li { display: grid; grid-template-columns: 110px 1fr; gap: 14px; font-size: 14.5px; }
+  .answers .k { font-weight: 750; color: var(--method); letter-spacing: -.01em; }
+  @media (max-width: 560px) { .answers li { grid-template-columns: 1fr; gap: 2px; } }
+
+  /* sections */
+  section { padding: 46px 0 0; }
+  .sec-head { display: flex; align-items: baseline; gap: 13px; margin-bottom: 6px; flex-wrap: wrap; }
+  .sec-num { font-family: ui-monospace, Menlo, monospace; font-size: 12px; font-weight: 600; color: var(--method); }
+  .sec-head h2 { font-size: 22px; font-weight: 760; letter-spacing: -.015em; }
+  .sec-sub { color: var(--ink-soft); font-size: 14.5px; margin: 4px 0 20px; max-width: 740px; }
+  h3 { font-size: 15.5px; font-weight: 700; margin: 24px 0 8px; letter-spacing: -.01em; }
+  p { font-size: 14.5px; margin-bottom: 12px; max-width: 740px; }
+  ul, ol.plain { padding-left: 20px; font-size: 14.5px; max-width: 740px; margin-bottom: 12px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--ink-faint); }
+  b, strong { font-weight: 700; }
+  code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: .88em; background: var(--surface-2); border: 1px solid var(--line-soft); padding: 1px 6px; border-radius: 4px; }
+  pre { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.55; background: var(--surface-2); border: 1px solid var(--line); border-radius: 9px; padding: 13px 15px; overflow-x: auto; margin: 0 0 14px; max-width: 740px; }
+  pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+
+  /* tables (same look as the module spec) */
+  .cp-scroll { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); margin: 6px 0 16px; }
+  table.cp { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 620px; background: var(--surface); }
+  table.cp th, table.cp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  table.cp thead th { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); background: var(--surface-2); }
+  table.cp tbody tr:last-child td { border-bottom: none; }
+  table.cp .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .yes { color: var(--ship); font-weight: 700; }
+  .no { color: var(--ink-faint); }
+  .opt { color: var(--crew); font-weight: 700; }
+  .type-pill { font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+  .type-pill.action { color: var(--method); background: var(--method-soft); }
+  .type-pill.puzzle { color: var(--elective); background: var(--elective-soft); }
+  .type-pill.story { color: var(--crew); background: var(--crew-soft); }
+  .type-pill.sim { color: var(--ship); background: var(--ship-soft); }
+
+  /* callouts */
+  .note { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--method); border-radius: 0 10px 10px 0; padding: 12px 16px; margin: 14px 0 16px; max-width: 760px; font-size: 14.5px; }
+  .note.crew { border-left-color: var(--crew); }
+  .note.ship { border-left-color: var(--ship); }
+  .note p { margin: 0; }
+
+  /* compare */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .compare { grid-template-columns: 1fr; } }
+  .compare > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .compare h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; }
+  .compare .pick { border-color: color-mix(in srgb, var(--method) 55%, transparent); background: var(--method-soft); }
+  .compare .pick h4 { color: var(--method); }
+  .compare ul { margin: 0; font-size: 14px; }
+
+  /* week strip */
+  .weeks { display: grid; grid-template-columns: repeat(12, 1fr); gap: 4px; margin: 6px 0 8px; }
+  .weeks div { height: 44px; border-radius: 7px; display: grid; place-items: center; font-family: ui-monospace, Menlo, monospace; font-size: 11px; font-weight: 600; background: var(--surface); border: 1px solid var(--line); color: var(--ink-soft); }
+  .weeks .g1 { background: var(--method-soft); border-color: var(--method); color: var(--ink); }
+  .weeks .g2 { background: var(--elective-soft); border-color: var(--elective); color: var(--ink); }
+  .weeks .g3 { background: var(--crew-soft); border-color: var(--crew); color: var(--ink); }
+  .legend { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 4px 0 16px; }
+  .lg { display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--ink-soft); }
+  .lg .sw { width: 11px; height: 11px; border-radius: 3px; border: 1px solid var(--line); background: var(--surface); }
+  .lg .sw.g1 { background: var(--method-soft); border-color: var(--method); }
+  .lg .sw.g2 { background: var(--elective-soft); border-color: var(--elective); }
+  .lg .sw.g3 { background: var(--crew-soft); border-color: var(--crew); }
+
+  /* flow */
+  .flow { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 10px; align-items: stretch; margin: 6px 0 18px; }
+  .flow .box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13.5px; box-shadow: var(--shadow); }
+  .flow .box b { display: block; margin-bottom: 4px; }
+  .flow .box small { display: block; color: var(--ink-soft); font-size: 12.5px; line-height: 1.45; }
+  .flow .arw { display: grid; place-items: center; color: var(--ink-faint); font-size: 18px; }
+  .flow .box.mem { border-color: color-mix(in srgb, var(--method) 45%, transparent); background: var(--method-soft); }
+  @media (max-width: 720px) { .flow { grid-template-columns: 1fr; } .flow .arw { transform: rotate(90deg); } }
+
+  /* decisions */
+  .decisions { list-style: none; display: grid; gap: 9px; margin-top: 6px; }
+  .decisions li { display: grid; grid-template-columns: 30px 1fr; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 11px; padding: 12px 14px; font-size: 14.5px; box-shadow: var(--shadow); }
+  .decisions .n { font-family: ui-monospace, Menlo, monospace; font-weight: 700; color: var(--crew); }
+  .decisions .rec { display: inline-block; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--ship); background: var(--ship-soft); padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: 1px; }
+  .decisions .done { color: var(--method); background: var(--method-soft); }
+
+  .rec.open { color: var(--crew); background: var(--crew-soft); }
+  .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 6px 0 16px; }
+  @media (max-width: 640px) { .lanes { grid-template-columns: 1fr; } }
+  .lanes > div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .lanes h4 { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+  .lanes .astra { border-color: color-mix(in srgb, var(--crew) 55%, transparent); }
+  .lanes .astra h4 { color: var(--crew); }
+  .lanes .cc { border-color: color-mix(in srgb, var(--method) 55%, transparent); }
+  .lanes .cc h4 { color: var(--method); }
+  .lanes ul { margin: 0; font-size: 14px; }
+  .screen { display: grid; grid-template-columns: 3fr 2fr; gap: 14px; margin: 8px 0 14px; }
+  @media (max-width: 720px) { .screen { grid-template-columns: 1fr; } }
+  .mon { background: var(--surface-2); border: 2px solid var(--line); border-radius: 12px; padding: 10px; box-shadow: var(--shadow); }
+  .mon .cap { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 8px; text-align: center; }
+  .wb { display: grid; grid-template-columns: 1fr 2fr 1.4fr; gap: 6px; min-height: 210px; }
+  .wb > div, .gd > div { border: 1px solid var(--line); border-radius: 8px; padding: 8px 9px; font-size: 12px; line-height: 1.4; background: var(--surface); }
+  .wb .side { background: var(--crew-soft); border-color: var(--crew); }
+  .wb .code { background: var(--surface); }
+  .wb .desks { display: grid; grid-template-rows: 1fr 1fr; gap: 6px; padding: 0; border: 0; background: none; }
+  .wb .desks > div { border: 1px solid var(--line); border-radius: 8px; padding: 8px 9px; }
+  .wb .astra { background: var(--elective-soft); border-color: var(--elective); }
+  .wb .cc { background: var(--method-soft); border-color: var(--method); }
+  .gd { display: grid; grid-template-rows: 1fr 1.3fr; gap: 6px; min-height: 210px; }
+  .gd .play { background: var(--ship-soft); border-color: var(--ship); display: grid; place-items: center; text-align: center; font-weight: 700; }
+  .wb b, .gd b { display: block; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 4px; }
+  .wb small, .gd small { color: var(--ink-soft); display: block; }
+  .quote { background: var(--surface); border: 1px solid var(--line); border-left: 3px solid var(--elective); border-radius: 0 10px 10px 0; padding: 14px 18px; margin: 10px 0 16px; max-width: 760px; font-size: 14.5px; }
+  .quote p { margin-bottom: 10px; } .quote p:last-child { margin-bottom: 0; }
+  footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+</style>
+</head>
+<body>
+<div class="topbar"><div class="wrap">
+  <span><a href="/documentation/">← Documentation</a> · <a href="/documentation/summary/v1/">Start here</a> · <a href="/documentation/v2/">Blueprint v2</a></span>
+  <span class="badge">Documentation · Classroom v2</span>
+</div></div>
+<div class="wrap">
+  <header>
+    <div class="eyebrow"><span class="dot"></span><span>Game Track · Classroom v2 · 20 Sep 2026 · For Neo &amp; Lan</span></div>
+    <h1>The classroom, the tools and the bill</h1>
+    <p class="dek">One Workbench, two AI desks, Godot beside them. Profit split: 50% Todak Studios, 20% Todak Academy, 30% student (<a href="/documentation/v2/#publishing">Blueprint v2.1</a>).</p>
+    <div class="answers">
+      <div class="k-head">Short version</div>
+      <ol>
+        <li><span class="k">Screen</span><span>Astra designs; Claude Code builds. One desk open at a time until week 7. Terminal from week 4.</span></li>
+        <li><span class="k">Ownership</span><span>Academy-owned accounts and machines, per <a href="/documentation/home/v1/">Home v1</a>. One seat per tool per student, included in the fee.</span></li>
+        <li><span class="k">Timetable</span><span>Proposed: three 3-hour sessions a week, about eleven hours at home; 240 hours over 12 weeks. Lan decides. Academy leads weeks 1–3, Fusion 4–9, Studios 10–12.</span></li>
+      </ol>
+    </div>
+  </header>
+
+  <section id="screen">
+    <div class="sec-head"><span class="sec-num">01</span><h2>The student's screen</h2></div>
+    <p><b>B · Todak Workbench:</b> a VS Code workspace with official Claude Code and Codex panels, Godot tools and a Todak sidebar. Workbench estimate: 2–3 weeks. <b>A · Separate apps:</b> no build work; dry run only. <b>C · Todak Studio:</b> browser option for weak laptops and recording that cannot be switched off; phase 2, 2–3 months, only if cohort 1 proves the need.</p>
+    <!-- Arcade screen tour: resources stay inside this approved insertion point. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;display=swap">
+    <link rel="stylesheet" href="../v1/anim/arcade.css">
+    <script src="../v1/anim/arcade.js" defer="defer"></script>
+    <figure class="arcade" data-arcade="tour" data-beat-ms="2400" aria-labelledby="arcade-tour-heading">
+      <figcaption class="arcade-heading" id="arcade-tour-heading">TODAK WORKBENCH <small>One prompt. Five beats. A game that moves.</small></figcaption>
+      <svg class="arcade-tour-svg" role="img" aria-labelledby="arcade-tour-title arcade-tour-desc" viewBox="0 0 1000 410" width="1000" height="410" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg">
+  <title id="arcade-tour-title">The Todak Workbench screen tour</title>
+  <desc id="arcade-tour-desc">Monitor 1 has the Todak sidebar, code in the middle, the closed Design desk and the active Build desk. A student types a paddle request; three lines change; Godot reloads on Monitor 2; Pong plays; the Paddle moves step and saved to memory chip light up.</desc>
+  <defs>
+    <pattern id="arcade-tour-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="rgba(0,0,0,.22)"/></pattern>
+  </defs>
+  <g class="panels">
+    <!-- monitor 1 -->
+    <rect class="frame" x="4" y="4" width="612" height="366" rx="0"/>
+    <text class="lbl" x="310" y="392" text-anchor="middle" font-size="7">Monitor 1 · Todak Workbench</text>
+    <!-- sidebar -->
+    <rect class="side" x="16" y="16" width="140" height="342" rx="0"/>
+    <text class="t strong" x="26" y="38" font-size="7">Week 3 · Game 1</text>
+    <text class="t" x="26" y="54" font-size="7">Pong</text>
+    <text class="t soft" x="26" y="80" font-size="7">Today's steps</text>
+    <g class="steps" font-size="7">
+      <rect class="box done" x="26" y="90" width="11" height="11"/><path class="tick" d="M28 96 l3 3 l6 -7"/><text class="t" x="44" y="100">Scaffold</text>
+      <rect class="box" x="26" y="110" width="11" height="11"/><path class="tick tick2" data-from="4" d="M28 116 l3 3 l6 -7"/><text class="t" x="44" y="120">Paddle moves</text>
+      <rect class="box" x="26" y="130" width="11" height="11"/><text class="t" x="44" y="140">Ball bounces</text>
+      <rect class="box" x="26" y="150" width="11" height="11"/><text class="t" x="44" y="160">Publish to web</text>
+    </g>
+    <text class="t soft" x="26" y="196" font-size="7">Design board</text>
+    <rect class="thumb" x="26" y="204" width="34" height="24"/><rect class="thumb" x="66" y="204" width="34" height="24"/><rect class="thumb" x="106" y="204" width="34" height="24"/>
+    <path class="net" d="M34 211 v10 M53 211 v10 M73 215 h7 M120 210 v12 M114 216 h12"/>
+    <rect class="ball" x="43" y="215" width="3" height="3"/>
+    <text class="t soft" x="26" y="252" font-size="7">Builds &amp; links</text>
+    <g class="btns" font-size="7">
+      <rect class="btn" x="26" y="262" width="56" height="18" rx="0"/><text class="t" x="54" y="275" text-anchor="middle">Run</text>
+      <rect class="btn" x="88" y="262" width="56" height="18" rx="0"/><text class="t" x="116" y="275" text-anchor="middle">Build</text>
+      <rect class="btn" x="26" y="286" width="56" height="18" rx="0"/><text class="t" x="54" y="299" text-anchor="middle">Publish</text>
+      <rect class="btn" x="88" y="286" width="56" height="18" rx="0"/><text class="t" x="116" y="299" text-anchor="middle">Review</text>
+    </g>
+    <g class="rec" font-size="6"><rect class="recdot" x="28" y="336" width="8" height="8"/><text class="t soft" x="42" y="344">recording · saved</text></g>
+    <!-- code -->
+    <rect class="code" x="166" y="16" width="234" height="342" rx="0"/>
+    <text class="t soft" x="176" y="34" font-size="7">paddle.gd</text>
+    <g class="lines">
+      <rect class="ln" x="176" y="46" width="150" height="6"/><rect class="ln" x="176" y="60" width="110" height="6"/><rect class="ln" x="176" y="74" width="180" height="6"/>
+      <rect class="ln new n1" data-from="1" data-delay="0" x="186" y="96" width="170" height="6"/><rect class="ln new n2" data-from="1" data-delay="350" x="186" y="110" width="130" height="6"/><rect class="ln new n3" data-from="1" data-delay="700" x="186" y="124" width="150" height="6"/>
+      <rect class="ln" x="176" y="146" width="120" height="6"/><rect class="ln" x="176" y="160" width="160" height="6"/>
+    </g>
+    <!-- desks -->
+    <rect class="desk astra" x="410" y="16" width="196" height="150" rx="0"/>
+    <text class="t strong" x="420" y="34" font-size="7">Design desk · Astra</text>
+    <text class="t soft" x="420" y="52" font-size="7">closed this block</text>
+    <rect class="thumb big" x="420" y="62" width="80" height="50"/><rect class="thumb big" x="510" y="62" width="80" height="50"/>
+    <text class="t soft" x="420" y="130" font-size="7">paddles · ball · title</text>
+    <rect class="desk cc" x="410" y="176" width="196" height="182" rx="0"/>
+    <text class="t strong" x="420" y="194" font-size="7">Build desk · Claude Code</text>
+    <g class="chat" font-size="7">
+      <text class="t soft" x="420" y="214">You</text>
+      <text class="t prompt" data-type="make the left paddle" x="420" y="230">make the left paddle</text>
+      <text class="t prompt p2" data-type="move with W and S" x="420" y="244">move with W and S</text>
+      <text class="t soft reply" data-from="1" x="420" y="272">Claude Code</text>
+      <text class="t reply" data-from="1" x="420" y="288">Edited paddle.gd, 3 lines.</text>
+      <text class="t reply" data-from="2" x="420" y="302" font-size="6">Godot reloaded. Press Play.</text>
+      <rect class="chip mem" data-from="4" x="420" y="320" width="120" height="18" rx="0"/><text class="t chipt mem" data-from="4" x="480" y="333" text-anchor="middle">saved to memory</text>
+    </g>
+    <!-- monitor 2 -->
+    <rect class="frame" x="646" y="4" width="350" height="366" rx="0"/>
+    <text class="lbl" x="821" y="392" text-anchor="middle" font-size="7">Monitor 2 · Godot, the live view</text>
+    <rect class="side" x="658" y="16" width="326" height="26" rx="0"/>
+    <text class="t strong" x="668" y="33" font-size="7">Godot · pong.tscn</text>
+    <polygon class="play" points="960,22 972,29 960,36"/>
+    <text class="t soft" x="668" y="60" font-size="7">Scene: Main › Paddle › Ball</text>
+    <rect class="game" x="668" y="70" width="306" height="278"/>
+    <text class="score" data-score="true" x="821" y="100" text-anchor="middle" font-size="13">1 : 0</text>
+    <line class="net" x1="821" y1="110" x2="821" y2="340" stroke-dasharray="6 6"/>
+    <rect class="paddle left" data-paddle="tour" x="684" y="190" width="10" height="46"/>
+    <rect class="paddle right" x="948" y="190" width="10" height="46"/>
+    <rect class="ball" data-ball="tour" x="816" y="220" width="10" height="10"/>
+    <g class="toast" data-only="2"><rect x="700" y="316" width="242" height="22" rx="0"/><text class="t" x="821" y="331" text-anchor="middle" font-size="7">Reloaded paddle.gd</text></g>
+    <text class="t soft keys" data-from="3" x="684" y="336" font-size="7">W / S</text>
+  </g>
+  <rect class="scanlines" x="16" y="16" width="590" height="342" fill="url(#arcade-tour-scan)"/>
+  <rect class="scanlines" x="658" y="16" width="326" height="332" fill="url(#arcade-tour-scan)"/>
+</svg>
+      <div class="arcade-dialog" id="arcade-tour-caption" aria-live="off" aria-atomic="true"><div class="arcade-caption" aria-hidden="true"><b>1 · The student types in the Build desk.</b> “make the left paddle move with W and S”.</div><div class="arcade-caption" aria-hidden="true"><b>2 · The code changes in the middle.</b> Three new lines in paddle.gd, highlighted.</div><div class="arcade-caption" aria-hidden="true"><b>3 · Godot reloads the script</b> on Monitor 2. Nothing to copy, nothing to paste.</div><div class="arcade-caption" aria-hidden="true"><b>4 · Press Play.</b> The paddle moves, the ball bounces, the score ticks. The student sees it work.</div><div class="arcade-caption"><b>5 · Step ticked, saved to memory.</b> The prompt is in the journey.</div></div>
+      <div class="arcade-progress"><div class="arcade-dots" aria-hidden="true"><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span></div><span class="arcade-status">Final beat · 5/5</span></div>
+      <div class="arcade-controls" hidden="hidden">
+        <button type="button" data-action="toggle"><svg class="arcade-control-icon arcade-play-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg><svg class="arcade-control-icon arcade-pause-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z"/></svg><span data-play-label="true">Play</span></button>
+        <button type="button" data-action="previous"><svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M9 0 L1 5 L9 10 Z"/></svg>Previous</button>
+        <button type="button" data-action="next">Next<svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg></button>
+      </div>
+      <p class="arcade-help">12-second loop · Hover or focus to pause · Previous / Next step one beat</p>
+    </figure>
+    <p>Animation, not a screenshot. The real Workbench is built in the kit phase.</p>
+    <p>One monitor works with a floating game window. Two 24-inch monitors are preferred. The projector shows the lecturer's Workbench for demos, then the class dashboard: steps, builds and showcase links. Personal prompt histories and assessment notes stay off it.</p>
+  </section>
+
+  <section id="walk">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Walk in: day 1, week 3, week 10</h2></div>
+    <div class="arcade-storyboard" role="group" aria-label="Day 1, week 3 and week 10 animated storyboard">
+    <figure class="arcade" data-arcade="day1" data-beat-ms="3000" aria-labelledby="arcade-day1-heading">
+      <figcaption class="arcade-heading" id="arcade-day1-heading">Day 1<small>Play, change, explain</small></figcaption>
+      <svg class="arcade-scene-svg" viewBox="0 0 316 244" width="316" height="244" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arcade-day1-title arcade-day1-desc">
+      <title id="arcade-day1-title">Day 1</title><desc id="arcade-day1-desc">A pixel student at two monitors: signed in to Week 1, playing a practice scene, sliding a setting, then explaining a higher jump. Claude Code saves the outcome. Astra stays closed. No Godot yet.</desc>
+      <defs><pattern id="arcade-day1-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="#000000" opacity=".22"/></pattern></defs>
+      <rect class="deskline" x="14" y="184" width="290" height="4"/>
+      <rect class="deskline" x="98" y="188" width="4" height="36"/><rect class="deskline" x="290" y="188" width="4" height="36"/>
+      <rect class="mon" x="102" y="80" width="114" height="88"/><rect class="mon" x="226" y="80" width="78" height="88"/>
+      <rect class="deskline" x="154" y="168" width="8" height="10"/><rect class="deskline" x="260" y="168" width="8" height="10"/>
+      <rect class="deskline" x="142" y="176" width="32" height="3"/><rect class="deskline" x="248" y="176" width="32" height="3"/>
+      <rect class="thumb" x="102" y="179" width="34" height="3"/>
+      <text class="lbl" x="102" y="70" font-size="6">Monitor 1</text><text class="lbl" x="232" y="70" font-size="6">Monitor 2</text>
+      <text class="soft" x="102" y="238" font-size="5">Workbench</text><text class="soft" x="226" y="238" font-size="5">Practice view</text>
+      <rect class="side" x="14" y="4" width="288" height="42"/>
+      <text x="24" y="22" font-size="7">Week 1 · Your first loop</text>
+      <text class="soft screen-copy" x="24" y="36">Signed in · Claude / Astra / GitHub</text>
+      <text x="110" y="94" font-size="5">TODAK</text>
+      <rect class="desk astra" x="110" y="102" width="98" height="20"/>
+      <text class="soft" x="115" y="114" font-size="5">Astra · closed</text>
+      <text x="110" y="134" font-size="5">Build desk</text>
+      <rect class="slider" x="112" y="149" width="80" height="4"/><rect class="knob" data-slider="true" x="180" y="145" width="7" height="12"/>
+      <rect class="scene" x="232" y="88" width="66" height="72"/>
+      <path class="scene-grid" d="M236 145 H290 M260 127 H288"/>
+      <rect class="hero" data-hero="true" x="276" y="116" width="9" height="9"/>
+      <g data-only="0"><text class="soft" x="236" y="106" font-size="5">READY</text></g>
+      <g data-only="1"><text x="238" y="102" font-size="5">PLAY</text></g>
+      <g data-only="2"><text x="237" y="102" font-size="5">HIGHER</text></g>
+      <g data-from="3"><rect class="chip" x="110" y="201" width="192" height="20"/>
+        <text class="chipt" x="119" y="214" font-size="6">Claude · saved to memory</text></g>
+      <rect class="scanlines" x="106" y="84" width="106" height="80" fill="url(#arcade-day1-scan)"/>
+      <rect class="scanlines" x="230" y="84" width="70" height="80" fill="url(#arcade-day1-scan)"/>
+      <g class="stu" transform="translate(48,130)">
+      <rect class="skin" x="0" y="0" width="16" height="16"/><rect class="hair" x="0" y="-4" width="16" height="6"/>
+      <rect class="shirt" x="-4" y="18" width="24" height="22"/><rect class="arm" x="20" y="20" width="24" height="6"/>
+      <rect class="pants" x="-2" y="40" width="9" height="12"/><rect class="pants" x="9" y="40" width="9" height="12"/>
+    </g>
+    </svg>
+      <div class="arcade-dialog" id="arcade-day1-caption" aria-live="off" aria-atomic="true"><div class="arcade-caption" aria-hidden="true"><b>1 · Signs in</b> to their own Claude seat, Astra seat and GitHub. The sidebar says “Week 1 · Your first loop”.</div><div class="arcade-caption" aria-hidden="true"><b>2 · Plays a supplied practice scene.</b> Astra stays closed until the lecturer introduces the design desk.</div><div class="arcade-caption" aria-hidden="true"><b>3 · Changes one visible setting.</b> Slides the setting; the practice scene changes.</div><div class="arcade-caption"><b>4 · Explains the difference.</b> “The jump is higher.” Claude Code saves the outcome to project memory.</div></div>
+      <div class="arcade-progress"><div class="arcade-dots" aria-hidden="true"><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span></div><span class="arcade-status">Final beat · 4/4</span></div>
+      <div class="arcade-controls" hidden="hidden">
+        <button type="button" data-action="toggle"><svg class="arcade-control-icon arcade-play-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg><svg class="arcade-control-icon arcade-pause-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z"/></svg><span data-play-label="true">Play</span></button>
+        <button type="button" data-action="previous"><svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M9 0 L1 5 L9 10 Z"/></svg>Previous</button>
+        <button type="button" data-action="next">Next<svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg></button>
+      </div>
+      <p class="arcade-help">Hover or focus to pause · Step through with Previous / Next</p>
+    </figure>
+    <figure class="arcade" data-arcade="week3" data-beat-ms="3000" aria-labelledby="arcade-week3-heading">
+      <figcaption class="arcade-heading" id="arcade-week3-heading">Week 3<small>First game, Pong</small></figcaption>
+      <svg class="arcade-scene-svg" viewBox="0 0 316 244" width="316" height="244" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arcade-week3-title arcade-week3-desc">
+      <title id="arcade-week3-title">Week 3</title><desc id="arcade-week3-desc">A pixel student asks the Build desk to scaffold Pong, requests W and S paddle controls, plays Pong on Monitor 2, then gets a web link.</desc>
+      <defs><pattern id="arcade-week3-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="#000000" opacity=".22"/></pattern></defs>
+      <rect class="deskline" x="14" y="184" width="290" height="4"/>
+      <rect class="deskline" x="98" y="188" width="4" height="36"/><rect class="deskline" x="290" y="188" width="4" height="36"/>
+      <rect class="mon" x="102" y="80" width="114" height="88"/><rect class="mon" x="226" y="80" width="78" height="88"/>
+      <rect class="deskline" x="154" y="168" width="8" height="10"/><rect class="deskline" x="260" y="168" width="8" height="10"/>
+      <rect class="deskline" x="142" y="176" width="32" height="3"/><rect class="deskline" x="248" y="176" width="32" height="3"/>
+      <rect class="thumb" x="102" y="179" width="34" height="3"/>
+      <text class="lbl" x="102" y="70" font-size="6">Monitor 1</text><text class="lbl" x="232" y="70" font-size="6">Monitor 2</text>
+      <text class="soft" x="102" y="238" font-size="5">Workbench</text><text class="soft" x="226" y="238" font-size="5">Godot</text>
+      <rect class="side" x="14" y="4" width="288" height="42"/>
+      <text x="24" y="22" font-size="7">Week 3 · Game 1 · Pong</text>
+      <text class="soft screen-copy" x="24" y="36">Kit template → paddle.gd → web build</text>
+      <text x="110" y="94" font-size="5">Build desk</text>
+      <g data-only="0"><rect class="thumb" x="110" y="104" width="98" height="38"/><text x="118" y="120" font-size="6">PONG</text><text class="soft screen-copy" x="118" y="134">kit template</text></g>
+      <g data-from="1"><text class="screen-copy" x="110" y="108">make the left</text><text class="screen-copy" x="110" y="120">paddle move</text><text class="screen-copy" x="110" y="132">with W and S</text></g>
+      <rect class="desk astra" x="110" y="146" width="98" height="14"/><text class="soft" x="115" y="155" font-size="5">Astra · closed</text>
+      <rect class="scene" x="232" y="88" width="66" height="72"/>
+      <line class="net" x1="265" y1="91" x2="265" y2="158" stroke-dasharray="3 3"/>
+      <rect class="paddle" data-paddle="small" x="236" y="113" width="4" height="17"/>
+      <rect class="paddle" x="290" y="113" width="4" height="17"/>
+      <rect class="ball" data-ball="small" x="263" y="123" width="4" height="4"/>
+      <g data-from="3"><rect class="chip" x="110" y="200" width="192" height="22"/><text class="chipt screen-copy" x="119" y="215">Web link: showcase / my-pong</text></g>
+      <rect class="scanlines" x="106" y="84" width="106" height="80" fill="url(#arcade-week3-scan)"/>
+      <rect class="scanlines" x="230" y="84" width="70" height="80" fill="url(#arcade-week3-scan)"/>
+      <g class="stu" transform="translate(48,130)">
+      <rect class="skin" x="0" y="0" width="16" height="16"/><rect class="hair" x="0" y="-4" width="16" height="6"/>
+      <rect class="shirt" x="-4" y="18" width="24" height="22"/><rect class="arm" x="20" y="20" width="24" height="6"/>
+      <rect class="pants" x="-2" y="40" width="9" height="12"/><rect class="pants" x="9" y="40" width="9" height="12"/>
+    </g>
+    </svg>
+      <div class="arcade-dialog" id="arcade-week3-caption" aria-live="off" aria-atomic="true"><div class="arcade-caption" aria-hidden="true"><b>1 · Scaffold Pong</b> from the kit template; Godot opens on monitor 2.</div><div class="arcade-caption" aria-hidden="true"><b>2 · “make the left paddle move with W and S”.</b> Code changes, Godot reloads.</div><div class="arcade-caption" aria-hidden="true"><b>3 · Student presses Play.</b> Paddle moves, ball bounces.</div><div class="arcade-caption"><b>4 · “publish to web”</b> sends the build to the farm and returns a link.</div></div>
+      <div class="arcade-progress"><div class="arcade-dots" aria-hidden="true"><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span></div><span class="arcade-status">Final beat · 4/4</span></div>
+      <div class="arcade-controls" hidden="hidden">
+        <button type="button" data-action="toggle"><svg class="arcade-control-icon arcade-play-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg><svg class="arcade-control-icon arcade-pause-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z"/></svg><span data-play-label="true">Play</span></button>
+        <button type="button" data-action="previous"><svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M9 0 L1 5 L9 10 Z"/></svg>Previous</button>
+        <button type="button" data-action="next">Next<svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg></button>
+      </div>
+      <p class="arcade-help">Hover or focus to pause · Step through with Previous / Next</p>
+    </figure>
+    <figure class="arcade" data-arcade="week10" data-beat-ms="3000" aria-labelledby="arcade-week10-heading">
+      <figcaption class="arcade-heading" id="arcade-week10-heading">Week 10<small>3D capstone</small></figcaption>
+      <svg class="arcade-scene-svg" viewBox="0 0 316 244" width="316" height="244" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="arcade-week10-title arcade-week10-desc">
+      <title id="arcade-week10-title">Week 10</title><desc id="arcade-week10-desc">A pixel student has a character sheet in the Design desk, a 3D character in Godot, and the same character on their test phone. The review report is approved and seen by the lecturer, Neo and Lan.</desc>
+      <defs><pattern id="arcade-week10-scan" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="2" fill="#000000" opacity=".22"/></pattern></defs>
+      <rect class="deskline" x="14" y="184" width="290" height="4"/>
+      <rect class="deskline" x="98" y="188" width="4" height="36"/><rect class="deskline" x="290" y="188" width="4" height="36"/>
+      <rect class="mon" x="102" y="80" width="114" height="88"/><rect class="mon" x="226" y="80" width="78" height="88"/>
+      <rect class="deskline" x="154" y="168" width="8" height="10"/><rect class="deskline" x="260" y="168" width="8" height="10"/>
+      <rect class="deskline" x="142" y="176" width="32" height="3"/><rect class="deskline" x="248" y="176" width="32" height="3"/>
+      <rect class="thumb" x="102" y="179" width="34" height="3"/>
+      <text class="lbl" x="102" y="70" font-size="6">Monitor 1</text><text class="lbl" x="232" y="70" font-size="6">Monitor 2</text>
+      <text class="soft" x="102" y="238" font-size="5">Workbench</text><text class="soft" x="226" y="238" font-size="5">Godot</text>
+      <rect class="side" x="14" y="4" width="288" height="42"/>
+      <text x="24" y="22" font-size="7">Week 10 · 3D capstone</text>
+      <text class="soft screen-copy" x="24" y="36">Character sheet → level → phone → review</text>
+      <rect class="desk astra" x="108" y="86" width="102" height="76"/>
+      <text x="114" y="99" font-size="5">Design desk</text>
+      <text class="soft" x="114" y="110" font-size="5">Astra</text>
+      <g transform="translate(125,122) scale(.65)"><path class="character-front" d="M0 0 H12 V12 H0 Z M-3 14 H15 V30 H-3 Z M-2 30 H4 V40 H-2 Z M9 30 H15 V40 H9 Z"/>
+          <path class="character-side" d="M12 0 L17 -4 V8 L12 12 Z M15 14 L20 10 V26 L15 30 Z M15 30 L20 26 V36 L15 40 Z"/>
+          <path class="character-top" d="M0 0 L5 -4 H17 L12 0 Z M-3 14 L2 10 H20 L15 14 Z"/>
+          <rect x="8" y="4" width="3" height="3" fill="#0d0f1a"/></g>
+      <g transform="translate(176,123) scale(.6)"><path class="character-front" d="M0 0 H12 V12 H0 Z M-3 14 H15 V30 H-3 Z M-2 30 H4 V40 H-2 Z M9 30 H15 V40 H9 Z"/>
+          <path class="character-side" d="M12 0 L17 -4 V8 L12 12 Z M15 14 L20 10 V26 L15 30 Z M15 30 L20 26 V36 L15 40 Z"/>
+          <path class="character-top" d="M0 0 L5 -4 H17 L12 0 Z M-3 14 L2 10 H20 L15 14 Z"/>
+          <rect x="8" y="4" width="3" height="3" fill="#0d0f1a"/></g>
+      <path class="scene-grid" d="M151 116 V157"/>
+      <rect class="scene" x="232" y="88" width="66" height="72"/>
+      <path class="scene-grid" d="M232 130 L265 112 L298 130 M232 144 L265 126 L298 144 M240 160 L273 142 L298 156 M238 126 L298 160 M232 142 L260 160 M264 112 L298 132"/>
+      <g data-from="1" data-character="true"><g transform="translate(257,110) scale(.85)"><path class="character-front" d="M0 0 H12 V12 H0 Z M-3 14 H15 V30 H-3 Z M-2 30 H4 V40 H-2 Z M9 30 H15 V40 H9 Z"/>
+          <path class="character-side" d="M12 0 L17 -4 V8 L12 12 Z M15 14 L20 10 V26 L15 30 Z M15 30 L20 26 V36 L15 40 Z"/>
+          <path class="character-top" d="M0 0 L5 -4 H17 L12 0 Z M-3 14 L2 10 H20 L15 14 Z"/>
+          <rect x="8" y="4" width="3" height="3" fill="#0d0f1a"/></g></g>
+      <g data-from="2"><rect class="phone" x="66" y="92" width="28" height="44"/><rect class="scene" x="70" y="98" width="20" height="30"/><g transform="translate(76,104) scale(.4)"><path class="character-front" d="M0 0 H12 V12 H0 Z M-3 14 H15 V30 H-3 Z M-2 30 H4 V40 H-2 Z M9 30 H15 V40 H9 Z"/>
+          <path class="character-side" d="M12 0 L17 -4 V8 L12 12 Z M15 14 L20 10 V26 L15 30 Z M15 30 L20 26 V36 L15 40 Z"/>
+          <path class="character-top" d="M0 0 L5 -4 H17 L12 0 Z M-3 14 L2 10 H20 L15 14 Z"/>
+          <rect x="8" y="4" width="3" height="3" fill="#0d0f1a"/></g><rect class="deskline" x="77" y="131" width="6" height="2"/></g>
+      <g class="stamp" data-from="3"><rect x="110" y="193" width="192" height="21"/><text x="122" y="207" font-size="6">Review report: approved</text></g>
+      <text class="soft screen-copy" data-from="3" x="110" y="227">Seen by lecturer · Neo · Lan</text>
+      <rect class="scanlines" x="106" y="84" width="106" height="80" fill="url(#arcade-week10-scan)"/>
+      <rect class="scanlines" x="230" y="84" width="70" height="80" fill="url(#arcade-week10-scan)"/>
+      <g class="stu" transform="translate(48,130)">
+      <rect class="skin" x="0" y="0" width="16" height="16"/><rect class="hair" x="0" y="-4" width="16" height="6"/>
+      <rect class="shirt" x="-4" y="18" width="24" height="22"/><rect class="arm" x="20" y="20" width="24" height="6"/>
+      <rect class="pants" x="-2" y="40" width="9" height="12"/><rect class="pants" x="9" y="40" width="9" height="12"/>
+    </g>
+    </svg>
+      <div class="arcade-dialog" id="arcade-week10-caption" aria-live="off" aria-atomic="true"><div class="arcade-caption" aria-hidden="true"><b>1 · Character sheet</b> on the Design desk. Student and Astra lock the core loop.</div><div class="arcade-caption" aria-hidden="true"><b>2 · Character</b> comes out of the Academy asset service as a 3D model, cleaned in Blender, wired into Godot.</div><div class="arcade-caption" aria-hidden="true"><b>3 · Android test build</b> on the student’s own phone.</div><div class="arcade-caption"><b>4 · “Review my game”</b> files the report: approved. The lecturer, Neo and Lan see it.</div></div>
+      <div class="arcade-progress"><div class="arcade-dots" aria-hidden="true"><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span><span class="arcade-dot"></span></div><span class="arcade-status">Final beat · 4/4</span></div>
+      <div class="arcade-controls" hidden="hidden">
+        <button type="button" data-action="toggle"><svg class="arcade-control-icon arcade-play-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg><svg class="arcade-control-icon arcade-pause-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 H4 V10 H1 Z M6 0 H9 V10 H6 Z"/></svg><span data-play-label="true">Play</span></button>
+        <button type="button" data-action="previous"><svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M9 0 L1 5 L9 10 Z"/></svg>Previous</button>
+        <button type="button" data-action="next">Next<svg class="arcade-control-icon" viewBox="0 0 10 10" aria-hidden="true"><path d="M1 0 L9 5 L1 10 Z"/></svg></button>
+      </div>
+      <p class="arcade-help">Hover or focus to pause · Step through with Previous / Next</p>
+    </figure>
+    </div>
+    <p>Animation, not a screenshot. The real Workbench is built in the kit phase.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>When</th><th>What the student does and keeps</th></tr></thead>
+      <tbody>
+        <tr><td>Day 1 · Week 1</td><td>Sign into Claude, Astra and GitHub. Watch one demo loop; play, change and explain a practice scene. No Godot yet. Claude records the task and shows the first saved memory. Astra opens on day 2 or 3 for an idea card and moodboard.</td></tr>
+        <tr><td>Week 3 · Pong</td><td>Start from a template; add paddle, ball, score and title screen; publish. Astra draws the game art. Claude edits, tests and builds. Keep a web game with their name and explain the paddle script with both desks closed.</td></tr>
+        <tr><td>Week 10 · 3D final game</td><td>Astra: character sheet, storyboard, screen designs, icon, listing and gameplay improvements. Claude: character, camera, behaviour, tested changes, review and Play internal testing. Keep a playable slice on their phone, a fix list and twelve weeks of prompt growth.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="desks">
+    <div class="sec-head"><span class="sec-num">03</span><h2>The two desks</h2></div>
+    <ul>
+      <li><b>Design board:</b> Astra's idea card, design document, moodboard, character sheet, storyboard and screen designs live in <code>design/</code>. Show two or three alternatives; the student chooses and explains.</li>
+      <li><b>Assets:</b> Astra requests sprites, tilesets, 3D models and sounds; Claude runs the Academy asset service. Files in <code>assets/</code> appear in Godot and the design board.</li>
+      <li><b>Code:</b> Astra works on a branch, a separate copy of the project. Code appears in the middle; the Build desk shows “branch ready”. Stop Astra, test, then hand Claude the files and a note: intention, tests, problems, sources. Claude reviews and merges approved changes. Neither silently overwrites the other.</li>
+      <li><b>Briefs and memory:</b> Claude writes a one-page brief in the design folder, as for RUSH. Claude owns project memory in the course database; Astra reads it. Both use the Memory tab; design decisions are saved there.</li>
+      <li><b>Builds and review:</b> Claude sends jobs to the build server. Links appear in Builds; the one-page review in the classroom system also appears on the sidebar for the lecturer, Neo and Lan.</li>
+      <li><b>Prompt journey:</b> both desks' records appear in the Journey tab and the lecturer's class view. Home uses the same Workbench and seats; records follow the login.</li>
+    </ul>
+  </section>
+
+  <section id="lesson">
+    <div class="sec-head"><span class="sec-num">04</span><h2>One lesson, minute by minute</h2></div>
+    <div class="cp-scroll"><table class="cp">
+      <caption>Three hours. Week 1's three sessions use practice scenes, no Godot. Where both desks are listed, students alternate until week 7.</caption>
+      <thead><tr><th>Time</th><th>Block</th><th>What happens</th><th>Design desk</th><th>Build desk</th><th>Godot</th></tr></thead>
+      <tbody>
+        <tr><td class="num">0:00–0:15</td><td>Demo</td><td>Lecturer shows the skill, result and explanation.</td><td>Open</td><td>Open</td><td>Open</td></tr>
+        <tr><td class="num">0:15–0:30</td><td>Design warm-up</td><td>One paragraph and one picture with Astra.</td><td>Open</td><td>Closed</td><td>Closed</td></tr>
+        <tr><td class="num">0:30–1:45</td><td>Guided build</td><td>Follow sidebar steps. Mentors circulate. Playtester runs after each step.</td><td>Open</td><td>Open</td><td>Open</td></tr>
+        <tr><td class="num">1:45–2:00</td><td colspan="5">Break</td></tr>
+        <tr><td class="num">2:00–2:30</td><td>AI-off walkthrough</td><td>Pairs explain code. From week 4, fix a mentor's fault without AI.</td><td>Closed</td><td>Closed</td><td>Open</td></tr>
+        <tr><td class="num">2:30–2:50</td><td>Showcase</td><td>Three or four students play web builds. Two questions each.</td><td>Closed</td><td>Closed</td><td>Projector</td></tr>
+        <tr><td class="num">2:50–3:00</td><td>Save</td><td>Save decisions and mark the day's best prompt.</td><td>Closed</td><td>Open</td><td>Closed</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="build">
+    <div class="sec-head"><span class="sec-num">05</span><h2>Build, or use as-is</h2></div>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Piece</th><th>Build or use</th><th>Effort</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Claude Code panel and Windows desktop app</td><td>Use</td><td>0</td><td>Seat includes panel, desktop, terminal and web.</td></tr>
+        <tr><td>Codex (Astra) panel and Windows desktop app</td><td>Use</td><td>0</td><td>Dry run: check reported missing Astra model in some Windows app pickers.</td></tr>
+        <tr><td>Godot 4 editor and export templates</td><td>Use</td><td>0</td><td>Free live view.</td></tr>
+        <tr><td>Todak sidebar</td><td>Build</td><td>2 weeks</td><td>Steps, design board, builds, journey; run/build/publish/review buttons call kit commands.</td></tr>
+        <tr><td>Workbench, lab setup, home installer</td><td>Build</td><td>3 days</td><td>Panels, Godot tools, sidebar, kit and recording switch.</td></tr>
+        <tr><td>Lecturer dashboard</td><td>Build</td><td>1 week</td><td>Student steps, builds, review queue, showcase.</td></tr>
+        <tr><td>Game Kit</td><td>Build</td><td>~6 weeks, earlier estimate</td><td>Templates, memory, assets, build server, publisher desk, review, collector. Revised pilot estimate below.</td></tr>
+        <tr><td>Todak Studio browser app</td><td>Phase 2</td><td>2–3 months</td><td>Only if cohort 1 needs it; same kit commands.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section id="astra">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Astra's point of view</h2></div>
+    <div class="quote">
+      <p>“Open one AI panel at a time.”</p>
+      <p>“Chat alone is not the deliverable.”</p>
+      <p>“Show one decision, its changed file and its result.”</p>
+    </div>
+    <h3>Where the two views differ, and what we take</h3>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Point</th><th>Claude Code said</th><th>Astra said</th><th>What goes in the plan</th></tr></thead>
+      <tbody>
+        <tr><td>Two desks</td><td>Both visible.</td><td>One open.</td><td>Weeks 1–6: sidebar selects one desk per block. Both together only from week 7.</td></tr>
+        <tr><td>Day 1</td><td>Astra moodboard; Claude saves idea.</td><td>Play, change, explain; Astra closed.</td><td>Astra's day 1. Design desk opens day 2 or 3 of week 1.</td></tr>
+        <tr><td>Kit timing</td><td>About six weeks total; kit two.</td><td>Two weeks to demonstrate; six to ten more for a dependable pilot. Two experienced developers; lecturer tests weekly. Custom Studio: three to six months or more, plus maintenance.</td><td>Astra's estimate adopted. Blueprint v2.2 states ten to twelve weeks to a pilot. Templates for dry-run games first; menu grows each cohort.</td></tr>
+        <tr><td>Testing</td><td>Staff reference games.</td><td>Add four to six real beginners.</td><td>Both before cohort 1. Also test long prompts, restarts, offline queues and both interfaces. Verify work and records reached storage before shared-PC logout.</td></tr>
+        <tr><td>Recording failure</td><td>No record, no evidence.</td><td>Show saved/waiting; recover faults.</td><td>Deliberately switching recording off loses evidence. Faults get recovery, never a penalty. Status always visible (v2.2).</td></tr>
+        <tr><td>Competence</td><td>Review, oral defence, prompt growth.</td><td>Lecturer moderates AI scores; publication or bypass is not proof.</td><td>Gate decides publishing. Walkthroughs and oral defence decide passing. AI proposes; lecturer signs.</td></tr>
+        <tr><td>Class builds</td><td>Build on request.</td><td>Twenty simultaneous requests need a queue.</td><td>Sidebar shows queue position and progress.</td></tr>
+      </tbody>
+    </table></div>
+    <p><a href="../astra-pov.md">Astra's full response and week-3 lesson plan</a>.</p>
+  </section>
+
+  <section id="seats">
+    <span id="machines"></span><span id="bill"></span>
+    <div class="sec-head"><span class="sec-num">07–09</span><h2>Seats, machines and the bill</h2></div>
+    <p><b>One Mac mini, controlled by us. Students never log into it. It exists so that iPhone builds and TestFlight are possible at all; a Windows PC cannot make an iPhone build.</b></p>
+    <p>Academy-owned pieces, per <a href="/documentation/home/v1/">Home v1</a>. September 2026 estimates at about RM4.75 per USD; confirm prices at purchase and usage in the dry run.</p>
+    <div class="cp-scroll"><table class="cp">
+      <thead><tr><th>Item</th><th>Cost / plan</th><th>What it covers</th></tr></thead>
+      <tbody>
+        <tr><td>Claude Team + ChatGPT Business</td><td>Each: ~USD 20/month yearly or USD 25 monthly. Team starts at two seats.</td><td>Academy email and workspace; one person per seat. Admin adds/removes students; no shared login or password rotation. One invoice; no training on workspace content by default. Codex allowance matches Plus.</td></tr>
+        <tr><td>Both seats · 12 weeks</td><td>RM570–710/student; USD 120–150 over three months.</td><td>In the fee. 15 students: RM8.6k–10.7k; 20: RM11.4k–14.3k. Students leave with published games and a journey export.</td></tr>
+        <tr><td>Heavy weeks 7–11</td><td>~RM2.4k Claude buffer; Astra amount to confirm.</td><td>Five Claude Max seats for the final-game month. Astra: higher tiers or extra credits, tested in dry run.</td></tr>
+        <tr><td>Assets</td><td>Seats first; ~RM50/student for paid services.</td><td>Ideas, moodboards, storyboards, concepts, documents, presentations, slides and RUSH art covered by seats. Bulk images, 3D and sound use rented GPU hours: ~RM300–700/cohort. Kit queues and meters jobs. Paid 3D and Studios video tools for gaps; no student Meshy subscriptions.</td></tr>
+        <tr><td>Seats + assets</td><td>~RM620–760/student per term.</td><td>Before teaching costs.</td></tr>
+        <tr><td>Mac mini M6 · 32 GB · 1 TB</td><td>~RM6,000; range RM3.8k–7.5k. V1 lists it on apple.com/my; store price to confirm.</td><td>Neo buys; Academy asset. Education eligibility to check. Web, Windows, Mac, Linux, Android and iPhone builds, store uploads, automated playtests. Room for twenty students' build caches.</td></tr>
+        <tr><td>Other Mac configurations · 22 September 2026 lineup in v1</td><td>M6 · 16 GB · 256 GB: RM3,799, education RM3,399. M5 Pro · 24 GB · 512 GB: RM7,499, education RM7,099.</td><td>Base M6: insufficient memory/disk. M5 Pro only for later local models. Standard 2.5 Gb Ethernet; no 10 Gb upgrade.</td></tr>
+        <tr><td>Mac setup</td><td>Academy IT room; Kenwingston fallback, own Cloudflare Tunnel.</td><td>RUSH/ApaNakMakan recipe: Xcode, Studios certificates in dedicated keychain, Android upload key in vault, Godot templates, kit build agent. No Neo network.</td></tr>
+        <tr><td>Academy Windows PCs</td><td>Already owned. Optional second monitor ~RM400 each.</td><td>Workbench; two 24-inch monitors preferred.</td></tr>
+        <tr><td>Site and code</td><td>RM0 hosting and GitHub.</td><td>creator.todakacademy.edu.my; Todak Cloudflare account; todak-academy GitHub organisation. Private student repositories; builds run on the server.</td></tr>
+        <tr><td>Course database</td><td>RM0, then ~RM120/month (~USD 25).</td><td>Supabase project in the Todak organisation: students, progress, prompts, reviews, paperwork, memory. Shared across cohorts.</td></tr>
+        <tr><td>Kay .213 server</td><td>Already Academy-owned; RM0.</td><td>In the Kay rack. Prompt collector and publishing queue.</td></tr>
+        <tr><td>Kit, Workbench, sidebar, dashboard</td><td>Earlier ~8-week internal-work estimate; no cash charge.</td><td>Revised ten-to-twelve-week pilot estimate in section 06.</td></tr>
+        <tr><td>Consent, IP licence, NDA</td><td>Legal drafting: to quote.</td><td>Recording permission, publishing rights with 50/20/30 split, confidentiality. Reused each cohort.</td></tr>
+        <tr><td>Store publishing</td><td>RM0 existing Studios accounts; Steam optional, USD 100/game, recoupable.</td><td>Apple, Google Play, itch.io and Steam. See <a href="/documentation/stores/v1/">Stores v1</a> for Epic and Roblox.</td></tr>
+      </tbody>
+    </table></div>
+    <p><b>Licences:</b> no game voices from the twin's personal-use voice engine on EdgeXpert. Verify a commercial voice licence or use a licensed Todak service. Higgsfield is Neo's personal subscription, not shared by twenty students. Music and sound libraries must allow store releases.</p>
+    <details>
+      <summary>Superseded v1 machine references</summary>
+      <p>These are not the Academy plan: tr-home (32-core Threadripper, 64 GB, 24 GB GPU); EdgeXpert (GB10, 130 GB unified memory; Siti and twin brain); bandung-01 (Bandung, RTX 5070 12 GB, 30 GB RAM); NAS (22 TB, Kenwingston). V1's RM0 fleet use and small electricity line, NAS retention rule still to set, Netlify, classroom.neotodak.com and course.neotodak.com are replaced by Home v1.</p>
+    </details>
+  </section>
+
+  <section id="decide">
+    <div class="sec-head"><span class="sec-num">10</span><h2>Decisions for Neo &amp; Lan</h2></div>
+    <ol class="decisions">
+      <li><span class="n">1</span><span>Todak Workbench (B), one desk until week 7. Todak Studio (C) waits for cohort 1 evidence.</span></li>
+      <li><span class="n">2</span><span>Buy M6, 32 GB, 1 TB. Confirm price and Academy education discount.</span></li>
+      <li><span class="n">3</span><span>Open Academy-owned Team and Business workspaces. <span class="rec">Recommended</span></span></li>
+      <li><span class="n">4</span><span>Use rented GPU hours for cohort 1 per Home v1. This replaces bandung-01; dedicated Academy GPU purchase waits for proven demand.</span></li>
+      <li><span class="n">5</span><span>Three 3-hour sessions weekly plus home work, or Lan's alternative reaching the same hours.</span></li>
+      <li><span class="n">6</span><span>Two monitors per lab PC.</span></li>
+      <li><span class="n">7</span><span>Beginner dry run and full recording test before enrolment. <span class="rec">Recommended yes to both</span></span></li>
+    </ol>
+  </section>
+
+  <section id="changelog">
+    <div class="sec-head"><span class="sec-num">11</span><h2>Changelog</h2></div>
+    <ul>
+      <li>v2 · 20 Sep 2026 · Cut to half the length after Neo and Lan found v1 too long; facts unchanged; animations unchanged.</li>
+      <li><a href="../v1/">v1 / v1.1 · 20 Sep 2026</a>: original classroom plan; Arcade animations; Home v1 replaces machine locations.</li>
+    </ul>
+  </section>
+  <footer>
+    <span>Todak AI Creator Program · Game Track · Classroom v2</span>
+    <span>Working plan · Sept 2026</span>
+  </footer>
+</div>
+</body>
+</html>
