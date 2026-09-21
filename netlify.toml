@@ -12,3 +12,9 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
 
+
+[[redirects]]
+  from = "/api/demo/*"
+  to = "https://cc.neotodak.com/demo-desk/api/:splat"
+  status = 200
+  force = true

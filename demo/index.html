@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex">
+<title>The one box — Todak AI Creator Program demo</title>
+<style>
+  :root { --bg:#e9ebee; --surface:#f6f7f8; --surface2:#ffffff; --line:#d3d8dd; --ink:#14181c; --soft:#545c64; --faint:#828d97; --method:#37627f; --crew:#9a6a1c; --ship:#2c8a66; --elective:#7a5aa0; --pink:#ff6ba8; --cyan:#1c8fa8; --green:#2c8a66; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0c0e11; --surface:#14181d; --surface2:#1a1f25; --line:#2a3138; --ink:#e7eaed; --soft:#9aa4ad; --faint:#69737c; --method:#86b2ce; --crew:#d2a052; --ship:#5cbf95; --elective:#b298d6; --cyan:#5be7ff; --green:#7cff6b; color-scheme: dark; } }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { height: 100%; }
+  body { background: var(--bg); color: var(--ink); font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; }
+  .top { border-bottom: 1px solid var(--line); font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .top .in { display: flex; justify-content: space-between; align-items: center; height: 44px; padding: 0 16px; gap: 12px; }
+  .top a { color: var(--soft); text-decoration: none; }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: clamp(22px, 3.4vw, 32px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 4px; }
+  .dek { color: var(--soft); font-size: 14.5px; margin-bottom: 14px; max-width: 760px; }
+  .gate { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 8px 0 16px; }
+  input, textarea, select, button { font: inherit; color: var(--ink); }
+  input, textarea, select { min-height: 44px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface2); }
+  button { min-height: 44px; padding: 8px 14px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 700; }
+  button.primary { border-color: var(--method); background: color-mix(in srgb, var(--method) 14%, transparent); }
+  button:disabled { opacity: .45; cursor: default; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 16px; }
+  @media (max-width: 880px) { .grid { grid-template-columns: 1fr; } }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.05); min-width: 0; }
+  .panel h2 { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+  .msgs { max-height: 52vh; overflow: auto; display: flex; flex-direction: column; gap: 10px; padding: 2px; }
+  .m { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface2); font-size: 14.5px; }
+  .m.you { border-color: var(--method); }
+  .m .who { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); margin-bottom: 4px; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; }
+  .badge.design { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 16%, transparent); } .badge.build { color: var(--green); background: color-mix(in srgb, var(--green) 16%, transparent); } .badge.plan, .badge.blocked, .badge.error { color: var(--crew); background: color-mix(in srgb, var(--crew) 16%, transparent); } .badge.explain { color: var(--elective); background: color-mix(in srgb, var(--elective) 16%, transparent); }
+  .m .why { color: var(--soft); font-size: 13px; margin-bottom: 6px; }
+  .m pre { white-space: pre-wrap; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px; margin: 6px 0; overflow: auto; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; } .chip { font-family: ui-monospace, Menlo, monospace; font-size: 11px; padding: 3px 8px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); cursor: pointer; }
+  .m .alt { margin-top: 6px; font-size: 12.5px; } .m .alt a { color: var(--method); cursor: pointer; }
+  .compose { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin-top: 10px; align-items: end; }
+  .compose textarea { width: 100%; min-height: 64px; resize: vertical; }
+  .tools { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; font-size: 13px; color: var(--soft); }
+  .working { font-size: 13px; color: var(--soft); margin-top: 8px; min-height: 18px; }
+  .working b { color: var(--ink); }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; } .tabs button { min-height: 36px; padding: 6px 12px; font-weight: 600; } .tabs button.on { border-color: var(--method); background: color-mix(in srgb, var(--method) 14%, transparent); }
+  .view { min-height: 360px; }
+  .game { aspect-ratio: 16 / 9; width: 100%; border: 1px solid var(--line); border-radius: 10px; background: #0d0f1a; }
+  .imgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; } .imgs figure { margin: 0; } .imgs img { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: #14152a; image-rendering: pixelated; } .imgs figcaption { font-family: ui-monospace, Menlo, monospace; font-size: 10.5px; color: var(--faint); }
+  .steps li { list-style: none; margin-bottom: 4px; } .steps { padding: 0; }
+  .j { font-size: 13px; border-bottom: 1px solid var(--line); padding: 6px 0; display: grid; grid-template-columns: 110px 1fr; gap: 8px; } .j .t { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--faint); }
+  .foot { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--faint); margin-top: 18px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .empty { color: var(--soft); border: 1px dashed var(--line); border-radius: 10px; padding: 16px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="top"><div class="in"><span><a href="/">← Home</a> · <a href="/documentation/classroom/v2/#desks">How the box works</a> · <a href="/play/">Showcase</a> · <a href="/journey/">Journey</a></span><span>The one box · demonstrator</span></div></div>
+<div class="wrap">
+  <h1>Type what you want. One box, two AIs behind it.</h1>
+  <p class="dek">A shared demo of the Todak desk. Artwork requests go to Astra, code requests to Claude Code, and every reply says which and why. The game runs in the viewer. Demonstrator, not the kit: one shared machine, one request at a time, a daily allowance.</p>
+  <form class="gate" id="gate"><input id="pin" type="password" inputmode="numeric" placeholder="Team PIN" autocomplete="off" required><input id="name" placeholder="Your name (for the credits)" maxlength="20"><button class="primary" type="submit" id="start">Start a fresh Pong</button><span id="gatemsg" style="color:var(--soft);font-size:13px"></span></form>
+  <div class="grid" id="app" hidden>
+    <section class="panel">
+      <h2><span>The box</span><span id="sess" style="letter-spacing:0;text-transform:none"></span></h2>
+      <div class="msgs" id="msgs"><div class="empty">Try: <b>make the left paddle move with W and S</b>, or <b>a title screen and a pink ball, pixel style</b>, or even <b>build me the whole game</b> to see what the box says.</div></div>
+      <div id="explainbox" hidden><div class="working"><b>What did that change do?</b> One sentence unlocks the next step.</div><div class="compose"><textarea id="explain" placeholder="the paddle now moves up with W and down with S"></textarea><button class="primary" id="sendExplain">Send</button></div></div>
+      <div id="composebox"><div class="compose"><textarea id="text" placeholder="What do you want?"></textarea><button class="primary" id="send">Send</button></div>
+      <div class="tools"><label>Send to <select id="to"><option value="auto">Auto (the box decides)</option><option value="design">Design desk (Astra)</option><option value="build">Build desk (Claude Code)</option></select></label><span id="cap"></span></div></div>
+      <div class="working" id="working"></div>
+    </section>
+    <section class="panel">
+      <h2><span>The viewer</span><span><button id="buildBtn" style="min-height:36px">Build &amp; play</button> <button id="reviewBtn" style="min-height:36px">Review</button></span></h2>
+      <div class="tabs"><button class="on" data-tab="game">Game</button><button data-tab="code">Code</button><button data-tab="board">Design board</button><button data-tab="steps">Steps &amp; review</button><button data-tab="journey">Journey</button></div>
+      <div class="view" id="view"></div>
+    </section>
+  </div>
+  <div class="foot"><span>Animation-free, real AI runs. Demonstrator, not the kit.</span><span><a href="#" id="reset" style="color:var(--soft)">Start over</a></span></div>
+</div>
+<script>
+const API = '/api/demo'; const GAMES = 'https://cc.neotodak.com/demo-desk';
+const $ = (s) => document.querySelector(s);
+let pin = '', session = '', state = null, tab = 'game', lastDiff = '';
+try { pin = localStorage.getItem('demo-pin') || ''; session = localStorage.getItem('demo-session') || ''; } catch {}
+if (pin) $('#pin').value = pin;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+async function call(path, body) { const r = await fetch(API + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pin, session, ...body }) }); const j = await r.json().catch(() => ({ error: 'bad reply' })); if (!r.ok) throw new Error(j.error || ('error ' + r.status)); return j; }
+$('#gate').addEventListener('submit', async (e) => { e.preventDefault(); pin = $('#pin').value.trim(); $('#gatemsg').textContent = 'Creating your Pong…'; try { const j = await call('/session', { name: $('#name').value.trim() }); session = j.session; try { localStorage.setItem('demo-pin', pin); localStorage.setItem('demo-session', session); } catch {} state = j.state; show(); } catch (err) { $('#gatemsg').textContent = err.message; } });
+$('#reset').addEventListener('click', async (e) => { e.preventDefault(); if (session) { try { await call('/reset', {}); } catch {} } session = ''; try { localStorage.removeItem('demo-session'); } catch {} location.reload(); });
+function show() { $('#gate').hidden = true; $('#app').hidden = false; $('#sess').textContent = state.name + ' · ' + state.student; render(); }
+function badge(route) { const map = { design: ['design', 'Design desk · Astra'], build: ['build', 'Build desk · Claude Code'], both: null, plan: ['plan', 'Plan'], blocked: ['blocked', 'Blocked'], explain: ['explain', 'Explained'], error: ['error', 'Error'] }; if (route === 'both') return '<span class="badge design">Design desk · Astra</span><span class="badge build">Build desk · Claude Code</span>'; const b = map[route] || ['plan', route]; return `<span class="badge ${b[0]}">${b[1]}</span>`; }
+function addMsg(html, cls = '') { const d = document.createElement('div'); d.className = 'm ' + cls; d.innerHTML = html; const box = $('#msgs'); if (box.querySelector('.empty')) box.innerHTML = ''; box.appendChild(d); box.scrollTop = box.scrollHeight; return d; }
+function renderReply(out) {
+  let html = `<div class="who">${badge(out.route)}</div>`; if (out.reason) html += `<div class="why">${esc(out.reason)}.</div>`;
+  if (out.notice && (out.route === 'plan' || out.route === 'blocked' || out.route === 'error')) html += `<pre>${esc(out.notice)}</pre>`;
+  if (out.results) for (const r of out.results) html += `<div style="margin-top:6px"><b>${r.desk === 'design' ? 'Astra' : 'Claude Code'}${r.ok ? '' : ' (failed)'}:</b> ${esc(r.text).replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>')}</div>`;
+  if (out.state && out.state.changed && out.state.changed.length) html += `<div class="chips">${out.state.changed.filter(f => !/^(journey|memory|review|\.tgk)/.test(f)).map(f => `<span class="chip">${esc(f)}</span>`).join('')}</div>`;
+  if (out.next) html += `<div class="chips"><span class="chip" data-fill="${esc(out.next.replace(/^Try: /, ''))}">${esc(out.next)}</span></div>`;
+  if (out.route === 'design' || out.route === 'build') html += `<div class="alt"><a data-alt="${out.route === 'design' ? 'build' : 'design'}">Send to the ${out.route === 'design' ? 'build desk (Claude Code)' : 'design desk (Astra)'} instead</a></div>`;
+  return html;
+}
+async function send(text, to, explain) {
+  if (!text && !explain) return; $('#send').disabled = true; $('#sendExplain').disabled = true;
+  if (text) addMsg(`<div class="who">You${to && to !== 'auto' ? ' · to ' + to : ''}</div>${esc(text)}`, 'you'); if (explain) addMsg(`<div class="who">You · what changed</div>${esc(explain)}`, 'you');
+  let route = null; if (text) { try { route = await call('/route', { text, to }); } catch {} }
+  const w = $('#working'); w.innerHTML = route && route.route ? `${badge(route.route)} <b>${route.route === 'plan' ? 'The box answers itself' : route.route === 'design' ? 'Astra is working' : route.route === 'build' ? 'Claude Code is working' : 'Astra first, then Claude Code'}…</b> ${route.route === 'plan' ? '' : 'usually 20 seconds to 2 minutes.'}` : '<b>Working…</b>';
+  const t0 = Date.now(); const tick = setInterval(() => { const s = Math.round((Date.now() - t0) / 1000); w.querySelector('b') && (w.querySelector('b').textContent = (w.querySelector('b').textContent.replace(/ ·.*$/, '')) + ' · ' + s + 's'); }, 1000);
+  try { const out = await call('/ask', { text, to, explain }); clearInterval(tick); w.textContent = ''; if (explain && !text) addMsg(`<div class="who">${badge('explain')}</div>${esc(out.notice || 'Thanks. Next step unlocked.')}`); else addMsg(renderReply(out)); if (out.diff) lastDiff = out.diff; state = out.state || state; }
+  catch (err) { clearInterval(tick); w.textContent = ''; addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); }
+  $('#send').disabled = false; $('#sendExplain').disabled = false; $('#text').value = ''; $('#explain').value = ''; render();
+}
+$('#send').addEventListener('click', () => send($('#text').value.trim(), $('#to').value));
+$('#text').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#send').click(); } });
+$('#sendExplain').addEventListener('click', () => send('', 'auto', $('#explain').value.trim()));
+$('#explain').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#sendExplain').click(); } });
+$('#msgs').addEventListener('click', e => { const f = e.target.closest('[data-fill]'); if (f) { $('#text').value = f.dataset.fill; $('#text').focus(); } const a = e.target.closest('[data-alt]'); if (a) { const you = [...$('#msgs').querySelectorAll('.m.you')].pop(); const t = you ? you.textContent.replace(/^You[^\n]*\n?/, '').trim() : ''; if (t) send(t, a.dataset.alt); } });
+$('#buildBtn').addEventListener('click', async () => { $('#buildBtn').disabled = true; $('#working').innerHTML = '<b>Building for the web…</b> about a minute.'; try { const j = await call('/build', {}); state = j.state; tab = 'game'; if (!j.ok) addMsg(`<div class="who">${badge('error')}</div>${esc(j.out)}`); } catch (err) { addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); } $('#working').textContent = ''; $('#buildBtn').disabled = false; render(); });
+$('#reviewBtn').addEventListener('click', async () => { $('#reviewBtn').disabled = true; $('#working').innerHTML = '<b>Reviewing…</b>'; try { const j = await call('/review', {}); state = j.state; tab = 'steps'; } catch (err) { addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); } $('#working').textContent = ''; $('#reviewBtn').disabled = false; render(); });
+document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; tab = b.dataset.tab; render(); });
+function render() {
+  if (!state) return; $('#explainbox').hidden = !state.awaiting_explain; $('#composebox').hidden = !!state.awaiting_explain; $('#cap').textContent = `Requests today: ${state.asksToday} of ${state.cap}`;
+  document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab)); const v = $('#view');
+  if (tab === 'game') v.innerHTML = state.gameUrl ? `<iframe class="game" src="${GAMES}${state.gameUrl}?t=${Date.now()}" allow="autoplay" title="Your game"></iframe><p style="font-size:12.5px;color:var(--soft);margin-top:6px">Click inside, press Space to start, W and S to move. Rebuild after each change with "Build &amp; play".</p>` : '<div class="empty">No build yet. Ask for something, then press "Build &amp; play". The first build takes about a minute.</div>';
+  if (tab === 'code') v.innerHTML = lastDiff ? `<pre style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px;max-height:60vh;overflow:auto">${esc(lastDiff)}</pre>` : '<div class="empty">The last code change will show here as a diff.</div>';
+  if (tab === 'board') v.innerHTML = state.images && state.images.length ? `<div class="imgs">${state.images.map(i => `<figure><img src="${GAMES}${i.url}" alt="${esc(i.name)}"><figcaption>${esc(i.folder)}/${esc(i.name)}</figcaption></figure>`).join('')}</div>` : '<div class="empty">Astra\'s pictures land here.</div>';
+  if (tab === 'steps') { const steps = [['scaffold','Scaffold'],['paddle','Paddle moves'],['ball','Ball bounces'],['publish','Publish to web']]; v.innerHTML = `<ul class="steps">${steps.map(s => `<li>${state.steps[s[0]] ? '☑' : '☐'} ${s[1]}</li>`).join('')}</ul>` + (state.report ? `<pre style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px">${esc(state.report)}</pre>` : '<div class="empty" style="margin-top:10px">Press Review for the one-page report.</div>'); }
+  if (tab === 'journey') v.innerHTML = state.journey && state.journey.length ? state.journey.slice().reverse().map(r => `<div class="j"><span class="t">${esc((r.at||'').slice(11,16))} · ${esc(r.desk)}</span><span>${esc(r.prompt)}${r.reason ? ` <span style="color:var(--faint)">— ${esc(r.reason)}</span>` : ''}</span></div>`).join('') : '<div class="empty">Every request you make is recorded here, with the route and the reason.</div>';
+}
+if (pin && session) { (async () => { try { const r = await fetch(API + '/state?' + new URLSearchParams({ pin, session })); if (r.ok) { state = await r.json(); show(); } } catch {} })(); }
+</script>
+</body>
+</html>
