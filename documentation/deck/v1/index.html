@@ -234,30 +234,62 @@
   }
   /* Edit mode: the team changes the points in place and saves for everyone. */
   .tools { justify-self: end; display: flex; align-items: center; gap: 8px; }
-  .editbtn[aria-pressed="true"] { border-color: var(--method); color: var(--method); }
-  .editbtn.dirty::after { content: ""; display: inline-block; width: 8px; height: 8px; margin-left: 8px; border-radius: 50%; background: var(--crew); vertical-align: middle; }
-  .editbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px clamp(16px, 3vw, 48px); background: var(--method-soft); border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-soft); }
+  .editing .tools { height: 44px; }
+  .editbtn[aria-pressed="true"] { border-color: var(--method); background: var(--method-soft); color: var(--method); }
+  .editbtn.dirty { position: relative; }
+  .editbtn.dirty::after { content: ""; position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; border-radius: 50%; background: var(--crew); }
+  .editbar { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 25ch) auto; align-items: center; gap: 16px; padding: 10px clamp(16px, 3vw, 48px); background: var(--surface); border-top: 1px solid var(--line); font-size: 12px; line-height: 1.4; color: var(--ink-soft); }
   .editbar[hidden] { display: none; }
-  .editbar .status { color: var(--ink); font-weight: 600; }
-  .editbar .acts { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; }
-  .editbar button { min-height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); color: var(--ink); padding: 8px 14px; font-size: 14px; font-weight: 600; }
+  .editbar .hint { min-width: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+  .editbar .status { min-width: 0; max-height: 40px; overflow: auto; scrollbar-width: thin; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .editbar:has(#ed-save:not(:disabled)) .status { color: var(--crew); }
+  .editbar .acts { display: flex; align-items: center; gap: 6px; }
+  .editbar button { min-height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); color: var(--ink); padding: 8px 12px; font-size: 13px; line-height: 1.4; font-weight: 600; white-space: nowrap; }
   .editbar button.primary { background: var(--method); color: var(--surface-2); border-color: var(--method); }
   .editbar button.quiet { border-color: transparent; background: transparent; color: var(--ink-soft); font-weight: 500; }
-  .editbar button:disabled { opacity: .45; }
-  [data-ep] { outline: 1px dashed var(--method); outline-offset: 3px; border-radius: 4px; cursor: text; }
-  [data-ep]:focus { outline: 2px solid var(--method); background: var(--surface-2); }
+  .editbar button:hover:not(:disabled) { border-color: var(--method); }
+  .editbar button.quiet:hover:not(:disabled) { border-color: var(--line); color: var(--ink); }
+  .editbar button:disabled { opacity: .55; }
+  .editbar button.primary:disabled { background: var(--method-soft); border-color: var(--line); color: var(--ink-soft); opacity: 1; }
+  [data-ep] { outline: 1px solid var(--line); outline-offset: 3px; border-radius: 4px; cursor: text; caret-color: var(--method); overflow-wrap: anywhere; }
+  [data-ep]:hover { outline-color: var(--method); }
+  [data-ep]:focus { outline: 2px solid var(--method); background: var(--surface-2); box-shadow: 0 0 0 5px var(--method-soft); }
   .ed { display: block; min-width: 4ch; }
-  .ed:empty::before { content: attr(data-ph); color: var(--ink-faint); }
+  .ed:empty::before { content: attr(data-ph); color: var(--ink-soft); }
   .points li.pt, .col li.pt { display: flex; align-items: flex-start; gap: 12px; }
-  .pt .ed { flex: 1; min-width: 0; }
-  .rm { flex: none; width: 32px; height: 32px; margin-top: 2px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); color: var(--ink-soft); font-size: 18px; line-height: 1; }
-  .rm:hover { color: #b3261e; border-color: #b3261e; }
-  .add { padding: 8px 12px; border: 1px dashed var(--line); border-radius: 8px; background: transparent; color: var(--method); font-size: 14px; font-weight: 600; }
-  .add:hover { border-color: var(--method); }
+  .pt .ed { flex: 1; min-width: 0; min-height: 36px; }
+  .rm { flex: none; width: 36px; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--ink-soft); font-size: 20px; line-height: 1; }
+  .rm:hover { background: var(--crew-soft); color: var(--crew); border-color: var(--crew); }
+  .add { min-height: 40px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--method); font-size: 13px; font-weight: 600; }
+  .add:hover { border-color: var(--method); background: var(--method-soft); }
   .points li.addrow::before { display: none; }
   .col li.addrow { border-top: 1px solid var(--line-soft); padding-top: 10px; }
   .dtop .ttl .edited { color: var(--ink-faint); }
-  @media (max-width: 560px) { .tools { gap: 6px; } .editbar { padding-block: 8px; font-size: 13px; } .editbar .acts { margin-left: 0; width: 100%; } }
+  .editing .dtop .ttl .edited { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  @media (max-width: 1100px) {
+    .editbar { grid-template-columns: minmax(0, 1fr) auto; }
+    .editbar .hint { display: none; }
+  }
+  @media (max-width: 760px) {
+    .editbar { grid-template-columns: repeat(10, minmax(0, 1fr)) repeat(2, minmax(24px, 1fr)); grid-template-rows: 38px 42px; gap: 6px; padding-block: 8px; }
+    .editbar .status { grid-column: 1 / 7; grid-row: 1; max-height: 38px; font-size: 11px; }
+    .editbar .acts { display: contents; }
+    .editbar button { min-width: 0; min-height: 0; height: 100%; padding: 4px 6px; font-size: 12px; line-height: 1.25; white-space: normal; }
+    #ed-resetall { grid-column: 7 / -1; grid-row: 1; justify-self: end; }
+    #ed-reset { grid-column: 1 / 6; grid-row: 2; }
+    #ed-save { grid-column: 6 / 11; grid-row: 2; }
+    #ed-done { grid-column: 11 / -1; grid-row: 2; }
+  }
+  @media (max-width: 560px) {
+    .tools { gap: 6px; }
+    .points li.pt, .col li.pt { gap: 10px; }
+    .pt .ed { min-height: 40px; }
+    .rm { width: 40px; height: 40px; }
+  }
+  @media print {
+    .editing #editbar, .editing .rm, .editing .addrow { display: none; }
+    .editing [data-ep] { outline: none; background: transparent; box-shadow: none; }
+  }
   @media (prefers-reduced-motion: reduce) { .slide.active { animation: none; } }
 </style>
 </head>
