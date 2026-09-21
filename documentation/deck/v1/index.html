@@ -54,7 +54,7 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; }
   body {
-    display: grid; grid-template-rows: auto minmax(0, 1fr) auto;
+    display: grid; grid-template-rows: auto minmax(0, 1fr) auto auto;
     height: 100dvh; overflow: hidden; background: var(--bg); color: var(--ink);
     font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     line-height: 1.5; -webkit-font-smoothing: antialiased;
@@ -232,6 +232,32 @@
     .animnote { font-size: 13px; }
     .dbot > button { min-width: 88px; padding-inline: 14px; }
   }
+  /* Edit mode: the team changes the points in place and saves for everyone. */
+  .tools { justify-self: end; display: flex; align-items: center; gap: 8px; }
+  .editbtn[aria-pressed="true"] { border-color: var(--method); color: var(--method); }
+  .editbtn.dirty::after { content: ""; display: inline-block; width: 8px; height: 8px; margin-left: 8px; border-radius: 50%; background: var(--crew); vertical-align: middle; }
+  .editbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding: 10px clamp(16px, 3vw, 48px); background: var(--method-soft); border-top: 1px solid var(--line); font-size: 14px; color: var(--ink-soft); }
+  .editbar[hidden] { display: none; }
+  .editbar .status { color: var(--ink); font-weight: 600; }
+  .editbar .acts { margin-left: auto; display: flex; flex-wrap: wrap; gap: 8px; }
+  .editbar button { min-height: 40px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface-2); color: var(--ink); padding: 8px 14px; font-size: 14px; font-weight: 600; }
+  .editbar button.primary { background: var(--method); color: var(--surface-2); border-color: var(--method); }
+  .editbar button.quiet { border-color: transparent; background: transparent; color: var(--ink-soft); font-weight: 500; }
+  .editbar button:disabled { opacity: .45; }
+  [data-ep] { outline: 1px dashed var(--method); outline-offset: 3px; border-radius: 4px; cursor: text; }
+  [data-ep]:focus { outline: 2px solid var(--method); background: var(--surface-2); }
+  .ed { display: block; min-width: 4ch; }
+  .ed:empty::before { content: attr(data-ph); color: var(--ink-faint); }
+  .points li.pt, .col li.pt { display: flex; align-items: flex-start; gap: 12px; }
+  .pt .ed { flex: 1; min-width: 0; }
+  .rm { flex: none; width: 32px; height: 32px; margin-top: 2px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); color: var(--ink-soft); font-size: 18px; line-height: 1; }
+  .rm:hover { color: #b3261e; border-color: #b3261e; }
+  .add { padding: 8px 12px; border: 1px dashed var(--line); border-radius: 8px; background: transparent; color: var(--method); font-size: 14px; font-weight: 600; }
+  .add:hover { border-color: var(--method); }
+  .points li.addrow::before { display: none; }
+  .col li.addrow { border-top: 1px solid var(--line-soft); padding-top: 10px; }
+  .dtop .ttl .edited { color: var(--ink-faint); }
+  @media (max-width: 560px) { .tools { gap: 6px; } .editbar { padding-block: 8px; font-size: 13px; } .editbar .acts { margin-left: 0; width: 100%; } }
   @media (prefers-reduced-motion: reduce) { .slide.active { animation: none; } }
 </style>
 </head>
@@ -239,7 +265,7 @@
 <nav class="dtop" aria-label="Documentation">
   <span><a href="/documentation/summary/v1/" data-ui="summary">The program in five minutes</a><a href="/documentation/" data-ui="docs">All documentation</a></span>
   <span class="ttl">The plan, step by step</span>
-  <button class="langbtn" id="langbtn" type="button" aria-label="Switch language"><b data-lang-cur>EN</b> / <span data-lang-other>BM</span></button>
+  <span class="tools"><button class="langbtn" id="langbtn" type="button" aria-label="Switch language"><b data-lang-cur>EN</b> / <span data-lang-other>BM</span></button><button class="langbtn editbtn" id="editbtn" type="button" aria-pressed="false">Edit</button></span>
 </nav>
 <main class="deck" id="deck">
 <section class="slide" data-id="title" aria-label="1"><div class="inner"><div class="kicker"></div><h1></h1><ul class="points"></ul><div class="visual"></div></div></section>
@@ -496,6 +522,11 @@
 <section class="slide" data-id="status" aria-label="14"><div class="inner"><div class="kicker"></div><h1></h1><ul class="points"></ul><div class="visual"><div class="vis-status"></div></div></div></section>
 <section class="slide" data-id="next" aria-label="15"><div class="inner"><div class="kicker"></div><h1></h1><ul class="points"></ul><div class="visual"><div class="vis-links"></div></div></div></section>
 </main>
+<div class="editbar" id="editbar" hidden>
+  <span class="hint" id="edhint"></span>
+  <span class="status" id="editstatus" role="status" aria-live="polite"></span>
+  <span class="acts"><button type="button" id="ed-resetall" class="quiet"></button><button type="button" id="ed-reset"></button><button type="button" id="ed-save" class="primary"></button><button type="button" id="ed-done"></button></span>
+</div>
 <nav class="dbot" aria-label="Slides">
   <button type="button" id="prev" data-ui="prev">Back</button>
   <div class="prog"><div class="dots" id="dots"></div><span class="counter" id="counter" aria-live="polite" aria-atomic="true"></span></div>
@@ -514,7 +545,79 @@ const BM = {"ui": {"lang": "BM", "other": "EN", "prev": "Kembali", "next": "Sete
   let idx=0; const n=slides.length;
   const h=parseInt((location.hash||'').replace('#',''),10); if(h>=1&&h<=n) idx=h-1;
   slides.forEach((s,i)=>{ const b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Slide '+(i+1)); b.addEventListener('click',()=>go(i)); dots.appendChild(b); });
-  function dict(){ return (lang==='bm'&&BM)?BM:EN; }
+  // ---- Shared edits: the team changes the points in place; "Save for everyone" stores them on the site. ----
+  const ORIG={en:EN,bm:BM||EN}; const DECK='v1'; const FIELDS=['kicker','title','points','decided','open','big','lesson','ladder','buy'];
+  const UX={
+    en:{edit:'Edit',done:'Done',save:'Save for everyone',resetSlide:'Reset this slide',resetAll:'Reset the whole deck',hint:'Click a point to change it. Enter adds one, × removes one. EN and BM are edited separately.',unsaved:'Unsaved edits, only in this browser',saving:'Saving…',saved:'Saved for everyone · {t}',failed:'Could not save. Your edits are kept in this browser.',conflict:'Someone saved a newer version. Your changes are placed on top; check the slides, then save again.',edited:'edited {t}',newPoint:'New point',remove:'Remove this point',add:'+ Add a point',clean:'No unsaved edits',resetAllConfirm:'Put every slide back to the original text, in both languages? Saved versions stay in the history.'},
+    bm:{edit:'Sunting',done:'Selesai',save:'Simpan untuk semua',resetSlide:'Kembalikan slaid ini',resetAll:'Kembalikan seluruh dek',hint:'Klik mana-mana poin untuk mengubahnya. Enter menambah poin, × membuangnya. EN dan BM disunting secara berasingan.',unsaved:'Suntingan belum disimpan, hanya dalam pelayar ini',saving:'Menyimpan…',saved:'Disimpan untuk semua · {t}',failed:'Tidak dapat disimpan. Suntingan kekal dalam pelayar ini.',conflict:'Seseorang menyimpan versi lebih baharu. Perubahan anda diletakkan di atasnya; semak slaid, kemudian simpan semula.',edited:'disunting {t}',newPoint:'Poin baharu',remove:'Buang poin ini',add:'+ Tambah poin',clean:'Tiada suntingan belum disimpan',resetAllConfirm:'Kembalikan setiap slaid kepada teks asal, dalam kedua-dua bahasa? Versi yang disimpan kekal dalam sejarah.'}
+  };
+  const clone=x=>JSON.parse(JSON.stringify(x));
+  function clean(s){ return String(s).slice(0,2000).replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/&lt;(\/?)(b|i|strong|em|u)&gt;/gi,'<$1$2>').replace(/&lt;br\s*\/?&gt;/gi,'<br>').replace(/(<br>\s*)+$/,'').trim(); }
+  function blank(s){ return !String(s).replace(/<br>|&nbsp;/g,'').trim(); }
+  let shared={overrides:{},saved_at:null,version:0}; let ov={en:{},bm:{}}; let delta={en:{},bm:{}}; let editing=false; let cache={};
+  const editbtn=document.getElementById('editbtn'), editbar=document.getElementById('editbar'), edstatus=document.getElementById('editstatus');
+  function ux(k){ return (UX[lang]||UX.en)[k]; }
+  function isDirty(){ return Object.keys(delta.en).length+Object.keys(delta.bm).length>0; }
+  function loadDraft(){ try{ const d=JSON.parse(localStorage.getItem('deck-'+DECK+'-draft')||'null'); if(d&&d.delta) delta={en:d.delta.en||{},bm:d.delta.bm||{}}; }catch(e){} }
+  function saveDraft(){ try{ if(isDirty()) localStorage.setItem('deck-'+DECK+'-draft',JSON.stringify({delta:delta,base:shared.version,at:Date.now()})); else localStorage.removeItem('deck-'+DECK+'-draft'); }catch(e){} }
+  function rebase(){ ov={en:clone(shared.overrides.en||{}),bm:clone(shared.overrides.bm||{})}; ['en','bm'].forEach(l=>{ Object.keys(delta[l]).forEach(k=>{ if(delta[l][k]===null) delete ov[l][k]; else ov[l][k]=clone(delta[l][k]); }); }); cache={}; }
+  function dictFor(l){ if(cache[l]) return cache[l]; const base=ORIG[l]; const o=ov[l]||{}; const slides=base.slides.map((sl,i)=>{ const c=Object.assign({},sl); FIELDS.forEach(f=>{ const k=i+'.'+f; if(k in o) c[f]=clone(o[k]); }); return c; }); return cache[l]=Object.assign({},base,{slides:slides}); }
+  function dict(){ return dictFor(lang); }
+  function getField(l,i,f){ return clone(dictFor(l).slides[i][f]); }
+  function setField(l,i,f,val){
+    const k=i+'.'+f; const sh=shared.overrides[l]||{}; const inShared=k in sh;
+    if(JSON.stringify(val)===JSON.stringify(ORIG[l].slides[i][f])){ delete ov[l][k]; if(inShared) delta[l][k]=null; else delete delta[l][k]; }
+    else { ov[l][k]=clone(val); if(inShared&&JSON.stringify(sh[k])===JSON.stringify(val)) delete delta[l][k]; else delta[l][k]=clone(val); }
+    cache={}; saveDraft(); updateBar();
+  }
+  function setLeaf(i,f,rest,val){ if(!rest.length){ setField(lang,i,f,val); return; } const cur=getField(lang,i,f); let t=cur; for(let j=0;j<rest.length-1;j++) t=t[rest[j]]; t[rest[rest.length-1]]=val; setField(lang,i,f,cur); }
+  function prune(){ ['en','bm'].forEach(l=>{ Object.keys(ov[l]).forEach(k=>{ const parts=k.split('.'); if(!/^(points|decided|open)$/.test(parts[1])) return; const arr=ov[l][k].filter(x=>!blank(x)); if(arr.length!==ov[l][k].length) setField(l,+parts[0],parts[1],arr); }); }); }
+  function ep(i,f,r,c){ return editing?' contenteditable="true" data-ep="'+[i,f,r,c].filter(x=>x!==undefined).join('.')+'"':''; }
+  function edAttr(el,path){ if(editing){ el.setAttribute('contenteditable','true'); el.dataset.ep=path; } else { el.removeAttribute('contenteditable'); delete el.dataset.ep; } }
+  function items(i,f,arr){ const out=arr.map((p,k)=> editing ? '<li class="pt"><span class="ed" data-ph="'+ux('newPoint')+'"'+ep(i,f,k)+'>'+p+'</span><button type="button" class="rm" data-rm="'+i+'.'+f+'.'+k+'" aria-label="'+ux('remove')+'">×</button></li>' : '<li>'+p+'</li>').join(''); return out+(editing?'<li class="addrow"><button type="button" class="add" data-add="'+i+'.'+f+'">'+ux('add')+'</button></li>':''); }
+  function when(iso){ const d=new Date(iso); if(isNaN(d)) return ''; const loc=lang==='bm'?'ms-MY':'en-GB'; const t=d.toLocaleTimeString(loc,{hour:'2-digit',minute:'2-digit'}); return d.toDateString()===new Date().toDateString()?t:d.toLocaleDateString(loc,{day:'numeric',month:'short'})+', '+t; }
+  function flash(msg,ms){ edstatus.textContent=msg; edstatus.dataset.hold='1'; clearTimeout(flash.t); flash.t=setTimeout(()=>{ delete edstatus.dataset.hold; updateBar(); },ms||4000); }
+  function updateBar(){
+    editbar.hidden=!editing; document.body.classList.toggle('editing',editing);
+    editbtn.textContent=editing?ux('done'):ux('edit'); editbtn.setAttribute('aria-pressed',String(editing)); editbtn.classList.toggle('dirty',isDirty()&&!editing);
+    document.getElementById('ed-save').disabled=!isDirty(); document.getElementById('ed-save').textContent=ux('save');
+    document.getElementById('ed-reset').textContent=ux('resetSlide'); document.getElementById('ed-resetall').textContent=ux('resetAll'); document.getElementById('ed-done').textContent=ux('done');
+    document.getElementById('edhint').textContent=ux('hint');
+    if(!edstatus.dataset.hold) edstatus.textContent=isDirty()?ux('unsaved'):(shared.saved_at?ux('saved').replace('{t}',when(shared.saved_at)):ux('clean'));
+    const t=document.querySelector('.dtop .ttl'); t.textContent=dict().slides[0].title; if(shared.saved_at){ const sm=document.createElement('small'); sm.className='edited'; sm.textContent=' · '+ux('edited').replace('{t}',when(shared.saved_at)); t.appendChild(sm); }
+  }
+  async function loadShared(){ try{ const r=await fetch('/api/deck/read?deck='+DECK,{cache:'no-store'}); if(r.ok){ const j=await r.json(); if(j&&j.overrides&&typeof j.overrides==='object') shared={overrides:j.overrides,saved_at:j.saved_at||null,version:Number(j.version)||0}; } }catch(e){} rebase(); }
+  async function save(){
+    prune(); if(!isDirty()) return; const btn=document.getElementById('ed-save'); btn.disabled=true; flash(ux('saving'),30000);
+    try{
+      const r=await fetch('/api/deck/save',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({deck:DECK,overrides:ov,base:shared.version})});
+      const j=await r.json().catch(()=>({}));
+      if(r.ok&&j.ok){ shared={overrides:clone(ov),saved_at:j.saved_at,version:Number(j.version)||0}; delta={en:{},bm:{}}; saveDraft(); flash(ux('saved').replace('{t}',when(j.saved_at))); }
+      else if(j.conflict){ await loadShared(); render(); go(idx); flash(ux('conflict'),9000); }
+      else throw new Error(j.error||('HTTP '+r.status));
+    }catch(e){ flash(ux('failed'),7000); }
+    updateBar();
+  }
+  const deckEl=document.getElementById('deck');
+  function focusEp(p){ const el=deckEl.querySelector('[data-ep="'+p+'"]'); if(!el) return; el.focus(); try{ const r=document.createRange(); r.selectNodeContents(el); r.collapse(false); const s=window.getSelection(); s.removeAllRanges(); s.addRange(r); }catch(e){} }
+  deckEl.addEventListener('input',e=>{ const el=e.target.closest('[data-ep]'); if(!el) return; const parts=el.dataset.ep.split('.'); setLeaf(+parts[0],parts[1],parts.slice(2).map(Number),clean(el.innerHTML)); });
+  deckEl.addEventListener('paste',e=>{ const el=e.target.closest('[data-ep]'); if(!el) return; e.preventDefault(); const t=(e.clipboardData||window.clipboardData).getData('text/plain'); document.execCommand('insertText',false,t); });
+  deckEl.addEventListener('keydown',e=>{
+    const el=e.target.closest('[data-ep]'); if(!el) return;
+    if(e.key==='Escape'){ e.preventDefault(); el.blur(); return; }
+    if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); const parts=el.dataset.ep.split('.'); const i=+parts[0], f=parts[1];
+      if(parts.length===3&&/^(points|decided|open)$/.test(f)){ const k=+parts[2]; const arr=getField(lang,i,f); arr[k]=clean(el.innerHTML); arr.splice(k+1,0,''); setField(lang,i,f,arr); render(); go(idx); focusEp(i+'.'+f+'.'+(k+1)); }
+      else el.blur(); }
+  });
+  deckEl.addEventListener('click',e=>{
+    const rm=e.target.closest('[data-rm]'); if(rm){ const p=rm.dataset.rm.split('.'); const arr=getField(lang,+p[0],p[1]); arr.splice(+p[2],1); setField(lang,+p[0],p[1],arr); render(); go(idx); return; }
+    const ad=e.target.closest('[data-add]'); if(ad){ const p=ad.dataset.add.split('.'); const arr=getField(lang,+p[0],p[1]); arr.push(''); setField(lang,+p[0],p[1],arr); render(); go(idx); focusEp(p[0]+'.'+p[1]+'.'+(arr.length-1)); }
+  });
+  editbtn.addEventListener('click',()=>{ editing=!editing; if(!editing) prune(); render(); go(idx); });
+  document.getElementById('ed-done').addEventListener('click',()=>{ editing=false; prune(); render(); go(idx); });
+  document.getElementById('ed-save').addEventListener('click',save);
+  document.getElementById('ed-reset').addEventListener('click',()=>{ FIELDS.forEach(f=>{ if((idx+'.'+f) in ov[lang]) setField(lang,idx,f,clone(ORIG[lang].slides[idx][f])); }); render(); go(idx); });
+  document.getElementById('ed-resetall').addEventListener('click',()=>{ if(!confirm(ux('resetAllConfirm'))) return; ['en','bm'].forEach(l=>{ Object.keys(ov[l]).forEach(k=>{ const p=k.split('.'); setField(l,+p[0],p[1],clone(ORIG[l].slides[+p[0]][p[1]])); }); }); render(); go(idx); });
   function render(){
     const D=dict(); document.documentElement.lang = lang==='bm'?'ms':'en';
     document.querySelectorAll('[data-ui]').forEach(el=>{ const k=el.dataset.ui; if(D.ui[k]) el.textContent=D.ui[k]; });
@@ -526,21 +629,22 @@ const BM = {"ui": {"lang": "BM", "other": "EN", "prev": "Kembali", "next": "Sete
     [...dots.children].forEach((b,i)=>b.setAttribute('aria-label', D.ui.slide+' '+(i+1)+': '+D.slides[i].title));
     updateFullscreenButtons();
     slides.forEach((s,i)=>{
-      const sl=D.slides[i]; s.setAttribute('aria-label', (i+1)+': '+sl.title); s.querySelector('.kicker').textContent=sl.kicker; s.querySelector('h1').innerHTML=sl.title;
-      const ul=s.querySelector('.points'); ul.innerHTML=sl.points.map(p=>'<li>'+p+'</li>').join('');
+      const sl=D.slides[i]; s.setAttribute('aria-label', (i+1)+': '+sl.title); const kk=s.querySelector('.kicker'); kk.innerHTML=sl.kicker; edAttr(kk,i+'.kicker'); const h1=s.querySelector('h1'); h1.innerHTML=sl.title; edAttr(h1,i+'.title');
+      const ul=s.querySelector('.points'); ul.innerHTML=items(i,'points',sl.points);
       if(i===0) ul.insertAdjacentHTML('beforeend','<li>'+D.ui.tap+'</li>');
       const v=sl.visual;
-      if(v==='big'||sl.big){ const el=s.querySelector('.visual'); el.innerHTML='<div class="bigrow">'+sl.big.map(b=>'<div class="big"><div class="n">'+b[0]+'</div><div class="l">'+b[1]+'</div></div>').join('')+'</div>'; }
-      if(v==='lesson'){ s.querySelector('.vis-lesson').innerHTML='<div class="strip">'+sl.lesson.map(r=>'<div class="'+(/Break|Rehat/.test(r[1])?'brk':'')+'" style="--duration:'+parseInt(r[2],10)/75*100+'%"><span class="time">'+r[0]+'</span><b>'+r[1]+'</b><small>'+r[2]+'</small></div>').join('')+'</div>'; }
-      if(v==='ladder'){ s.querySelector('.vis-ladder').innerHTML='<div class="stairs">'+sl.ladder.map(r=>'<div><b>'+r[0]+'</b><small>'+r[1]+'</small></div>').join('')+'</div>'; }
-      if(v==='buy'){ s.querySelector('.vis-buy').innerHTML='<div class="buyrows">'+sl.buy.map(r=>'<div><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('')+'</div>'; }
-      if(v==='status'){ s.querySelector('.vis-status').innerHTML='<div class="cols"><div class="col ok"><h3>'+(lang==='bm'?'Dicadangkan setakat ini':'Proposed so far')+'</h3><ul>'+sl.decided.map(x=>'<li>'+x+'</li>').join('')+'</ul></div><div class="col open"><h3>'+(lang==='bm'?'Masih perlu diputuskan':'Still to decide')+'</h3><ul>'+sl.open.map(x=>'<li>'+x+'</li>').join('')+'</ul></div></div>'; }
+      if(v==='big'||sl.big){ const el=s.querySelector('.visual'); el.innerHTML='<div class="bigrow">'+sl.big.map((b,r)=>'<div class="big"><div class="n"'+ep(i,'big',r,0)+'>'+b[0]+'</div><div class="l"'+ep(i,'big',r,1)+'>'+b[1]+'</div></div>').join('')+'</div>'; }
+      if(v==='lesson'){ s.querySelector('.vis-lesson').innerHTML='<div class="strip">'+sl.lesson.map((r,q)=>'<div class="'+(/Break|Rehat/.test(r[1])?'brk':'')+'" style="--duration:'+parseInt(r[2],10)/75*100+'%"><span class="time"'+ep(i,'lesson',q,0)+'>'+r[0]+'</span><b'+ep(i,'lesson',q,1)+'>'+r[1]+'</b><small'+ep(i,'lesson',q,2)+'>'+r[2]+'</small></div>').join('')+'</div>'; }
+      if(v==='ladder'){ s.querySelector('.vis-ladder').innerHTML='<div class="stairs">'+sl.ladder.map((r,q)=>'<div><b'+ep(i,'ladder',q,0)+'>'+r[0]+'</b><small'+ep(i,'ladder',q,1)+'>'+r[1]+'</small></div>').join('')+'</div>'; }
+      if(v==='buy'){ s.querySelector('.vis-buy').innerHTML='<div class="buyrows">'+sl.buy.map((r,q)=>'<div><span'+ep(i,'buy',q,0)+'>'+r[0]+'</span><span'+ep(i,'buy',q,1)+'>'+r[1]+'</span></div>').join('')+'</div>'; }
+      if(v==='status'){ s.querySelector('.vis-status').innerHTML='<div class="cols"><div class="col ok"><h3>'+(lang==='bm'?'Dicadangkan setakat ini':'Proposed so far')+'</h3><ul>'+items(i,'decided',sl.decided)+'</ul></div><div class="col open"><h3>'+(lang==='bm'?'Masih perlu diputuskan':'Still to decide')+'</h3><ul>'+items(i,'open',sl.open)+'</ul></div></div>'; }
       if(v==='links'){ s.querySelector('.vis-links').innerHTML='<div class="linkrow"><a href="/documentation/summary/v1/">'+D.ui.summary+'</a><a href="/documentation/classroom/v2/">'+D.ui.classroom+'</a><a href="/documentation/">'+D.ui.docs+'</a></div>'; }
     });
     Object.keys(D.captions||{}).forEach(k=>{
       if(k.endsWith('_heading')) { const f=document.querySelector('[data-arcade="'+k.replace('_heading','')+'"] figcaption'); if(f) f.innerHTML=D.captions[k]; return; }
       const caps=document.querySelectorAll('[data-arcade="'+k+'"] .arcade-caption'); D.captions[k].forEach((c,i)=>{ if(caps[i]) caps[i].innerHTML=c; });
     });
+    updateBar();
   }
 
   // Wrap the existing, unchanged figures without measuring or shrinking them.
@@ -601,7 +705,7 @@ const BM = {"ui": {"lang": "BM", "other": "EN", "prev": "Kembali", "next": "Sete
   let touch=null;
   const deck=document.getElementById('deck');
   deck.addEventListener('touchstart',e=>{
-    if(e.touches.length!==1 || e.target.closest('figure,button,a') || document.fullscreenElement) {touch=null;return;}
+    if(e.touches.length!==1 || e.target.closest('figure,button,a,[contenteditable="true"]') || document.fullscreenElement) {touch=null;return;}
     const t=e.changedTouches[0]; touch={x:t.clientX,y:t.clientY};
   },{passive:true});
   deck.addEventListener('touchend',e=>{
@@ -617,7 +721,8 @@ const BM = {"ui": {"lang": "BM", "other": "EN", "prev": "Kembali", "next": "Sete
     if(e.clientX<48) go(idx-1); else if(e.clientX>innerWidth-48) go(idx+1);
   });
   window.addEventListener('hashchange',()=>{ const h=parseInt(location.hash.replace('#',''),10); if(h>=1&&h<=n&&h-1!==idx) go(h-1); });
-  render(); go(idx);
+  loadDraft(); rebase(); let started=false; const start=()=>{ if(started) return; started=true; render(); go(idx); };
+  loadShared().then(()=>{ if(started){ render(); go(idx); } else start(); }); setTimeout(start,2500);
 })();
 </script>
 </body>
