@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex">
+<title>Trainer's box — First lab · Todak AI Creator Program</title>
+<style>
+  :root { --bg:#e9ebee; --surface:#f6f7f8; --surface2:#ffffff; --line:#d3d8dd; --ink:#14181c; --soft:#545c64; --faint:#828d97; --method:#37627f; --crew:#9a6a1c; --ship:#2c8a66; --elective:#7a5aa0; --cyan:#1c8fa8; --green:#2c8a66; --pink:#c2447f; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0c0e11; --surface:#14181d; --surface2:#1a1f25; --line:#2a3138; --ink:#e7eaed; --soft:#9aa4ad; --faint:#69737c; --method:#86b2ce; --crew:#d2a052; --ship:#5cbf95; --elective:#b298d6; --cyan:#5be7ff; --green:#7cff6b; --pink:#ff6ba8; color-scheme: dark; } }
+  * { box-sizing: border-box; margin: 0; } [hidden] { display: none !important; }
+  body { background: var(--bg); color: var(--ink); font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; }
+  .top { border-bottom: 1px solid var(--line); font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .top .in { display: flex; justify-content: space-between; align-items: center; height: 44px; padding: 0 16px; gap: 12px; } .top a { color: var(--soft); text-decoration: none; }
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 14px 16px 40px; }
+  h1 { font-size: clamp(20px, 3vw, 28px); font-weight: 800; letter-spacing: -.02em; }
+  .dek { color: var(--soft); font-size: 14px; margin: 2px 0 12px; }
+  input, textarea, button { font: inherit; color: var(--ink); } input, textarea { min-height: 44px; padding: 8px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface2); }
+  button { min-height: 40px; padding: 6px 12px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; font-weight: 700; } button.primary { border-color: var(--method); background: color-mix(in srgb, var(--method) 14%, transparent); } button:disabled { opacity: .45; }
+  .gate { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-bottom: 12px; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); gap: 14px; } @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+  .grid.projector { grid-template-columns: 1fr; } .projector .slides, .projector .box { display: none; } .projector .card { font-size: 16px; }
+  .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; }
+  .panel h2 { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  /* slides */
+  .slide { display: none; min-height: 300px; } .slide.on { display: block; }
+  .slide .k { font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: var(--crew); margin-bottom: 8px; }
+  .slide h3 { font-size: clamp(22px, 2.6vw, 30px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; margin-bottom: 10px; }
+  .slide li { font-size: 15.5px; margin-bottom: 6px; } .slide ul { padding-left: 20px; } .slide p { font-size: 15px; color: var(--soft); }
+  .nav { display: flex; align-items: center; gap: 8px; margin-top: 10px; } .nav .n { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--faint); margin-left: auto; }
+  /* board */
+  .obj { border: 1px solid var(--line); border-left: 3px solid var(--ship); border-radius: 10px; padding: 8px 12px; margin-bottom: 10px; font-size: 14px; background: var(--surface2); }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; }
+  .card { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--surface2); font-size: 13.5px; }
+  .card .name { font-weight: 800; font-size: 16px; display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .pill { font-family: ui-monospace, Menlo, monospace; font-size: 10px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--soft); white-space: nowrap; }
+  .pill.working, .pill.active { color: var(--green); border-color: var(--green); } .pill.must { color: var(--crew); border-color: var(--crew); } .pill.playing, .pill.starting, .pill.rebuilding { color: var(--method); border-color: var(--method); }
+  .ticks { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 6px; } .tick { font-family: ui-monospace, Menlo, monospace; font-size: 11px; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--line); color: var(--faint); } .tick.on { color: var(--green); border-color: var(--green); }
+  .last { color: var(--soft); font-size: 12.5px; } .last b { color: var(--ink); font-weight: 600; }
+  .badge { display: inline-block; padding: 1px 6px; border-radius: 999px; font-family: ui-monospace, Menlo, monospace; font-size: 9.5px; letter-spacing: .06em; text-transform: uppercase; margin-right: 4px; }
+  .badge.claude { color: var(--green); background: color-mix(in srgb, var(--green) 16%, transparent); } .badge.codex, .badge.both { color: var(--cyan); background: color-mix(in srgb, var(--cyan) 16%, transparent); } .badge.plan, .badge.blocked { color: var(--crew); background: color-mix(in srgb, var(--crew) 16%, transparent); } .badge.explain { color: var(--elective); background: color-mix(in srgb, var(--elective) 16%, transparent); } .badge.trainer { color: var(--pink); background: color-mix(in srgb, var(--pink) 16%, transparent); }
+  .card a { color: var(--method); font-size: 12px; }
+  /* box */
+  .box { grid-column: 1 / -1; }
+  .msgs { display: flex; flex-direction: column; gap: 8px; max-height: 40vh; overflow: auto; margin-bottom: 8px; }
+  .m { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--surface2); font-size: 14px; } .m.you { border-color: var(--method); } .m pre { white-space: pre-wrap; font-family: ui-monospace, Menlo, monospace; font-size: 12px; margin-top: 6px; }
+  .compose { display: grid; grid-template-columns: 1fr auto; gap: 8px; } .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; } .chip { font-family: ui-monospace, Menlo, monospace; font-size: 11px; padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); cursor: pointer; }
+  .foot { font-family: ui-monospace, Menlo, monospace; font-size: 11px; color: var(--faint); margin-top: 16px; }
+  .empty { color: var(--soft); border: 1px dashed var(--line); border-radius: 10px; padding: 14px; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="top"><div class="in"><span><a href="/">← Home</a> · <a href="/demo/">Student demo</a> · <a href="/journey/">Journey</a> · <a href="/documentation/first-lab/v1/">First lab plan</a></span><span>Trainer's box · demonstrator</span></div></div>
+<div class="wrap">
+  <h1>Trainer's box · First lab</h1>
+  <p class="dek">Your presentation for this session on the left, every student's progress against today's objective on the right, and a box to ask the room questions, review a game, or drop a note into a student's box. Lecturer PIN.</p>
+  <form class="gate" id="gate"><input id="pin" type="password" inputmode="numeric" placeholder="Lecturer PIN" autocomplete="off" required><button class="primary" type="submit">Open the room</button><span id="gatemsg" style="color:var(--soft);font-size:13px"></span></form>
+  <div class="grid" id="app" hidden>
+    <section class="panel slides">
+      <h2><span>This session's presentation</span><span><button id="proj" style="min-height:32px">Projector view</button></span></h2>
+      <div class="slide on"><div class="k">First lab · 60 minutes</div><h3>Play, then ask.</h3><ul><li>Objective: every student gets their paddle moving and explains the change in one sentence.</li><li>The game is already built. Nobody installs anything today.</li><li>Two helpers behind one box: Astra for pictures, Claude Code for how the game behaves.</li></ul></div>
+      <div class="slide"><div class="k">0–5 min</div><h3>Play it first.</h3><ul><li>Click inside the game, press Space. The computer plays the right paddle.</li><li>Ask the room: what is wrong with this game? (Two things: your paddle, and the ball flies through.)</li><li>That gap is today's lesson.</li></ul></div>
+      <div class="slide"><div class="k">5–20 min</div><h3>One change, in your own words.</h3><ul><li>"My paddle doesn't move." Watch the badge: Build desk · Claude Code, and the reason.</li><li>The game rebuilds itself. Play again.</li><li>Then the desk asks what changed. One sentence, no jargon, unlocks the next step.</li></ul><p>Walk the room. The board on the right shows who has the tick and who is stuck.</p></div>
+      <div class="slide"><div class="k">20–35 min</div><h3>The other helper.</h3><ul><li>"Draw me a cool title screen." Badge: Design desk · Astra. A picture lands on the design board.</li><li>Ask: why did the box choose differently? Let students guess the route before sending.</li><li>Optional: "make the ball faster" — back to the build desk.</li></ul></div>
+      <div class="slide"><div class="k">35–45 min</div><h3>Try to cheat.</h3><ul><li>"Build me the whole game." The box answers with the step list and "not in one go".</li><li>Say it out loud: the course is steps, and the box will not let anyone skip.</li></ul></div>
+      <div class="slide"><div class="k">45–60 min</div><h3>Read the code. See the record.</h3><ul><li>Open the Code tab together: the paddle diff, line by line, in plain words.</li><li>Open the Journey tab: everything they typed, with the route and the reason.</li><li>Close: in week 4 the AI goes off for the drills. Today they learned the box; the code is theirs.</li></ul></div>
+      <div class="nav"><button id="prev">Back</button><button id="next" class="primary">Next</button><span class="n" id="sn">1 / 6</span></div>
+    </section>
+    <section class="panel">
+      <h2><span>The room · live</span><span id="meta" style="letter-spacing:0;text-transform:none;color:var(--soft)"></span></h2>
+      <div class="obj" id="obj"></div>
+      <div class="cards" id="cards"><div class="empty">Waiting for students…</div></div>
+    </section>
+    <section class="panel box">
+      <h2><span>Ask the room</span></h2>
+      <div class="msgs" id="msgs"><div class="empty">Try: <b>who hasn't finished the paddle</b> · <b>who is stuck</b> · <b>summary</b> · <b>show Neo</b> · <b>review Neo</b> · <b>note Neo: read the clamp line before you go on</b> · <b>draft feedback for Neo</b></div></div>
+      <div class="compose"><input id="q" placeholder="Ask about the room, review a student, or send a note…"><button class="primary" id="ask">Ask</button></div>
+      <div class="chips" id="chips"><span class="chip" data-q="summary">summary</span><span class="chip" data-q="who hasn't finished the paddle">who hasn't finished the paddle</span><span class="chip" data-q="who has explained">who has explained</span><span class="chip" data-q="who is stuck">who is stuck</span></div>
+    </section>
+  </div>
+  <div class="foot">Demonstrator, not the kit. The board reads the course record only; it never touches a student's game or memory. Reviews run the same checker the student sees. Notes land in the student's box.</div>
+</div>
+<script>
+const API = 'https://cc.neotodak.com/demo-desk/api'; const $ = (s) => document.querySelector(s);
+let pin = ''; try { pin = sessionStorage.getItem('trainer-pin') || ''; } catch {} if (pin) $('#pin').value = pin;
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let board = null, slide = 0, timer = null;
+async function load() { const r = await fetch(API + '/class?' + new URLSearchParams({ pin })); if (!r.ok) throw new Error(r.status === 403 ? 'Wrong PIN.' : 'Could not load (' + r.status + ')'); board = await r.json(); renderBoard(); }
+$('#gate').addEventListener('submit', async (e) => { e.preventDefault(); pin = $('#pin').value.trim(); try { await load(); try { sessionStorage.setItem('trainer-pin', pin); } catch {} $('#gate').hidden = true; $('#app').hidden = false; if (!timer) timer = setInterval(() => load().catch(() => {}), 5000); } catch (err) { $('#gatemsg').textContent = err.message; } });
+function badge(d) { return `<span class="badge ${esc(d)}">${d === 'claude' ? 'build' : d === 'codex' ? 'design' : esc(d)}</span>`; }
+function renderBoard() {
+  if (!board) return; $('#meta').textContent = `${board.students.length} in the room · ${board.asksToday} of ${board.cap} requests today · ${new Date(board.at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
+  $('#obj').innerHTML = `<b>Objective:</b> ${esc(board.objective.goal)}`;
+  const c = $('#cards'); if (!board.students.length) { c.innerHTML = '<div class="empty">Waiting for students… they appear the moment they start a game at /demo.</div>'; return; }
+  c.innerHTML = board.students.map(r => { const st = r.status === 'must explain' ? 'must' : r.status; const t = (k, l) => `<span class="tick ${r.checks[k] ? 'on' : ''}">${r.checks[k] ? '✓' : '·'} ${l}</span>`;
+    return `<div class="card"><div class="name"><span>${esc(r.name)}</span><span class="pill ${esc(st)}">${esc(r.status)}${r.idleMin >= 10 && r.status === 'idle' ? ' · ' + r.idleMin + ' min' : ''}</span></div>
+      <div class="ticks">${t('played', 'played')}${t('paddle', 'paddle moves')}${t('explained', 'explained')}${t('ball', 'ball bounces')}</div>
+      <div class="last">${r.last ? badge(r.last.desk) + '<b>' + esc(r.last.text) + '</b>' : 'No request yet.'}${r.review ? `<div>Review: ${r.review.passed} of ${r.review.total}</div>` : ''}<div>${r.prompts} requests · ${r.explains} explained${r.routes.blocked ? ' · ' + r.routes.blocked + ' blocked' : ''}</div></div>
+      <a href="/demo/?session=${esc(r.session)}" target="_blank" rel="noopener">open their box ↗</a></div>`; }).join('');
+}
+function addMsg(html, cls = '') { const d = document.createElement('div'); d.className = 'm ' + cls; d.innerHTML = html; const box = $('#msgs'); if (box.querySelector('.empty')) box.innerHTML = ''; box.appendChild(d); box.scrollTop = box.scrollHeight; }
+async function ask(text) { if (!text) return; addMsg(esc(text), 'you'); $('#ask').disabled = true; $('#q').value = '';
+  try { const r = await fetch(API + '/trainer/ask', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pin, text }) }); const j = await r.json(); if (!r.ok) throw new Error(j.error || r.status);
+    let html = esc(j.text); if (j.kind === 'review' && j.report) html += `<pre>${esc(j.report)}</pre>`; if (j.kind === 'draft') html += `<pre>${esc(j.text)}</pre><div style="color:var(--soft);font-size:12.5px">${esc(j.hint || '')}</div>`; if (j.kind === 'student' && j.student) html += `<pre>${j.student.recent.map(x => `${(x.at||'').slice(11,16)}  ${x.desk.padEnd(8)} ${x.text}${x.reason ? '  — ' + x.reason : ''}`).join('\n')}</pre>`;
+    addMsg(html); if (j.board) { board = j.board; renderBoard(); } } catch (err) { addMsg('Could not ask: ' + esc(err.message)); }
+  $('#ask').disabled = false; }
+$('#ask').addEventListener('click', () => ask($('#q').value.trim())); $('#q').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#ask').click(); } });
+$('#chips').addEventListener('click', e => { const c = e.target.closest('[data-q]'); if (c) ask(c.dataset.q); });
+const slides = [...document.querySelectorAll('.slide')]; function goSlide(i) { slide = Math.max(0, Math.min(slides.length - 1, i)); slides.forEach((s, j) => s.classList.toggle('on', j === slide)); $('#sn').textContent = (slide + 1) + ' / ' + slides.length; }
+$('#prev').addEventListener('click', () => goSlide(slide - 1)); $('#next').addEventListener('click', () => goSlide(slide + 1));
+$('#proj').addEventListener('click', () => { $('#app').classList.toggle('projector'); });
+document.addEventListener('keydown', e => { if (e.target.closest('input,textarea')) return; if (e.key === 'ArrowRight') goSlide(slide + 1); if (e.key === 'ArrowLeft') goSlide(slide - 1); });
+if (pin) { load().then(() => { $('#gate').hidden = true; $('#app').hidden = false; timer = setInterval(() => load().catch(() => {}), 5000); }).catch(() => {}); }
+</script>
+</body>
+</html>

@@ -91,7 +91,10 @@ function welcome() {
   if ($('#msgs').children.length) return;
   addMsg(`<div class="who"><span class="badge explain">Your desk</span></div>Hi ${esc(firstName())}, I'm your desk. Your game is on the right${state && state.built ? '' : ' (building now, about a minute)'}. Play it first: click inside it and press Space. You'll notice your paddle does not move yet and the ball flies straight through. Tell me one thing you'd like different, in your own words, and I'll pass it to the right helper and tell you which one.<div class="chips"><span class="chip" data-fill="my paddle doesn't move">my paddle doesn't move</span><span class="chip" data-fill="make the ball faster">make the ball faster</span><span class="chip" data-fill="draw me a cool title screen">draw me a cool title screen</span></div><div class="alt" style="color:var(--faint)">Curious? Try asking for everything at once and see what the desk says.</div>`);
 }
-function show() { $('#gate').hidden = true; $('#app').hidden = false; $('#sess').textContent = state.name + ' · ' + state.student; welcome(); render(); watchBuild(); }
+let notesSeen = 0;
+function showNotes() { const notes = (state && state.journey ? state.journey : []).filter(r => r.desk === 'trainer'); for (let i = notesSeen; i < notes.length; i++) addMsg(`<div class="who"><span class="badge explain">Your trainer</span></div>${esc(notes[i].prompt)}`); notesSeen = notes.length; }
+setInterval(async () => { if (!session) return; try { const r = await fetch(API + '/state?' + new URLSearchParams({ pin, session })); if (r.ok) { const st = await r.json(); state = { ...state, ...st }; showNotes(); } } catch {} }, 20000);
+function show() { $('#gate').hidden = true; $('#app').hidden = false; $('#sess').textContent = state.name + ' · ' + state.student; welcome(); showNotes(); render(); watchBuild(); }
 let watching = null, lastBuiltAt = 0;
 function watchBuild() {
   if (watching) return; watching = setInterval(async () => {
