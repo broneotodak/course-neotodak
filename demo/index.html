@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex">
-<title>The one box — Todak AI Creator Program demo</title>
+<title>First lab — the one box · Todak AI Creator Program</title>
 <style>
   :root { --bg:#e9ebee; --surface:#f6f7f8; --surface2:#ffffff; --line:#d3d8dd; --ink:#14181c; --soft:#545c64; --faint:#828d97; --method:#37627f; --crew:#9a6a1c; --ship:#2c8a66; --elective:#7a5aa0; --pink:#ff6ba8; --cyan:#1c8fa8; --green:#2c8a66; color-scheme: light; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0c0e11; --surface:#14181d; --surface2:#1a1f25; --line:#2a3138; --ink:#e7eaed; --soft:#9aa4ad; --faint:#69737c; --method:#86b2ce; --crew:#d2a052; --ship:#5cbf95; --elective:#b298d6; --cyan:#5be7ff; --green:#7cff6b; color-scheme: dark; } }
@@ -52,22 +52,22 @@
 </style>
 </head>
 <body>
-<div class="top"><div class="in"><span><a href="/">← Home</a> · <a href="/documentation/classroom/v2/#desks">How the box works</a> · <a href="/play/">Showcase</a> · <a href="/journey/">Journey</a></span><span>The one box · demonstrator</span></div></div>
+<div class="top"><div class="in"><span><a href="/">← Home</a> · <a href="/documentation/classroom/v2/#desks">How the box works</a> · <a href="/play/">Showcase</a> · <a href="/journey/">Journey</a></span><span>First lab · the one box · demonstrator</span></div></div>
 <div class="wrap">
-  <h1>Type what you want. One box, two AIs behind it.</h1>
-  <p class="dek">An open demo of the Todak desk. Artwork requests go to Astra, code requests to Claude Code, and every reply says which and why. The game runs in the viewer. Demonstrator, not the kit: one shared machine, one request at a time, a daily allowance for everyone.</p>
+  <h1>First lab: play, then ask.</h1>
+  <p class="dek">This is the first hour a student touches the tools. The game is already built. Play it, then tell the box one thing you want different, in your own words. Behind the box, two helpers: Astra for pictures and design, Claude Code for how the game behaves; every reply says which one answered and why. Demonstrator, not the kit: one shared machine, one request at a time, a daily allowance for everyone.</p>
   <form class="gate" id="gate"><input id="name" placeholder="Your name (for the credits)" maxlength="20"><button class="primary" type="submit" id="start">Start a fresh Pong</button><span id="gatemsg" style="color:var(--soft);font-size:13px"></span></form>
   <div class="grid" id="app" hidden>
     <section class="panel">
       <h2><span>The box</span><span id="sess" style="letter-spacing:0;text-transform:none"></span></h2>
-      <div class="msgs" id="msgs"><div class="empty">Try: <b>make the left paddle move with W and S</b>, or <b>a title screen and a pink ball, pixel style</b>, or even <b>build me the whole game</b> to see what the box says.</div></div>
+      <div class="msgs" id="msgs"></div>
       <div id="explainbox" hidden><div class="working"><b>What did that change do?</b> One sentence unlocks the next step.</div><div class="compose"><textarea id="explain" placeholder="the paddle now moves up with W and down with S"></textarea><button class="primary" id="sendExplain">Send</button></div></div>
-      <div id="composebox"><div class="compose"><textarea id="text" placeholder="What do you want?"></textarea><button class="primary" id="send">Send</button></div>
+      <div id="composebox"><div class="compose"><textarea id="text" placeholder="One thing you want different…"></textarea><button class="primary" id="send">Send</button></div>
       <div class="tools"><label>Send to <select id="to"><option value="auto">Auto (the box decides)</option><option value="design">Design desk (Astra)</option><option value="build">Build desk (Claude Code)</option></select></label><span id="cap"></span></div></div>
       <div class="working" id="working"></div>
     </section>
     <section class="panel">
-      <h2><span>The viewer</span><span><button id="buildBtn" style="min-height:36px">Build &amp; play</button> <button id="reviewBtn" style="min-height:36px">Review</button></span></h2>
+      <h2><span>The viewer</span><span><button id="buildBtn" style="min-height:36px">Rebuild</button> <button id="reviewBtn" style="min-height:36px">Review</button></span></h2>
       <div class="tabs"><button class="on" data-tab="game">Game</button><button data-tab="code">Code</button><button data-tab="board">Design board</button><button data-tab="steps">Steps &amp; review</button><button data-tab="journey">Journey</button></div>
       <div class="view" id="view"></div>
     </section>
@@ -86,7 +86,19 @@ const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;
 async function call(path, body) { const r = await fetch(API + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pin, session, ...body }) }); const j = await r.json().catch(() => ({ error: 'bad reply' })); if (!r.ok) throw new Error(j.error || ('error ' + r.status)); return j; }
 $('#gate').addEventListener('submit', async (e) => { e.preventDefault(); pin = ''; $('#gatemsg').textContent = 'Creating your Pong…'; try { const j = await call('/session', { name: $('#name').value.trim() }); session = j.session; try { localStorage.setItem('demo-pin', pin); localStorage.setItem('demo-session', session); } catch {} state = j.state; show(); } catch (err) { $('#gatemsg').textContent = err.message; } });
 $('#reset').addEventListener('click', async (e) => { e.preventDefault(); if (session) { try { await call('/reset', {}); } catch {} } session = ''; try { localStorage.removeItem('demo-session'); } catch {} location.reload(); });
-function show() { $('#gate').hidden = true; $('#app').hidden = false; $('#sess').textContent = state.name + ' · ' + state.student; render(); }
+function firstName() { return (state && state.student ? state.student.replace(/^demo-/, '') : 'there'); }
+function welcome() {
+  if ($('#msgs').children.length) return;
+  addMsg(`<div class="who"><span class="badge explain">Your desk</span></div>Hi ${esc(firstName())}, I'm your desk. Your game is on the right${state && state.built ? '' : ' (building now, about a minute)'}. Play it first. Then tell me one thing you'd like different, in your own words. I'll pass it to the right helper and tell you which one.<div class="chips"><span class="chip" data-fill="my paddle doesn't move">my paddle doesn't move</span><span class="chip" data-fill="make the ball faster">make the ball faster</span><span class="chip" data-fill="draw me a cool title screen">draw me a cool title screen</span></div><div class="alt" style="color:var(--faint)">Curious? Try asking for everything at once and see what the desk says.</div>`);
+}
+function show() { $('#gate').hidden = true; $('#app').hidden = false; $('#sess').textContent = state.name + ' · ' + state.student; welcome(); render(); watchBuild(); }
+let watching = null, lastBuiltAt = 0;
+function watchBuild() {
+  if (watching) return; watching = setInterval(async () => {
+    if (!state || (!state.building && state.built)) { if (state && state.built && state.builtAt && state.builtAt !== lastBuiltAt) { lastBuiltAt = state.builtAt; if (tab === 'game') render(); } if (!state || !state.building) { clearInterval(watching); watching = null; } return; }
+    try { const r = await fetch(API + '/state?' + new URLSearchParams({ pin, session })); if (r.ok) { const st = await r.json(); const was = state.builtAt; state = { ...state, ...st }; if (tab === 'game' && (st.builtAt !== was || !st.building)) render(); } } catch {}
+  }, 5000);
+}
 function badge(route) { const map = { design: ['design', 'Design desk · Astra'], build: ['build', 'Build desk · Claude Code'], both: null, plan: ['plan', 'Plan'], blocked: ['blocked', 'Blocked'], explain: ['explain', 'Explained'], error: ['error', 'Error'] }; if (route === 'both') return '<span class="badge design">Design desk · Astra</span><span class="badge build">Build desk · Claude Code</span>'; const b = map[route] || ['plan', route]; return `<span class="badge ${b[0]}">${b[1]}</span>`; }
 function addMsg(html, cls = '') { const d = document.createElement('div'); d.className = 'm ' + cls; d.innerHTML = html; const box = $('#msgs'); if (box.querySelector('.empty')) box.innerHTML = ''; box.appendChild(d); box.scrollTop = box.scrollHeight; return d; }
 function renderReply(out) {
@@ -108,20 +120,20 @@ async function send(text, to, explain) {
   catch (err) { clearInterval(tick); w.innerHTML = '<b>Connection dropped; waiting for the desk to finish…</b>';
     try { for (let i = 0; i < 60; i++) { await new Promise(r => setTimeout(r, 5000)); const r = await fetch(API + '/state?' + new URLSearchParams({ pin, session })); if (!r.ok) break; const st = await r.json(); if (!st.busy) { state = st; const last = (st.journey || []).slice(-1)[0]; addMsg(`<div class="who">${badge(last && last.desk === 'codex' ? 'design' : 'build')}</div>The desk finished while the connection was down. Changed: ${esc((st.changed || []).filter(f => !/^(journey|memory|review|\.tgk)/.test(f)).join(', ') || 'nothing')}. See the Code and Journey tabs.`); w.textContent = ''; break; } } }
     catch (e2) { w.textContent = ''; addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); } }
-  $('#send').disabled = false; $('#sendExplain').disabled = false; $('#text').value = ''; $('#explain').value = ''; render();
+  $('#send').disabled = false; $('#sendExplain').disabled = false; $('#text').value = ''; $('#explain').value = ''; render(); watchBuild();
 }
 $('#send').addEventListener('click', () => send($('#text').value.trim(), $('#to').value));
 $('#text').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#send').click(); } });
 $('#sendExplain').addEventListener('click', () => send('', 'auto', $('#explain').value.trim()));
 $('#explain').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#sendExplain').click(); } });
 $('#msgs').addEventListener('click', e => { const f = e.target.closest('[data-fill]'); if (f) { $('#text').value = f.dataset.fill; $('#text').focus(); } const a = e.target.closest('[data-alt]'); if (a) { const you = [...$('#msgs').querySelectorAll('.m.you')].pop(); const t = you ? you.textContent.replace(/^You[^\n]*\n?/, '').trim() : ''; if (t) send(t, a.dataset.alt); } });
-$('#buildBtn').addEventListener('click', async () => { $('#buildBtn').disabled = true; $('#working').innerHTML = '<b>Building for the web…</b> about a minute.'; try { const j = await call('/build', {}); state = j.state; tab = 'game'; if (!j.ok) addMsg(`<div class="who">${badge('error')}</div>${esc(j.out)}`); } catch (err) { addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); } $('#working').textContent = ''; $('#buildBtn').disabled = false; render(); });
+$('#buildBtn').addEventListener('click', async () => { $('#buildBtn').disabled = true; $('#working').innerHTML = '<b>Building for the web…</b> about a minute.'; try { const j = await call('/build', {}); state = j.state || state; tab = 'game'; if (!j.ok) addMsg(`<div class="who">${badge('error')}</div>${esc(j.out)}`); } catch (err) { addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); } $('#working').textContent = ''; $('#buildBtn').disabled = false; render(); watchBuild(); });
 $('#reviewBtn').addEventListener('click', async () => { $('#reviewBtn').disabled = true; $('#working').innerHTML = '<b>Reviewing…</b>'; try { const j = await call('/review', {}); state = j.state; tab = 'steps'; } catch (err) { addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); } $('#working').textContent = ''; $('#reviewBtn').disabled = false; render(); });
 document.querySelector('.tabs').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; tab = b.dataset.tab; render(); });
 function render() {
   if (!state) return; $('#explainbox').hidden = !state.awaiting_explain; $('#composebox').hidden = !!state.awaiting_explain; $('#cap').textContent = `Requests today: ${state.asksToday} of ${state.cap}`;
   document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab === tab)); const v = $('#view');
-  if (tab === 'game') v.innerHTML = state.gameUrl ? `<iframe class="game" src="${GAMES}${state.gameUrl}?t=${Date.now()}" allow="autoplay" title="Your game"></iframe><p style="font-size:12.5px;color:var(--soft);margin-top:6px">Click inside, press Space to start, W and S to move. Rebuild after each change with "Build &amp; play".</p>` : '<div class="empty">No build yet. Ask for something, then press "Build &amp; play". The first build takes about a minute.</div>';
+  if (tab === 'game') v.innerHTML = state.gameUrl ? `<iframe class="game" src="${GAMES}${state.gameUrl}?t=${state.builtAt || Date.now()}" allow="autoplay" title="Your game"></iframe><p style="font-size:12.5px;color:var(--soft);margin-top:6px">${state.building ? '<b>Rebuilding with your change…</b> about a minute; the game refreshes itself. ' : ''}Click inside, press Space to start, W and S to move.</p>` : `<div class="empty">${state.building ? '<b>Building your game…</b> about a minute. Play it as soon as it appears here.' : 'No build yet. Press "Build &amp; play".'}</div>`;
   if (tab === 'code') v.innerHTML = lastDiff ? `<pre style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px;max-height:60vh;overflow:auto">${esc(lastDiff)}</pre>` : '<div class="empty">The last code change will show here as a diff.</div>';
   if (tab === 'board') v.innerHTML = state.images && state.images.length ? `<div class="imgs">${state.images.map(i => `<figure><img src="${GAMES}${i.url}" alt="${esc(i.name)}"><figcaption>${esc(i.folder)}/${esc(i.name)}</figcaption></figure>`).join('')}</div>` : '<div class="empty">Astra\'s pictures land here.</div>';
   if (tab === 'steps') { const steps = [['scaffold','Scaffold'],['paddle','Paddle moves'],['ball','Ball bounces'],['publish','Publish to web']]; v.innerHTML = `<ul class="steps">${steps.map(s => `<li>${state.steps[s[0]] ? '☑' : '☐'} ${s[1]}</li>`).join('')}</ul>` + (state.report ? `<pre style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px">${esc(state.report)}</pre>` : '<div class="empty" style="margin-top:10px">Press Review for the one-page report.</div>'); }
