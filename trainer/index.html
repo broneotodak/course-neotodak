@@ -51,8 +51,8 @@
 <div class="top"><div class="in"><span><a href="/">← Home</a> · <a href="/demo/">Student demo</a> · <a href="/journey/">Journey</a> · <a href="/documentation/first-lab/v1/">First lab plan</a></span><span>Trainer's box · demonstrator</span></div></div>
 <div class="wrap">
   <h1>Trainer's box · First lab</h1>
-  <p class="dek">Your presentation for this session on the left, every student's progress against today's objective on the right, and a box to ask the room questions, review a game, or drop a note into a student's box. Lecturer PIN.</p>
-  <form class="gate" id="gate"><input id="pin" type="password" inputmode="numeric" placeholder="Lecturer PIN" autocomplete="off" required><button class="primary" type="submit">Open the room</button><span id="gatemsg" style="color:var(--soft);font-size:13px"></span></form>
+  <p class="dek">Your presentation for this session on the left, every student's progress against today's objective on the right, and a box to ask the room questions, review a game, or drop a note into a student's box. Open for the demo.</p>
+  <form class="gate" id="gate"><button class="primary" type="submit">Open the room</button><span id="gatemsg" style="color:var(--soft);font-size:13px"></span></form>
   <div class="grid" id="app" hidden>
     <section class="panel slides">
       <h2><span>This session's presentation</span><span><button id="proj" style="min-height:32px">Projector view</button></span></h2>
@@ -80,11 +80,11 @@
 </div>
 <script>
 const API = 'https://cc.neotodak.com/demo-desk/api'; const $ = (s) => document.querySelector(s);
-let pin = ''; try { pin = sessionStorage.getItem('trainer-pin') || ''; } catch {} if (pin) $('#pin').value = pin;
+let pin = '';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 let board = null, slide = 0, timer = null;
 async function load() { const r = await fetch(API + '/class?' + new URLSearchParams({ pin })); if (!r.ok) throw new Error(r.status === 403 ? 'Wrong PIN.' : 'Could not load (' + r.status + ')'); board = await r.json(); renderBoard(); }
-$('#gate').addEventListener('submit', async (e) => { e.preventDefault(); pin = $('#pin').value.trim(); try { await load(); try { sessionStorage.setItem('trainer-pin', pin); } catch {} $('#gate').hidden = true; $('#app').hidden = false; if (!timer) timer = setInterval(() => load().catch(() => {}), 5000); } catch (err) { $('#gatemsg').textContent = err.message; } });
+$('#gate').addEventListener('submit', async (e) => { e.preventDefault(); pin = ''; try { await load(); $('#gate').hidden = true; $('#app').hidden = false; if (!timer) timer = setInterval(() => load().catch(() => {}), 5000); } catch (err) { $('#gatemsg').textContent = err.message; } });
 function badge(d) { return `<span class="badge ${esc(d)}">${d === 'claude' ? 'build' : d === 'codex' ? 'design' : esc(d)}</span>`; }
 function renderBoard() {
   if (!board) return; $('#meta').textContent = `${board.students.length} in the room · ${board.asksToday} of ${board.cap} requests today · ${new Date(board.at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
@@ -108,7 +108,7 @@ const slides = [...document.querySelectorAll('.slide')]; function goSlide(i) { s
 $('#prev').addEventListener('click', () => goSlide(slide - 1)); $('#next').addEventListener('click', () => goSlide(slide + 1));
 $('#proj').addEventListener('click', () => { $('#app').classList.toggle('projector'); });
 document.addEventListener('keydown', e => { if (e.target.closest('input,textarea')) return; if (e.key === 'ArrowRight') goSlide(slide + 1); if (e.key === 'ArrowLeft') goSlide(slide - 1); });
-if (pin) { load().then(() => { $('#gate').hidden = true; $('#app').hidden = false; timer = setInterval(() => load().catch(() => {}), 5000); }).catch(() => {}); }
+{ load().then(() => { $('#gate').hidden = true; $('#app').hidden = false; timer = setInterval(() => load().catch(() => {}), 5000); }).catch(() => {}); }
 </script>
 </body>
 </html>
