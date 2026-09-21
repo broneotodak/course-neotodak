@@ -7,6 +7,7 @@
   :root { --bg:#e9ebee; --surface:#f6f7f8; --surface2:#ffffff; --line:#d3d8dd; --ink:#14181c; --soft:#545c64; --faint:#828d97; --method:#37627f; --crew:#9a6a1c; --ship:#2c8a66; --elective:#7a5aa0; --pink:#ff6ba8; --cyan:#1c8fa8; --green:#2c8a66; color-scheme: light; }
   @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#0c0e11; --surface:#14181d; --surface2:#1a1f25; --line:#2a3138; --ink:#e7eaed; --soft:#9aa4ad; --faint:#69737c; --method:#86b2ce; --crew:#d2a052; --ship:#5cbf95; --elective:#b298d6; --cyan:#5be7ff; --green:#7cff6b; color-scheme: dark; } }
   * { box-sizing: border-box; margin: 0; }
+  [hidden] { display: none !important; }
   html, body { height: 100%; }
   body { background: var(--bg); color: var(--ink); font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.5; }
   .top { border-bottom: 1px solid var(--line); font-family: ui-monospace, Menlo, monospace; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
