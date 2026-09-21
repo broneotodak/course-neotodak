@@ -74,7 +74,8 @@
   <div class="foot"><span>Animation-free, real AI runs. Demonstrator, not the kit.</span><span><a href="#" id="reset" style="color:var(--soft)">Start over</a></span></div>
 </div>
 <script>
-const API = '/api/demo'; const GAMES = 'https://cc.neotodak.com/demo-desk';
+// Calls go straight to the demo door: the site's own proxy cuts long calls at ~30 s, and an AI run can take two minutes.
+const GAMES = 'https://cc.neotodak.com/demo-desk'; const API = GAMES + '/api';
 const $ = (s) => document.querySelector(s);
 let pin = '', session = '', state = null, tab = 'game', lastDiff = '';
 try { pin = localStorage.getItem('demo-pin') || ''; session = localStorage.getItem('demo-session') || ''; } catch {}
@@ -104,7 +105,9 @@ async function send(text, to, explain) {
   const w = $('#working'); w.innerHTML = route && route.route ? `${badge(route.route)} <b>${route.route === 'plan' ? 'The box answers itself' : route.route === 'design' ? 'Astra is working' : route.route === 'build' ? 'Claude Code is working' : 'Astra first, then Claude Code'}…</b> ${route.route === 'plan' ? '' : 'usually 20 seconds to 2 minutes.'}` : '<b>Working…</b>';
   const t0 = Date.now(); const tick = setInterval(() => { const s = Math.round((Date.now() - t0) / 1000); w.querySelector('b') && (w.querySelector('b').textContent = (w.querySelector('b').textContent.replace(/ ·.*$/, '')) + ' · ' + s + 's'); }, 1000);
   try { const out = await call('/ask', { text, to, explain }); clearInterval(tick); w.textContent = ''; if (explain && !text) addMsg(`<div class="who">${badge('explain')}</div>${esc(out.notice || 'Thanks. Next step unlocked.')}`); else addMsg(renderReply(out)); if (out.diff) lastDiff = out.diff; state = out.state || state; }
-  catch (err) { clearInterval(tick); w.textContent = ''; addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); }
+  catch (err) { clearInterval(tick); w.innerHTML = '<b>Connection dropped; waiting for the desk to finish…</b>';
+    try { for (let i = 0; i < 60; i++) { await new Promise(r => setTimeout(r, 5000)); const r = await fetch(API + '/state?' + new URLSearchParams({ pin, session })); if (!r.ok) break; const st = await r.json(); if (!st.busy) { state = st; const last = (st.journey || []).slice(-1)[0]; addMsg(`<div class="who">${badge(last && last.desk === 'codex' ? 'design' : 'build')}</div>The desk finished while the connection was down. Changed: ${esc((st.changed || []).filter(f => !/^(journey|memory|review|\.tgk)/.test(f)).join(', ') || 'nothing')}. See the Code and Journey tabs.`); w.textContent = ''; break; } } }
+    catch (e2) { w.textContent = ''; addMsg(`<div class="who">${badge('error')}</div>${esc(err.message)}`); } }
   $('#send').disabled = false; $('#sendExplain').disabled = false; $('#text').value = ''; $('#explain').value = ''; render();
 }
 $('#send').addEventListener('click', () => send($('#text').value.trim(), $('#to').value));
