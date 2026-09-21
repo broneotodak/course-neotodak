@@ -205,8 +205,8 @@
       <thead><tr><th>Min</th><th>The beginner does</th><th>Lan sees</th><th>Built by</th></tr></thead>
       <tbody>
         <tr><td class="num">0–1</td><td>Signs in, opens "Todak Workbench". Sidebar: Week 3 · Pong, today's steps.</td><td>One window, no terminal.</td><td>Workbench profile, sidebar</td></tr>
-        <tr><td class="num">1–3</td><td>Asks Astra for paddles, a ball and a title screen in a style they choose.</td><td>Pictures land on the design board.</td><td>Design desk, kit's design folder</td></tr>
-        <tr><td class="num">3–6</td><td>Asks Claude Code to scaffold Pong, then "make the left paddle move with W and S". Presses Play.</td><td>Code changes in the middle, Godot reloads, the paddle moves.</td><td>Pong template, kit commands, project memory</td></tr>
+        <tr><td class="num">1–3</td><td>Types into the one box: "paddles, a ball and a title screen, pixel style". The box says "sent to the design desk (Astra)".</td><td>Pictures land on the design board.</td><td>Todak desk, router, kit's design folder</td></tr>
+        <tr><td class="num">3–6</td><td>Types "make the left paddle move with W and S". The box says "sent to the build desk (Claude Code)". Presses Play. The box then asks: what changed? One sentence unlocks the next step.</td><td>Code changes in the middle, Godot reloads, the paddle moves.</td><td>Todak desk, router, step gating, explain-back</td></tr>
         <tr><td class="num">6–8</td><td>Says "publish to web".</td><td>A link on course.neotodak.com with the beginner's name. Opens on Lan's phone.</td><td>Build and publish command, showcase</td></tr>
         <tr><td class="num">8–9</td><td>Opens the journey tab.</td><td>Every prompt from both desks, timestamped, in the classroom system.</td><td>Recording hooks, journey page</td></tr>
         <tr><td class="num">9–10</td><td>Says "review my game".</td><td>A one-page report: what passed, what to fix.</td><td>Reviewer</td></tr>
@@ -228,6 +228,7 @@
         <tr><td><b>Journey page</b></td><td>The lecturer's view in the classroom system: prompts per student, per game, both desks.</td><td>Claude Code</td></tr>
         <tr><td><b>Reviewer</b></td><td>Runs the game headless, checks the "ships complete" list, writes a one-page report.</td><td>Claude Code</td></tr>
         <tr><td><b>Todak sidebar</b></td><td>The panel in the Workbench: steps, design board, buttons, journey link, recording status.</td><td>Codex</td></tr>
+        <tr><td><b>Todak desk (the one box)</b></td><td>A chat box in the sidebar that calls the kit's router: design requests to Astra, code to Claude Code, both in sequence when needed; shows the route and the reason; step gating and explain-back built in. Decided 21 Sep.</td><td>Claude Code (router) · Codex (the box)</td></tr>
         <tr><td><b>Workbench profile and installer</b></td><td>The editor profile with both desks, the Godot tools and the sidebar; one script to install on a lab PC.</td><td>Claude Code · Codex reviews the feel</td></tr>
       </tbody>
     </table></div>
@@ -271,6 +272,7 @@
   <section id="changelog">
     <div class="sec-head"><span class="sec-num">06</span><h2>Changelog</h2></div>
     <ul>
+      <li><b>Day 3 · 21 Sep 2026.</b> Neo decided the student sees <b>one box</b> with two AIs behind it. The kit gained <code>tgk ask</code>: a router with a whole-game guard, step gating and explain-back, recording the route and reason. Codex briefed on the chat box in the sidebar. The demo script changed accordingly.</li>
       <li><b>Day 2 · 20 Sep 2026.</b> Opened to the team: <a href="/documentation/demo/try/">Try the demo</a>, a team showcase on GitHub Pages with a publish key, a team PIN for the journey page, and a team pack from Neo. The front page of course.neotodak.com became the presenting dashboard, and Codex Astra built <a href="/classroom-3d/">The classroom, in 3D</a>, an animated ten-stop tour of the whole program in English and Malay.</li>
       <li><b>Day 2, early · 20 Sep 2026.</b> Codex delivered the Todak sidebar (a small editor extension: game, steps, Run · Build · Publish · Review buttons, design board, recording status, recent prompts, review summary, the demonstrator label; 12 tests, no network, commands run in a real terminal) and the Pong pixel art (paddle, ball, title backdrop, icon, 5 KB in total). Packaged and installed into an isolated editor profile. Still to check by eye in a real editor window: that is day 5's dry run.</li>
       <li><b>Day 1, late · 20 Sep 2026.</b> The core moment of the demo works unaided: a real Claude Code run, reading only the kit's instruction file, made the paddle move with W and S, ran the review itself, ticked the step and saved its reasoning to the project brain, in two plain sentences to the student. A real Codex session's prompt was collected into the same journey.</li>
