@@ -55,8 +55,8 @@
 <div class="top"><div class="in"><span><a href="/">← Home</a> · <a href="/documentation/classroom/v2/#desks">How the box works</a> · <a href="/play/">Showcase</a> · <a href="/journey/">Journey</a></span><span>The one box · demonstrator</span></div></div>
 <div class="wrap">
   <h1>Type what you want. One box, two AIs behind it.</h1>
-  <p class="dek">A shared demo of the Todak desk. Artwork requests go to Astra, code requests to Claude Code, and every reply says which and why. The game runs in the viewer. Demonstrator, not the kit: one shared machine, one request at a time, a daily allowance.</p>
-  <form class="gate" id="gate"><input id="pin" type="password" inputmode="numeric" placeholder="Team PIN" autocomplete="off" required><input id="name" placeholder="Your name (for the credits)" maxlength="20"><button class="primary" type="submit" id="start">Start a fresh Pong</button><span id="gatemsg" style="color:var(--soft);font-size:13px"></span></form>
+  <p class="dek">An open demo of the Todak desk. Artwork requests go to Astra, code requests to Claude Code, and every reply says which and why. The game runs in the viewer. Demonstrator, not the kit: one shared machine, one request at a time, a daily allowance for everyone.</p>
+  <form class="gate" id="gate"><input id="name" placeholder="Your name (for the credits)" maxlength="20"><button class="primary" type="submit" id="start">Start a fresh Pong</button><span id="gatemsg" style="color:var(--soft);font-size:13px"></span></form>
   <div class="grid" id="app" hidden>
     <section class="panel">
       <h2><span>The box</span><span id="sess" style="letter-spacing:0;text-transform:none"></span></h2>
@@ -82,10 +82,9 @@ let pin = '', session = '', state = null, tab = 'game', lastDiff = '';
 try { pin = localStorage.getItem('demo-pin') || ''; session = localStorage.getItem('demo-session') || ''; } catch {}
 // a shared link can carry the session (and the PIN for a lecturer's own screen): /demo/?session=abcd1234&pin=…
 { const q = new URLSearchParams(location.search); if (q.get('session')) session = q.get('session'); if (q.get('pin')) pin = q.get('pin'); if (q.get('session') || q.get('pin')) { try { localStorage.setItem('demo-pin', pin); localStorage.setItem('demo-session', session); } catch {} history.replaceState(null, '', location.pathname); } }
-if (pin) $('#pin').value = pin;
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 async function call(path, body) { const r = await fetch(API + path, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ pin, session, ...body }) }); const j = await r.json().catch(() => ({ error: 'bad reply' })); if (!r.ok) throw new Error(j.error || ('error ' + r.status)); return j; }
-$('#gate').addEventListener('submit', async (e) => { e.preventDefault(); pin = $('#pin').value.trim(); $('#gatemsg').textContent = 'Creating your Pong…'; try { const j = await call('/session', { name: $('#name').value.trim() }); session = j.session; try { localStorage.setItem('demo-pin', pin); localStorage.setItem('demo-session', session); } catch {} state = j.state; show(); } catch (err) { $('#gatemsg').textContent = err.message; } });
+$('#gate').addEventListener('submit', async (e) => { e.preventDefault(); pin = ''; $('#gatemsg').textContent = 'Creating your Pong…'; try { const j = await call('/session', { name: $('#name').value.trim() }); session = j.session; try { localStorage.setItem('demo-pin', pin); localStorage.setItem('demo-session', session); } catch {} state = j.state; show(); } catch (err) { $('#gatemsg').textContent = err.message; } });
 $('#reset').addEventListener('click', async (e) => { e.preventDefault(); if (session) { try { await call('/reset', {}); } catch {} } session = ''; try { localStorage.removeItem('demo-session'); } catch {} location.reload(); });
 function show() { $('#gate').hidden = true; $('#app').hidden = false; $('#sess').textContent = state.name + ' · ' + state.student; render(); }
 function badge(route) { const map = { design: ['design', 'Design desk · Astra'], build: ['build', 'Build desk · Claude Code'], both: null, plan: ['plan', 'Plan'], blocked: ['blocked', 'Blocked'], explain: ['explain', 'Explained'], error: ['error', 'Error'] }; if (route === 'both') return '<span class="badge design">Design desk · Astra</span><span class="badge build">Build desk · Claude Code</span>'; const b = map[route] || ['plan', route]; return `<span class="badge ${b[0]}">${b[1]}</span>`; }
@@ -128,7 +127,7 @@ function render() {
   if (tab === 'steps') { const steps = [['scaffold','Scaffold'],['paddle','Paddle moves'],['ball','Ball bounces'],['publish','Publish to web']]; v.innerHTML = `<ul class="steps">${steps.map(s => `<li>${state.steps[s[0]] ? '☑' : '☐'} ${s[1]}</li>`).join('')}</ul>` + (state.report ? `<pre style="white-space:pre-wrap;font-family:ui-monospace,Menlo,monospace;font-size:12px;background:var(--surface2);border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:10px">${esc(state.report)}</pre>` : '<div class="empty" style="margin-top:10px">Press Review for the one-page report.</div>'); }
   if (tab === 'journey') v.innerHTML = state.journey && state.journey.length ? state.journey.slice().reverse().map(r => `<div class="j"><span class="t">${esc((r.at||'').slice(11,16))} · ${esc(r.desk)}</span><span>${esc(r.prompt)}${r.reason ? ` <span style="color:var(--faint)">— ${esc(r.reason)}</span>` : ''}</span></div>`).join('') : '<div class="empty">Every request you make is recorded here, with the route and the reason.</div>';
 }
-if (pin && session) { (async () => { try { const r = await fetch(API + '/state?' + new URLSearchParams({ pin, session })); if (r.ok) { state = await r.json(); show(); } } catch {} })(); }
+if (session) { (async () => { try { const r = await fetch(API + '/state?' + new URLSearchParams({ pin, session })); if (r.ok) { state = await r.json(); show(); } } catch {} })(); }
 </script>
 </body>
 </html>
